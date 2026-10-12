@@ -42,16 +42,8 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
   isAuthorMode = false,
   onOpenComicUploader
 }) => {
-  // Mode selection: Novel (Truyện chữ) vs Comic (Truyện tranh)
-  // Vì truyện chữ chưa có, nếu là độc giả thì 100% hiển thị Truyện Tranh Webtoon
-  const [readerType, setReaderType] = useState<ReaderType>(isAuthorMode ? 'novel' : 'comic');
-  const [authorPreviewComingSoon, setAuthorPreviewComingSoon] = useState(false);
-
-  useEffect(() => {
-    if (!isAuthorMode) {
-      setReaderType('comic');
-    }
-  }, [isAuthorMode]);
+  // Mode selection: Novel (Truyện chữ - Đang sáng tác) vs Comic (Truyện tranh - Sắp ra mắt)
+  const [readerType, setReaderType] = useState<ReaderType>('novel');
   
   // Novel reader states
   const [selectedPartId, setSelectedPartId] = useState<string>(parts[0]?.id || '');
@@ -88,6 +80,44 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
   const [showPanelCreator, setShowPanelCreator] = useState<boolean>(false);
   const [customSnippet, setCustomSnippet] = useState<string>('');
 
+  // Danh sách phẳng tất cả các chương qua toàn bộ các Phần (để nhảy chương xuyên suốt chuẩn NetTruyen)
+  const allFlatChapters = React.useMemo(() => {
+    const list: {
+      partId: string;
+      partTitle: string;
+      chapter: Chapter;
+      partIndex: number;
+      chapterIndex: number;
+    }[] = [];
+    parts.forEach((p, pIdx) => {
+      p.chapters.forEach((c, cIdx) => {
+        list.push({
+          partId: p.id,
+          partTitle: p.title,
+          chapter: c,
+          partIndex: pIdx,
+          chapterIndex: cIdx
+        });
+      });
+    });
+    return list;
+  }, [parts]);
+
+  const currentGlobalIndex = React.useMemo(() => {
+    const idx = allFlatChapters.findIndex(
+      item => item.partId === selectedPartId && item.chapterIndex === activeChapterIndex
+    );
+    return idx >= 0 ? idx : 0;
+  }, [allFlatChapters, selectedPartId, activeChapterIndex]);
+
+  const goToChapterByGlobalIndex = (targetIdx: number) => {
+    if (targetIdx < 0 || targetIdx >= allFlatChapters.length) return;
+    const target = allFlatChapters[targetIdx];
+    setSelectedPartId(target.partId);
+    setActiveChapterIndex(target.chapterIndex);
+    scrollToTop();
+  };
+
   const activePart = parts.find(p => p.id === selectedPartId) || parts[0];
   const chapters = activePart?.chapters || [];
   const currentChapter: Chapter | undefined = chapters[activeChapterIndex] || chapters[0];
@@ -111,21 +141,33 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
       if (['INPUT', 'TEXTAREA', 'SELECT'].includes((e.target as HTMLElement)?.tagName)) {
         return;
       }
-      if (e.key === 'ArrowLeft') {
-        if (activeComicIndex > 0) {
-          setActiveComicIndex(prev => prev - 1);
-          scrollToTop();
+      if (readerType === 'novel') {
+        if (e.key === 'ArrowLeft') {
+          if (currentGlobalIndex > 0) {
+            goToChapterByGlobalIndex(currentGlobalIndex - 1);
+          }
+        } else if (e.key === 'ArrowRight') {
+          if (currentGlobalIndex < allFlatChapters.length - 1) {
+            goToChapterByGlobalIndex(currentGlobalIndex + 1);
+          }
         }
-      } else if (e.key === 'ArrowRight') {
-        if (activeComicIndex < comicChapters.length - 1) {
-          setActiveComicIndex(prev => prev + 1);
-          scrollToTop();
+      } else {
+        if (e.key === 'ArrowLeft') {
+          if (activeComicIndex > 0) {
+            setActiveComicIndex(prev => Math.max(0, prev - 1));
+            scrollToTop();
+          }
+        } else if (e.key === 'ArrowRight') {
+          if (activeComicIndex < comicChapters.length - 1) {
+            setActiveComicIndex(prev => Math.min(comicChapters.length - 1, prev + 1));
+            scrollToTop();
+          }
         }
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [activeComicIndex, comicChapters.length]);
+  }, [readerType, currentGlobalIndex, allFlatChapters.length, activeComicIndex, comicChapters.length]);
 
   // Tổng hợp toàn bộ các ô tranh (panels) của Chapter hiện tại thành dòng cuộn dọc NetTruyen
   const allPanels = React.useMemo(() => {
@@ -270,42 +312,35 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
       <div className={`px-4 sm:px-6 py-2.5 border-b flex flex-wrap items-center justify-between gap-3 backdrop-blur-xl z-20 ${novelThemeClasses.toolbar}`}>
         {/* Left: Branding & Mode Switcher */}
         <div className="flex items-center space-x-3">
-          {isAuthorMode ? (
-            <div className="flex items-center bg-black/20 dark:bg-slate-900/80 p-1 rounded-xl border border-white/10">
-              <button
-                onClick={() => setReaderType('novel')}
-                className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
-                  readerType === 'novel'
-                    ? 'bg-amber-500/25 text-amber-300 border border-amber-500/40 shadow-sm'
-                    : 'opacity-70 hover:opacity-100 text-slate-300'
-                }`}
-              >
-                <BookOpen className="w-3.5 h-3.5" />
-                <span>Truyện Chữ (Novel)</span>
-              </button>
+          <div className="flex items-center bg-black/20 dark:bg-slate-900/80 p-1 rounded-xl border border-white/10">
+            <button
+              onClick={() => setReaderType('novel')}
+              className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                readerType === 'novel'
+                  ? 'bg-amber-500/25 text-amber-300 border border-amber-500/40 shadow-sm'
+                  : 'opacity-70 hover:opacity-100 text-slate-300'
+              }`}
+            >
+              <BookOpen className="w-3.5 h-3.5 text-amber-400" />
+              <span>Truyện Chữ (Đang sáng tác)</span>
+            </button>
 
-              <button
-                onClick={() => setReaderType('comic')}
-                className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
-                  readerType === 'comic'
-                    ? 'bg-rose-500/25 text-rose-300 border border-rose-500/40 shadow-sm'
-                    : 'opacity-70 hover:opacity-100 text-slate-300'
-                }`}
-              >
-                <ImageIcon className="w-3.5 h-3.5 text-rose-400" />
-                <span>Truyện Tranh (Comic)</span>
-              </button>
-            </div>
-          ) : (
-            <div className="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-rose-500/15 border border-rose-500/30 text-rose-300 text-xs font-bold shadow-sm">
+            <button
+              onClick={() => setReaderType('comic')}
+              className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                readerType === 'comic'
+                  ? 'bg-rose-500/25 text-rose-300 border border-rose-500/40 shadow-sm'
+                  : 'opacity-70 hover:opacity-100 text-slate-300'
+              }`}
+            >
               <ImageIcon className="w-3.5 h-3.5 text-rose-400" />
-              <span>Truyện Tranh Webtoon</span>
-            </div>
-          )}
+              <span>Truyện Tranh (Sắp ra mắt)</span>
+            </button>
+          </div>
 
           <span className="hidden md:inline text-xs opacity-50">•</span>
           <span className="hidden md:inline text-xs font-medium opacity-80 truncate max-w-xs font-serif">
-            {readerType === 'comic' || !isAuthorMode ? activeComic.title : currentChapter?.title}
+            {readerType === 'novel' ? currentChapter?.title : activeComic.title}
           </span>
         </div>
 
@@ -447,29 +482,102 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
 
       {/* ================= MAIN CONTENT VIEWPORT ================= */}
       <div ref={scrollContainerRef} className="flex-1 overflow-y-auto custom-scrollbar relative">
-        {isAuthorMode && readerType === 'novel' ? (
-          /* ================= NOVEL READER MODE (CHỈ DÀNH CHO TÁC GIẢ XEM BẢN THẢO) ================= */
-          <div className="max-w-4xl mx-auto px-4 sm:px-8 py-10 transition-all duration-300">
-            {/* Header / Chapter Title Info */}
-            <div className="text-center mb-10 pb-8 border-b border-black/10 dark:border-white/10">
-              <span className="text-xs font-mono tracking-widest uppercase opacity-60">
-                {activePart.title}
-              </span>
-              <h1 className={`font-serif text-2xl sm:text-4xl font-bold mt-2 mb-3 tracking-tight ${novelThemeClasses.text}`}>
-                {currentChapter?.title || 'Chương Chưa Đặt Tên'}
+        {readerType === 'novel' ? (
+          /* ================= NETTRUYEN STYLE NOVEL READER ================= */
+          <div className="w-full max-w-4xl mx-auto px-3 sm:px-6 py-6 transition-all duration-300">
+            {/* 1. TOP INFO & BREADCRUMBS (NETTRUYEN) */}
+            <div className="mb-4 pb-3 border-b border-black/10 dark:border-white/10">
+              {/* Breadcrumbs */}
+              <nav className="flex items-center space-x-1.5 text-xs text-slate-400 mb-2 overflow-x-auto whitespace-nowrap">
+                <span onClick={() => goToChapterByGlobalIndex(0)} className="hover:text-amber-400 cursor-pointer">
+                  Trang chủ
+                </span>
+                <span>/</span>
+                <span className="hover:text-amber-400 cursor-pointer">{project.title}</span>
+                <span>/</span>
+                <span className="text-slate-300 font-medium">{activePart.title.split('—')[0].trim()}</span>
+                <span>/</span>
+                <span className="text-amber-400 font-semibold">{currentChapter?.title || 'Chương 1'}</span>
+              </nav>
+
+              {/* Chapter Main Title */}
+              <h1 className={`text-xl sm:text-3xl font-bold font-serif tracking-tight ${novelThemeClasses.text}`}>
+                {project.title} - <span className="text-amber-400">{currentChapter?.title || 'Chương Chưa Đặt Tên'}</span>
               </h1>
-              <div className="flex items-center justify-center space-x-4 text-xs opacity-70 font-mono">
+
+              {/* Metadata & Timestamp */}
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs opacity-75 mt-2 font-mono">
+                <span className="italic">[Ngày cập nhật: {project.updatedAt || 'Mới nhất'}]</span>
+                <span>•</span>
                 <span>POV: {currentChapter?.povCharacterName || 'Toàn tri'}</span>
                 <span>•</span>
-                <span>{currentChapter?.location || 'Chưa định vị'}</span>
+                <span>{currentChapter?.location || 'Thế giới Long Ấn'}</span>
                 <span>•</span>
-                <span>{totalWords.toLocaleString()} từ (~{estimatedReadTime} phút)</span>
+                <span>{totalWords.toLocaleString()} chữ (~{estimatedReadTime} phút đọc)</span>
               </div>
             </div>
 
-            {/* Prose Content */}
+            {/* 2. READING CONTROL BOX (NETTRUYEN) */}
+            <div className="bg-slate-900/90 dark:bg-slate-900/90 border border-white/10 rounded-2xl p-4 mb-6 shadow-xl backdrop-blur-md">
+              {/* Keyboard shortcut hint alert */}
+              <div className="bg-sky-500/10 border border-sky-500/25 text-sky-200 text-xs px-3.5 py-2 rounded-xl flex items-center gap-2 mb-3">
+                <Info className="w-4 h-4 text-sky-400 shrink-0" />
+                <span>Sử dụng mũi tên trái (←) hoặc phải (→) trên bàn phím để chuyển chapter</span>
+              </div>
+
+              {/* Chapter Navigation Buttons & Select */}
+              <div className="flex flex-wrap items-center justify-center gap-2 pt-1">
+                <button
+                  onClick={() => goToChapterByGlobalIndex(0)}
+                  title="Trang chủ / Chương đầu"
+                  className="p-2.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-white/10 transition-all cursor-pointer"
+                >
+                  <Home className="w-4 h-4" />
+                </button>
+
+                <button
+                  disabled={currentGlobalIndex <= 0}
+                  onClick={() => goToChapterByGlobalIndex(currentGlobalIndex - 1)}
+                  className="px-4 py-2 rounded-lg bg-rose-600 hover:bg-rose-500 disabled:opacity-30 disabled:pointer-events-none text-white font-bold text-xs flex items-center gap-1.5 shadow-md shadow-rose-600/30 transition-all cursor-pointer"
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                  <span>Chap trước</span>
+                </button>
+
+                {/* Select Chapter Dropdown */}
+                <select
+                  value={currentGlobalIndex}
+                  onChange={e => goToChapterByGlobalIndex(Number(e.target.value))}
+                  className="px-3.5 py-2 rounded-lg bg-slate-800 hover:bg-slate-750 border border-white/20 text-white font-medium text-xs focus:ring-2 focus:ring-rose-500 outline-none max-w-[260px] sm:max-w-xs truncate cursor-pointer shadow-sm"
+                >
+                  {parts.map(p => (
+                    <optgroup key={p.id} label={p.title}>
+                      {p.chapters.map(c => {
+                        const flatIdx = allFlatChapters.findIndex(f => f.chapter.id === c.id);
+                        return (
+                          <option key={c.id} value={flatIdx}>
+                            {c.title}
+                          </option>
+                        );
+                      })}
+                    </optgroup>
+                  ))}
+                </select>
+
+                <button
+                  disabled={currentGlobalIndex >= allFlatChapters.length - 1}
+                  onClick={() => goToChapterByGlobalIndex(currentGlobalIndex + 1)}
+                  className="px-4 py-2 rounded-lg bg-rose-600 hover:bg-rose-500 disabled:opacity-30 disabled:pointer-events-none text-white font-bold text-xs flex items-center gap-1.5 shadow-md shadow-rose-600/30 transition-all cursor-pointer"
+                >
+                  <span>Chap sau</span>
+                  <ChevronRight className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+
+            {/* 3. PROSE ARTICLE (NỘI DUNG TRUYỆN CHỮ) */}
             <article 
-              className={`font-serif prose prose-lg max-w-none text-justify ${novelThemeClasses.prose}`}
+              className={`font-serif prose prose-lg max-w-none text-justify px-3 sm:px-8 py-8 rounded-2xl ${novelThemeClasses.container} ${novelThemeClasses.prose} shadow-lg`}
               style={{
                 fontSize: `${fontSize}px`,
                 lineHeight: lineHeight,
@@ -480,20 +588,20 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
                 currentChapter.content.split('\n\n').map((paragraph, pIdx) => {
                   if (paragraph.startsWith('“') || paragraph.startsWith('﻿“')) {
                     return (
-                      <p key={pIdx} className="italic text-amber-400/90 font-medium pl-4 border-l-2 border-amber-500/50 my-6">
+                      <p key={pIdx} className="italic text-amber-400 font-medium pl-4 border-l-2 border-amber-500/50 my-6">
                         {paragraph}
                       </p>
                     );
                   }
                   if (paragraph.startsWith('—')) {
                     return (
-                      <p key={pIdx} className="font-sans pl-2 my-3 text-slate-100 dark:text-slate-100 font-medium">
+                      <p key={pIdx} className="font-sans pl-2 my-3 text-slate-100 font-medium">
                         {paragraph}
                       </p>
                     );
                   }
                   return (
-                    <p key={pIdx} className="indent-8 my-4">
+                    <p key={pIdx} className="indent-8 my-4 leading-relaxed">
                       {paragraph}
                     </p>
                   );
@@ -503,34 +611,119 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
               )}
             </article>
 
-            {/* Bottom Chapter Navigation */}
-            <div className="mt-14 pt-8 border-t border-black/10 dark:border-white/10 flex items-center justify-between">
+            {/* 4. CHAPTER BOTTOM NAV (NETTRUYEN) */}
+            <div className="chapter-nav-bottom flex flex-wrap items-center justify-center gap-2 py-8 border-t border-black/10 dark:border-white/10 mt-8">
               <button
-                disabled={activeChapterIndex <= 0}
-                onClick={() => setActiveChapterIndex(prev => Math.max(0, prev - 1))}
-                className="flex items-center space-x-2 px-4 py-2 rounded-xl bg-black/10 dark:bg-white/5 hover:bg-black/20 disabled:opacity-30 disabled:pointer-events-none text-sm font-serif"
+                disabled={currentGlobalIndex <= 0}
+                onClick={() => goToChapterByGlobalIndex(currentGlobalIndex - 1)}
+                className="px-4 py-2 rounded-lg bg-rose-600 hover:bg-rose-500 disabled:opacity-30 disabled:pointer-events-none text-white font-bold text-xs flex items-center gap-1.5 shadow-md shadow-rose-600/30 transition-all cursor-pointer"
               >
                 <ChevronLeft className="w-4 h-4" />
-                <span>Chương Trước</span>
+                <span>Chap trước</span>
               </button>
 
-              <span className="text-xs font-mono opacity-60">
-                {activeChapterIndex + 1} / {chapters.length} chương
-              </span>
+              <select
+                value={currentGlobalIndex}
+                onChange={e => goToChapterByGlobalIndex(Number(e.target.value))}
+                className="px-3.5 py-2 rounded-lg bg-slate-800 hover:bg-slate-750 border border-white/20 text-white font-medium text-xs focus:ring-2 focus:ring-rose-500 outline-none max-w-[260px] sm:max-w-xs truncate cursor-pointer shadow-sm"
+              >
+                {parts.map(p => (
+                  <optgroup key={p.id} label={p.title}>
+                    {p.chapters.map(c => {
+                      const flatIdx = allFlatChapters.findIndex(f => f.chapter.id === c.id);
+                      return (
+                        <option key={c.id} value={flatIdx}>
+                          {c.title}
+                        </option>
+                      );
+                    })}
+                  </optgroup>
+                ))}
+              </select>
 
               <button
-                disabled={activeChapterIndex >= chapters.length - 1}
-                onClick={() => setActiveChapterIndex(prev => Math.min(chapters.length - 1, prev + 1))}
-                className="flex items-center space-x-2 px-4 py-2 rounded-xl bg-amber-500/20 text-amber-300 hover:bg-amber-500/30 disabled:opacity-30 disabled:pointer-events-none text-sm font-serif"
+                disabled={currentGlobalIndex >= allFlatChapters.length - 1}
+                onClick={() => goToChapterByGlobalIndex(currentGlobalIndex + 1)}
+                className="px-4 py-2 rounded-lg bg-rose-600 hover:bg-rose-500 disabled:opacity-30 disabled:pointer-events-none text-white font-bold text-xs flex items-center gap-1.5 shadow-md shadow-rose-600/30 transition-all cursor-pointer"
               >
-                <span>Chương Sau</span>
+                <span>Chap sau</span>
                 <ChevronRight className="w-4 h-4" />
+              </button>
+
+              <button
+                onClick={scrollToTop}
+                className="px-3.5 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-white/10 text-xs font-medium flex items-center gap-1 cursor-pointer transition-all"
+                title="Cuộn lên đầu trang"
+              >
+                <ArrowUp className="w-4 h-4" />
+                <span>Đầu trang</span>
+              </button>
+            </div>
+
+            {/* 5. FLOATING QUICK SWITCH BAR FOR NOVEL */}
+            <div className="sticky bottom-4 z-40 mx-auto px-4 py-2 rounded-2xl bg-slate-900/90 backdrop-blur-xl border border-white/15 shadow-2xl flex items-center gap-2 text-xs w-fit">
+              <button
+                disabled={currentGlobalIndex <= 0}
+                onClick={() => goToChapterByGlobalIndex(currentGlobalIndex - 1)}
+                className="px-2.5 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-500 disabled:opacity-30 text-white font-medium flex items-center gap-1 cursor-pointer"
+              >
+                <ChevronLeft className="w-3.5 h-3.5" /> Trước
+              </button>
+
+              <select
+                value={currentGlobalIndex}
+                onChange={e => goToChapterByGlobalIndex(Number(e.target.value))}
+                className="px-2.5 py-1.5 rounded-lg bg-slate-800 border border-slate-700 text-white font-medium text-xs max-w-[140px] sm:max-w-[200px] truncate cursor-pointer"
+              >
+                {allFlatChapters.map((item, idx) => (
+                  <option key={item.chapter.id} value={idx}>
+                    {item.chapter.title}
+                  </option>
+                ))}
+              </select>
+
+              <button
+                disabled={currentGlobalIndex >= allFlatChapters.length - 1}
+                onClick={() => goToChapterByGlobalIndex(currentGlobalIndex + 1)}
+                className="px-2.5 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-500 disabled:opacity-30 text-white font-medium flex items-center gap-1 cursor-pointer"
+              >
+                Sau <ChevronRight className="w-3.5 h-3.5" />
+              </button>
+
+              <button
+                onClick={scrollToTop}
+                className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 cursor-pointer"
+                title="Lên đầu trang"
+              >
+                <ArrowUp className="w-3.5 h-3.5" />
               </button>
             </div>
           </div>
         ) : (
-          /* ================= NETTRUYEN STYLE COMIC READER ================= */
+          /* ================= NETTRUYEN STYLE COMIC READER (COMING SOON) ================= */
           <div className="w-full max-w-4xl mx-auto px-2 sm:px-4 py-6">
+            {/* COMING SOON BANNER FOR COMIC */}
+            <div className="mb-6 p-6 rounded-2xl bg-gradient-to-br from-rose-950/40 via-slate-900/90 to-amber-950/30 border border-rose-500/30 text-center shadow-xl backdrop-blur-md">
+              <div className="w-12 h-12 mx-auto mb-3 rounded-2xl bg-rose-500/20 border border-rose-500/40 flex items-center justify-center text-rose-400">
+                <Sparkles className="w-6 h-6 animate-pulse" />
+              </div>
+              <span className="inline-block px-3 py-0.5 rounded-full text-[11px] font-bold bg-rose-500/20 text-rose-300 border border-rose-500/30 uppercase tracking-wider mb-2">
+                Đang Chuẩn Bị Sản Xuất • Coming Soon
+              </span>
+              <h2 className="text-lg sm:text-xl font-bold font-serif text-white mb-2">
+                Bản Truyện Tranh Webtoon Đang Trong Quá Trình Thực Hiện
+              </h2>
+              <p className="text-xs sm:text-sm text-slate-300 leading-relaxed max-w-md mx-auto mb-4">
+                Họa sĩ & tác giả đang tiến hành phân cảnh kịch bản và vẽ minh họa cho <strong className="text-amber-300">Long Ấn Ký</strong>. Mời bạn đón đọc bản Truyện Chữ đang sáng tác và phát hành trực tiếp!
+              </p>
+              <button
+                onClick={() => { setReaderType('novel'); scrollToTop(); }}
+                className="inline-flex items-center space-x-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-rose-500 text-white font-bold text-xs shadow-lg shadow-amber-500/20 hover:opacity-90 transition-all cursor-pointer"
+              >
+                <BookOpen className="w-4 h-4" />
+                <span>👉 Đọc Bản Truyện Chữ Ngay Bây Giờ</span>
+              </button>
+            </div>
             {/* 1. TOP INFO & BREADCRUMBS (NETTRUYEN) */}
             <div className="mb-4 pb-3 border-b border-white/10">
               {/* Breadcrumbs */}
