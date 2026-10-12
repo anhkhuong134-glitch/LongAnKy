@@ -32,7 +32,6 @@ interface UnifiedReaderViewProps {
   parts: Part[];
   isWarmTheme: boolean;
   aiSettings: AISettings;
-  onOpenAIHub?: () => void;
   comicChapters?: ComicChapter[];
   isAuthorMode?: boolean;
   onOpenComicUploader?: () => void;
@@ -47,7 +46,6 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
   parts,
   isWarmTheme,
   aiSettings,
-  onOpenAIHub,
   comicChapters: propsComicChapters,
   isAuthorMode = false,
   onOpenComicUploader
@@ -295,15 +293,17 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
               <span>{isPlayingAudio ? 'Đang đọc...' : 'Đọc Audio'}</span>
             </button>
 
-            {/* Convert to Comic Trigger */}
-            <button
-              onClick={() => setShowPanelCreator(true)}
-              className="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl text-xs font-medium bg-gradient-to-r from-rose-500/20 to-amber-500/20 hover:from-rose-500/30 hover:to-amber-500/30 text-rose-300 border border-rose-500/30 shadow-sm"
-              title="Dùng AI phân cảnh đoạn văn thành truyện tranh và sinh ảnh"
-            >
-              <Sparkles className="w-3.5 h-3.5 text-amber-300" />
-              <span>Biến thành Truyện Tranh AI</span>
-            </button>
+            {/* Convert to Comic Trigger - Only for Author */}
+            {isAuthorMode && (
+              <button
+                onClick={() => setShowPanelCreator(true)}
+                className="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl text-xs font-medium bg-gradient-to-r from-rose-500/20 to-amber-500/20 hover:from-rose-500/30 hover:to-amber-500/30 text-rose-300 border border-rose-500/30 shadow-sm"
+                title="Dành cho tác giả: Dùng AI phân cảnh đoạn văn thành truyện tranh và sinh ảnh"
+              >
+                <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+                <span>Biến thành Truyện Tranh AI</span>
+              </button>
+            )}
           </div>
         ) : (
           <div className="flex items-center space-x-2">
@@ -323,13 +323,16 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
               </button>
             </div>
 
-            <button
-              onClick={() => setShowPanelCreator(true)}
-              className="flex items-center space-x-1 px-2.5 py-1.5 rounded-xl text-xs bg-rose-500/20 text-rose-300 border border-rose-500/30"
-            >
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>Tạo Hồi Mới</span>
-            </button>
+            {isAuthorMode && (
+              <button
+                onClick={() => setShowPanelCreator(true)}
+                className="flex items-center space-x-1 px-2.5 py-1.5 rounded-xl text-xs bg-rose-500/20 text-rose-300 border border-rose-500/30"
+                title="Dành cho tác giả: Tạo hồi truyện tranh mới"
+              >
+                <Sparkles className="w-3.5 h-3.5" />
+                <span>Tạo Hồi Mới</span>
+              </button>
+            )}
           </div>
         )}
 

@@ -12,7 +12,6 @@ import { AIAssistantPanel } from './components/ai/AIAssistantPanel';
 import { FactApprovalModal } from './components/ai/FactApprovalModal';
 import { UnifiedReaderView } from './components/reader/UnifiedReaderView';
 import { GoogleSyncView } from './components/googleSync/GoogleSyncView';
-import { AIStudioHubView } from './components/ai/AIStudioHubView';
 import { ImportExportModal } from './components/importExport/ImportExportModal';
 import { SettingsModal } from './components/settings/SettingsModal';
 import { AuthorLoginModal } from './components/author/AuthorLoginModal';
@@ -32,18 +31,26 @@ import {
 
 import './styles/index.css';
 
-type ActiveTab = 'editor' | 'bible' | 'characters' | 'timeline' | 'foreshadowing' | 'ai_hub' | 'reader' | 'google_sync';
+type ActiveTab = 'editor' | 'bible' | 'characters' | 'timeline' | 'foreshadowing' | 'reader' | 'google_sync';
 
 export default function App() {
-  // Author mode authorization (Khách vào link Vercel mặc định chỉ thấy Đọc Sách, Tác giả mở khóa thấy Soạn Thảo)
+  // Author mode authorization: Khách vào link Vercel mặc định 100% chỉ thấy Đọc Sách, KHÔNG THẤY Soạn Thảo
   const [isAuthorMode, setIsAuthorMode] = useState<boolean>(() => {
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search);
+      // Chỉ khi tác giả chủ động thêm ?author=1 hoặc ?admin=true hoặc ?pin=134
       if (params.get('author') === '1' || params.get('author') === 'true' || params.get('pin') === '134' || params.get('admin') === 'true') {
+        sessionStorage.setItem('mach_author_session', 'true');
         StorageService.setAuthorAuthenticated(true);
         return true;
       }
-      return StorageService.isAuthorAuthenticated();
+      // Khách ghé thăm link bình thường: mặc định KHÔNG mở quyền tác giả
+      const isSessionAuth = sessionStorage.getItem('mach_author_session') === 'true';
+      if (!isSessionAuth) {
+        StorageService.setAuthorAuthenticated(false);
+        return false;
+      }
+      return true;
     }
     return false;
   });
@@ -235,6 +242,18 @@ export default function App() {
       setActiveTab('reader');
     }
   }, [isAuthorMode, activeTab]);
+
+  // Phím tắt bí mật cho Tác Giả: Ctrl + Shift + A (hoặc Cmd + Shift + A)
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'A' || e.key === 'a')) {
+        e.preventDefault();
+        setShowAuthorLogin(true);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   // Update Chapter content directly
   const handleUpdateChapterContent = useCallback((newContent: string) => {
@@ -465,9 +484,17 @@ export default function App() {
         isAuthorMode={isAuthorMode}
         onOpenAuthorLogin={() => setShowAuthorLogin(true)}
         onExitAuthorMode={() => {
-          setIsAuthorMode(false);
+          sessionStorage.removeItem('mach_author_session');
           StorageService.setAuthorAuthenticated(false);
+          setIsAuthorMode(false);
           setActiveTab('reader');
+          if (typeof window !== 'undefined') {
+            const url = new URL(window.location.href);
+            url.searchParams.delete('author');
+            url.searchParams.delete('pin');
+            url.searchParams.delete('admin');
+            window.history.replaceState({}, '', url.pathname + (url.searchParams.toString() ? '?' + url.searchParams.toString() : ''));
+          }
         }}
         isAutoSyncLive={isAutoSyncLive}
         onToggleAutoSync={() => setIsAutoSyncLive(prev => !prev)}
@@ -477,8 +504,8 @@ export default function App() {
 
       {/* Main Studio Viewport */}
       <div className="flex-1 overflow-hidden flex flex-col relative">
-        {/* TAB: Manuscript Studio (Phần -> Chương -> Soạn thảo & Up Truyện Tranh) */}
-        {activeTab === 'editor' && (
+        {/* TAB: Manuscript Studio (Phần -> Chương -> Soạn thảo & Up Truyện Tranh) - Chỉ tác giả mới xem được */}
+        {isAuthorMode && activeTab === 'editor' && (
           <div className="flex-1 flex overflow-hidden">
             <OutlineNav
               parts={parts}
@@ -535,8 +562,8 @@ export default function App() {
           </div>
         )}
 
-        {/* TAB: Story Bible */}
-        {activeTab === 'bible' && (
+        {/* TAB: Story Bible - Chỉ Tác Giả */}
+        {isAuthorMode && activeTab === 'bible' && (
           <div className="flex-1 overflow-hidden">
             <StoryBibleView
               facts={bibleFacts}
@@ -548,8 +575,8 @@ export default function App() {
           </div>
         )}
 
-        {/* TAB: Characters Dossiers */}
-        {activeTab === 'characters' && (
+        {/* TAB: Characters Dossiers - Chỉ Tác Giả */}
+        {isAuthorMode && activeTab === 'characters' && (
           <div className="flex-1 overflow-hidden">
             <CharacterList
               characters={characters}
@@ -557,16 +584,15 @@ export default function App() {
               onAddCharacter={handleAddCharacter}
               onDeleteCharacter={handleDeleteCharacter}
               onRequestRoleplay={(charId) => {
-                setActiveTab('ai_hub');
-                setTimeout(() => handleRequestAI('character_actor', 'Nhập vai nhân vật được chọn', { targetCharacterId: charId }), 100);
+                handleRequestAI('character_actor', 'Nhập vai nhân vật được chọn', { targetCharacterId: charId });
               }}
               isWarmTheme={isWarmTheme}
             />
           </div>
         )}
 
-        {/* TAB: Timeline */}
-        {activeTab === 'timeline' && (
+        {/* TAB: Timeline - Chỉ Tác Giả */}
+        {isAuthorMode && activeTab === 'timeline' && (
           <div className="flex-1 overflow-hidden">
             <TimelineView
               timeline={timeline}
@@ -578,8 +604,8 @@ export default function App() {
           </div>
         )}
 
-        {/* TAB: Foreshadowing Tracker */}
-        {activeTab === 'foreshadowing' && (
+        {/* TAB: Foreshadowing Tracker - Chỉ Tác Giả */}
+        {isAuthorMode && activeTab === 'foreshadowing' && (
           <div className="flex-1 overflow-hidden">
             <ForeshadowingView
               hooks={foreshadowing}
@@ -591,8 +617,8 @@ export default function App() {
           </div>
         )}
 
-        {/* TAB: Google Docs & Google Sheets Two-Way Sync + Soul Seal Game */}
-        {activeTab === 'google_sync' && (
+        {/* TAB: Google Docs & Google Sheets Two-Way Sync + Soul Seal Game - Chỉ Tác Giả */}
+        {isAuthorMode && activeTab === 'google_sync' && (
           <div className="flex-1 overflow-hidden">
             <GoogleSyncView
               activeChapter={activeChapter}
@@ -602,23 +628,7 @@ export default function App() {
           </div>
         )}
 
-        {/* TAB: Google AI Studio Command Center & 8 Specialists */}
-        {activeTab === 'ai_hub' && (
-          <div className="flex-1 overflow-hidden">
-            <AIStudioHubView
-              activeChapter={activeChapter}
-              characters={characters}
-              bibleFacts={bibleFacts}
-              hooks={foreshadowing}
-              aiSettings={aiSettings}
-              onSaveAISettings={(newSettings) => setAISettings(newSettings)}
-              onApplyTextToChapter={(text) => handleAcceptProposal(text, 'Chèn từ Google AI Studio')}
-              isWarmTheme={isWarmTheme}
-            />
-          </div>
-        )}
-
-        {/* TAB: Unified Reader (Novel & Comic Preview + Audio TTS) */}
+        {/* TAB: Unified Reader (Novel & Comic Preview + Audio TTS) - MẶC ĐỊNH VÀ DUY NHẤT CHO ĐỘC GIẢ */}
         {activeTab === 'reader' && (
           <div className="flex-1 overflow-hidden">
             <UnifiedReaderView
@@ -626,10 +636,11 @@ export default function App() {
               parts={parts}
               isWarmTheme={isWarmTheme}
               aiSettings={aiSettings}
-              onOpenAIHub={() => setActiveTab('ai_hub')}
               comicChapters={comicChapters}
               isAuthorMode={isAuthorMode}
-              onOpenComicUploader={() => setActiveTab('editor')}
+              onOpenComicUploader={() => {
+                if (isAuthorMode) setActiveTab('editor');
+              }}
             />
           </div>
         )}
@@ -642,6 +653,8 @@ export default function App() {
         isOpen={showAuthorLogin}
         onClose={() => setShowAuthorLogin(false)}
         onSuccess={() => {
+          sessionStorage.setItem('mach_author_session', 'true');
+          StorageService.setAuthorAuthenticated(true);
           setIsAuthorMode(true);
           setActiveTab('editor');
         }}
