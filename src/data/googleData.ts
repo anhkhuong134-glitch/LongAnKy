@@ -277,6 +277,7 @@ export const sampleComicChapters: ComicChapter[] = [
             dialogues: [],
             sfx: 'RÌ RÀO... TÍCH TẮC...',
             prompt: 'Wide cinematic establishing shot of a mystical medieval harbor town at night, an enormous river flowing horizontally in the starry sky like a floating celestial water ribbon, lanterns and steam below, dark fantasy style, masterpiece',
+            imageUrl: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1200&q=80',
             widthSpan: 'full',
             aspectRatio: '16:9'
           },
@@ -304,6 +305,7 @@ export const sampleComicChapters: ComicChapter[] = [
             ],
             sfx: 'KENG! LÁCH CÁCH',
             prompt: 'Close-up anime webtoon style, young determined mechanic boy with grease on cheek inspecting gears of a heavy mechanical winch, atmospheric lighting, detailed mechanical parts',
+            imageUrl: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=800&q=80',
             widthSpan: 'half',
             aspectRatio: '4:3'
           },
@@ -331,6 +333,7 @@ export const sampleComicChapters: ComicChapter[] = [
             ],
             sfx: 'XÈO... HƠI NƯỚC',
             prompt: 'Medium shot webtoon comic, athletic young female dock guard holding a metallic quarterstaff with glowing ring bracelet on her wrist, gentle steam rising, soft smile, atmospheric fantasy dock',
+            imageUrl: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&w=800&q=80',
             widthSpan: 'half',
             aspectRatio: '4:3'
           }
@@ -358,6 +361,7 @@ export const sampleComicChapters: ComicChapter[] = [
             ],
             sfx: 'RẮC!! ROẸT!!',
             prompt: 'Dramatic anime comic action panel, heavy iron winch spinning out of control with sparks flying, metallic teeth grinding, young mechanic dodging flying metal shards, extreme motion blur',
+            imageUrl: 'https://images.unsplash.com/photo-1516245834210-c4c142787335?auto=format&fit=crop&w=800&q=80',
             widthSpan: 'half',
             aspectRatio: '4:3'
           },
@@ -378,6 +382,7 @@ export const sampleComicChapters: ComicChapter[] = [
             ],
             sfx: 'ẦM ẦM!! ROOOAR!!',
             prompt: 'Epic webtoon vertical panel, monstrous dark water spout rising unnaturally from a harbor well, a wrecked wooden galleon ship emerging head-first from the vortex, foaming water, mist and dramatic lighting',
+            imageUrl: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80',
             widthSpan: 'half',
             aspectRatio: '4:3'
           },
@@ -398,6 +403,7 @@ export const sampleComicChapters: ComicChapter[] = [
             ],
             sfx: 'XOẢNG!! RẦM!!',
             prompt: 'High action anime panel, athletic heroine leaping across dark abyss onto a creaking shattered ship deck, kinetic energy waves bursting from her staff, wood splinters flying, heroic composition',
+            imageUrl: 'https://images.unsplash.com/photo-1514539079130-25950c84af65?auto=format&fit=crop&w=1200&q=80',
             widthSpan: 'full',
             aspectRatio: '16:9'
           }
@@ -425,6 +431,7 @@ export const sampleComicChapters: ComicChapter[] = [
             ],
             sfx: 'LÁCH CÁCH... XÈO...',
             prompt: 'Eerie dark fantasy comic panel, horrifying translucent elongated alien fingers with unnatural disjointed knuckles gripping a cracked wooden doorframe, water dripping, shadowy form lurking behind, unsettling mood',
+            imageUrl: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=800&q=80',
             widthSpan: 'half',
             aspectRatio: '4:3'
           },
@@ -445,6 +452,7 @@ export const sampleComicChapters: ComicChapter[] = [
             ],
             sfx: 'RẮC!! PHÌ...',
             prompt: 'Intense anime panel, boy clenching heavy iron clamp shut with bloody hands and grimace of pain, glowing water steam escaping high pressure hose, high tension',
+            imageUrl: 'https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80',
             widthSpan: 'half',
             aspectRatio: '4:3'
           },
@@ -465,6 +473,7 @@ export const sampleComicChapters: ComicChapter[] = [
             ],
             sfx: 'IM LẶNG...',
             prompt: 'Emotional webtoon climax panel, shivering old woman wrapped in an oversized trenchcoat with trembling lips, eyes wide in disbelief and horror, dark misty harbor background, haunting atmosphere',
+            imageUrl: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1200&q=80',
             widthSpan: 'full',
             aspectRatio: '16:9'
           }

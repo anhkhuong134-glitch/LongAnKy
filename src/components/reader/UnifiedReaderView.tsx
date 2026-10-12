@@ -565,6 +565,9 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
                                 alt={panel.caption || `Panel ${panel.panelNumber}`}
                                 className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                                 loading="lazy"
+                                onError={(e) => {
+                                  (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1200&q=80';
+                                }}
                               />
                             ) : (
                               <div className="text-center p-6 text-slate-500">
