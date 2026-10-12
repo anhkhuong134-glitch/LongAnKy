@@ -1,0 +1,125 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-serif: 'Lora', 'Merriweather', 'Cinzel', Georgia, serif;
+  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+/* Ambient Dark Studio Background */
+body {
+  background-color: #060911;
+  background-image: 
+    radial-gradient(at 0% 0%, rgba(245, 158, 11, 0.04) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, rgba(99, 102, 241, 0.05) 0px, transparent 50%),
+    radial-gradient(at 50% 100%, rgba(244, 63, 94, 0.03) 0px, transparent 50%);
+  color: #f1f5f9;
+  font-family: var(--font-sans);
+  overflow: hidden;
+}
+
+/* Custom Ultra-thin Glowing Scrollbar */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(6, 9, 17, 0.8);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(245, 158, 11, 0.25);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(245, 158, 11, 0.55);
+}
+
+/* Writing Area Typography (Novelist Experience) */
+.manuscript-content {
+  font-family: var(--font-serif);
+  line-height: 2.05;
+  letter-spacing: 0.01em;
+  text-rendering: optimizeLegibility;
+}
+
+.manuscript-content p {
+  margin-bottom: 1.5rem;
+  text-indent: 1.75rem;
+}
+
+.manuscript-content p:first-of-type {
+  text-indent: 0;
+}
+
+/* Glassmorphism Panels */
+.glass-luxury {
+  background: rgba(10, 15, 29, 0.75);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.glass-luxury-warm {
+  background: rgba(253, 250, 244, 0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(180, 83, 9, 0.15);
+}
+
+/* Glowing Border & Accent Utils */
+.gold-glow {
+  box-shadow: 0 0 25px rgba(245, 158, 11, 0.15);
+}
+
+.card-hover-glow {
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.card-hover-glow:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4), 0 0 15px rgba(245, 158, 11, 0.1);
+  border-color: rgba(245, 158, 11, 0.35);
+}
+
+/* Three Knocks Rhythm Pulse Animation */
+@keyframes knockEcho {
+  0% {
+    transform: scale(0.95);
+    opacity: 0.4;
+    box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4);
+  }
+  50% {
+    transform: scale(1.02);
+    opacity: 1;
+    box-shadow: 0 0 0 12px rgba(245, 158, 11, 0);
+  }
+  100% {
+    transform: scale(0.95);
+    opacity: 0.4;
+    box-shadow: 0 0 0 0 rgba(245, 158, 11, 0);
+  }
+}
+
+.animate-knock-pulse {
+  animation: knockEcho 2.4s infinite cubic-bezier(0.4, 0, 0.6, 1);
+}
+
+/* Status Badges */
+.badge-canon {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.18), rgba(5, 150, 105, 0.08));
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  color: #34d399;
+}
+
+.badge-suggested {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.18), rgba(217, 119, 6, 0.08));
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  color: #fbbf24;
+}
+
+.badge-deprecated {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.18), rgba(185, 28, 28, 0.08));
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  color: #f87171;
+}

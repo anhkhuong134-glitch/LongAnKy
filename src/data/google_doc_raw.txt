@@ -1,0 +1,950 @@
+﻿“Điều đáng sợ nhất đôi khi là mọi thứ vẫn trông bình thường.”
+Con người có nhiều cách để nhận ra mình đang gặp nguy hiểm. Một tiếng động quá lớn, mùi cháy trong căn phòng đóng kín, cảm giác hụt chân khi bước xuống một bậc cầu thang tưởng rằng vẫn còn ở đó. Cơ thể thường biết sợ trước khi ta kịp gọi tên điều đang xảy ra; bàn tay tìm chỗ bám, hơi thở ngừng lại, những việc vừa mới khiến ta bận tâm lập tức trở nên nhỏ bé. Trong khoảnh khắc ấy, nỗi sợ có một hình dạng đủ rõ để ta chống lại hoặc bỏ chạy. Nhưng có những tai họa bắt đầu khi mọi giác quan vẫn quả quyết rằng thế giới còn nguyên vẹn. Căn phòng không đổi khác. Ngọn đèn vẫn cháy. Ngoài cửa, những âm thanh quen thuộc tiếp tục vang lên, vừa đủ để ta yên lòng ở lại.
+Sự bình thường được tạo nên từ rất nhiều lần không có chuyện gì xảy ra. Ta đi qua một cây cầu mỗi ngày mà không nhìn xuống những chân trụ. Ta ngủ dưới một mái nhà đã cũ, nghe tiếng gỗ kêu trong đêm rồi trở mình, bởi nó vẫn kêu như thế từ nhiều năm trước. Ta giao cho những vật quen thuộc một phần trách nhiệm giữ mình sống sót và dần quên rằng chúng cũng có thể mỏi, có thể nứt, có thể hỏng ở nơi mắt không nhìn tới. Sự tin cậy ấy giúp con người sống được. Nếu phải nghi ngờ từng bậc thềm, từng cánh cửa, từng bàn tay chìa ra trước mặt, có lẽ chẳng ai còn đủ sức bước hết một ngày.
+Rồi những dấu hiệu nhỏ xuất hiện. Một vệt ẩm trở lại dù đã được lau khô. Một tiếng động đến sớm hơn thường lệ. Mặt nước đang lặng bỗng lay động trong khi gió đã ngừng. Từng điều riêng lẻ đều có thể bỏ qua; mỗi điều đều tìm được một lời giải thích vừa đủ hợp lý. Ta đặt chúng về những chỗ quen thuộc trong đầu, giống như xếp lại đồ đạc trong căn phòng sau một đêm mất ngủ. Có lẽ do thời tiết. Có lẽ đã nhìn nhầm. Có lẽ ngày mai sẽ khác. Những lời ấy không làm điều bất thường biến mất, nhưng chúng giúp ta tiếp tục bữa ăn, công việc, cuộc trò chuyện đang dở.
+Khó chịu nhất là lúc ta vẫn nhớ rõ một điều đã xảy ra mà không biết phải chứng minh bằng cách nào. Cánh cửa quả thật vừa rung lên, nhưng phía bên kia không có ai. Sợi dây đã căng, dù vật buộc ở đầu kia vẫn nằm yên. Âm thanh nghe thấy dưới mặt sàn ngừng lại đúng lúc ta cúi xuống lắng nghe. Không có vết thương, không có đổ vỡ, không có thứ gì đủ rõ để gọi người khác tới xem. Ta chỉ còn cảm giác cơ thể đã nhận ra một mối nguy mà lời nói chưa theo kịp. Ở một mình với cảm giác ấy quá lâu, con người thường bắt đầu nghi ngờ chính mình.
+Thế giới chưa bao giờ nhỏ bằng những tấm bản đồ dùng để mô tả nó. Bên ngoài đường mực cuối cùng vẫn còn những dòng chảy, những khoảng sâu và những nơi ánh sáng tới được nhưng chưa có ai trở về để kể lại. Một vùng trắng trên giấy trông sạch sẽ, yên tĩnh; người ta có thể gấp nó lại, cất vào ngăn kéo và quên đi. Vùng đất nằm ngoài ấy vẫn tiếp tục tồn tại. Nước vẫn đi qua nó, mang theo bùn, khoáng chất, những mảnh vỡ và đôi khi cả những thứ chưa từng được đặt tên.
+Có những miền mà con người đã quen nhìn thấy nước chảy ngang bầu trời. Họ lớn lên dưới bóng của nó, dựng nhà trong những vùng đất nó nuôi sống, biết màu nước nào báo một mùa thuận lợi, biết lúc nào nên khép cửa và chờ. Qua nhiều thế hệ, sự kỳ lạ cũng trở thành một phần của đời sống. Người ta có thể nhìn một dòng nước treo cao hơn núi mà chỉ bận tâm đến thời tiết ngày mai. Những điều được nhìn thấy từ khi còn nhỏ thường có một quyền lực đặc biệt: chúng khiến ta tin rằng mình đã hiểu, chỉ vì mình chưa từng biết một thế giới thiếu chúng.
+Dưới mặt nước ấy, khoảng cách đôi khi lớn hơn mắt có thể đo. Một cái bóng đi qua vùng sáng có thể chỉ là đàn cá bơi sát nhau. Nó cũng có thể thuộc về một thứ ở xa đến mức phần đang nhìn thấy chỉ là một đoạn rất nhỏ. Ta đứng trên bờ, thấy mặt nước khép lại sau chuyển động ấy và tự nhiên cảm thấy được bảo vệ bởi lớp không khí quanh mình. Đất ở dưới chân. Trời ở trên đầu. Mọi thứ dường như vẫn biết nơi mình thuộc về.
+Những ranh giới quen thuộc mang lại cảm giác an toàn sâu đến mức con người hiếm khi nghĩ tới lúc chúng không còn giữ được nữa. Bờ tường có thể cao thêm, cửa có thể dày hơn, những bàn tay có thể luyện đến mức bẻ cong kim loại hoặc giữ lại một cú đánh đủ làm đá nứt. Sức mạnh luôn khiến người ta hy vọng rằng, khi nguy hiểm tới, mình sẽ làm được điều gì đó. Nhưng trước khi có thể chống trả, ta vẫn phải nhận ra thứ đang tiến gần. Một đòn đánh cần có hướng để tránh. Một sức nặng cần có điểm tựa để giữ. Điều chưa hiểu hết thường khiến mọi sự chuẩn bị trở nên mong manh theo những cách khó lường.
+Bởi vậy, có những nỗi sợ không nằm ở hình dạng của thứ xuất hiện trước mắt, mà ở cảm giác những điều mình từng biết đang lần lượt mất tác dụng. Ta làm đúng những gì đã được dạy và kết quả vẫn sai. Ta nghe tiếng động ở bên ngoài, khóa cửa thật chặt, rồi âm thanh ấy lại vang lên từ phía trong. Cảm giác nhẹ nhõm vừa kịp xuất hiện đã bị lấy đi, để lại một khoảng trống lạnh trong lồng ngực. Chính lúc ấy, căn phòng quen thuộc bắt đầu có những góc ta không muốn nhìn tới.
+Sau một tai họa, người ta thường quay lại tìm khoảnh khắc mọi thứ bắt đầu. Một chỗ hỏng đã bị bỏ qua. Một lời cảnh báo chưa được nghe hết. Một quyết định nhỏ, khi được đưa ra, còn có vẻ vô hại. Những điều từng rời rạc bỗng nối với nhau rõ đến tàn nhẫn. Người còn sống nhìn vào đó và tự hỏi vì sao lúc ấy mình không nhận ra, dù khi quay về trong trí nhớ, họ chỉ thấy một ngày bình thường với quá nhiều việc phải làm.
+Có lẽ điều khiến con người bất an lâu nhất chính là ý nghĩ ấy: tai họa có thể đã bắt đầu trong lúc cuộc sống vẫn tiếp diễn. Bữa ăn vẫn được dọn ra. Một công việc vẫn được để lại cho sáng mai. Ngoài cửa, tiếng nước vẫn đều đặn như mọi đêm, và chưa có lý do nào đủ lớn để khiến tất cả cùng ngẩng đầu.
+Cho đến khi âm thanh đầu tiên vang lên, ta vẫn còn tin rằng mình có thời gian.
+PHẦN I — MÙA NƯỚC ĐỨNG
+Chương 1 — Chiếc tàu đến sớm
+Đến hồi chuông cuối, bến Arumo vẫn chưa chịu ngủ. Đèn dưới mái chợ đã tắt, nhưng quầy cháo sát giếng cảng còn đỏ bếp; hai người khuân hàng ngồi trên những cuộn dây, chờ bà chủ vét nốt đáy nồi. Phía trên các mái nhà, sông Asera trải thành một dải bạc đứt quãng sau mây. Đêm ít gió, tiếng nước chảy ngang trời nghe gần đến mức người mới tới thường đứng lại tìm xem con thác nằm ở đâu. Dân làng thì cứ đi qua, chỉ kéo cổ áo khi một làn hơi lạnh rơi xuống.
+Rento quỳ bên chiếc tời số bảy, soi đèn vào hộp bánh răng. Còn một con ốc cứng đầu và một vết rạn cậu muốn xem cho rõ trước khi nghỉ. Ngoài mép cầu, móc cáp treo lơ lửng trên mặt giếng tối. Mười một ngày nữa tàu mới về; lẽ ra cậu đã có thể đậy máy từ nửa giờ trước, nếu người quản bến không quay lại đúng lúc cậu đang thu đồ.
+— Xong chưa? — người ấy hỏi.
+Rento ngẩng lên. Tovan đứng dưới mái che, đôi giày còn khô. Ông giữ sổ công ép vào nách, đầu ngón tay gõ nhè nhẹ trên bìa. Buổi chiều, chính ông đã gọi Rento tới vì thợ chính phải sang bến bên kia.
+— Con thay chốt dẫn rồi. Má phanh mòn quá, cần thay luôn. Còn vết này…
+Cậu nghiêng đèn. Tovan chỉ nhìn đầu ngón tay lấm dầu đang chạm vào thành máy.
+— Ghi lại cho thợ chính xem sáng mai. Cậu chưa có thẻ, đừng tự đổi đồ.
+Rento rút tay, với lấy tờ phiếu đặt trên xe dụng cụ. Cậu đã chờ cả tối để đưa nó ra mà không phải nhắc chuyện tiền.
+— Vậy chú ký giúp phần công hôm nay.
+Tovan mở sổ, dò tới một dòng rồi khép lại. Ông trả tờ phiếu bằng hai ngón tay.
+— Hộ của Mira còn treo bảo hộ. Để bên quỹ xác nhận đã.
+— Nhưng việc này chú gọi con tới làm.
+— Việc ra việc. Chuyện nhà cậu chưa giải quyết xong thì cứ theo thứ tự.
+Ông đi về phía nhà trực trước khi Rento kịp hỏi thứ tự ấy còn kéo dài bao lâu. Cậu gấp phiếu, vuốt cho nếp giấy thẳng rồi nhét vào túi trong. Bốn năm rồi, lần nào người ta cũng nói như thể chỉ cần đợi thêm một buổi nữa.
+Một đôi giày dừng bên cạnh cậu. Nari cúi nhìn cái túi vừa bị ấn sâu dưới vạt áo, nhưng không hỏi. Cô cầm bát mì trên tay trái; cây sào gác tựa vào cột chòi phía sau, cạnh chiếc còi đồng của ca đêm.
+— Còn định ở đây tới lúc tàu mùa sau về à?
+— Đợi con ốc này biết điều.
+— Chắc nó cũng chờ bên quỹ xác nhận.
+Rento bật ra một tiếng cười ngắn. Cô nghiêng bát mì tránh giọt nước từ mái rơi xuống rồi hất cằm về chiếc máy phủ bạt xanh trên xe kéo.
+— Mai mang về thật?
+— Nếu cậu chịu cho mượn xe.
+— Xe của bến.
+— Thế cho tôi mượn người có quyền mượn xe của bến.
+Nari lắc đầu, nhưng khóe miệng nhếch lên. Cô bảo cậu làm xong thì gọi, trước lúc đổi ca còn có thể phụ một đoạn. Rento nhìn theo cô về chòi, tự thấy mình dễ vui quá. Chỉ một lời hẹn chắc chắn đã đủ làm cậu quên tờ phiếu trong túi được mấy phút.
+Chiếc tời dưới bạt xanh là máy cũ cậu mua từ bãi phế liệu. Bốn tháng tiền công đổi lấy một khối sắt mà người bán còn phải hỏi cậu có chắc không. Rento đã sửa nó suốt ba tuần, mài lại trục, thay dây, ngồi đến khuya để nghe xem vòng quay còn tiếng sượng ở đâu. Ở xưởng nơi mẹ làm thuê, bà đã xin được một khoảng sát cửa để đặt máy. Sáng mai cậu sẽ đẩy nó qua cánh cửa ấy. Mẹ chỉ cần thử tay quay là biết.
+Rento cúi xuống hộp bánh răng lần cuối. Khi cậu đưa tuốc nơ vít vào, sợi cáp ngoài mái bến khẽ rung. Cậu tưởng một con cá lớn vừa quẫy bên dưới. Rồi chiếc tời bắt đầu quay.
+Đầu tuốc nơ vít bị kéo khỏi tay. Rento giật cổ tay ra đúng lúc cán gỗ mắc giữa hai khớp thép; tiếng rắc bật lên sát mặt, một mảnh vỡ quệt qua tai. Cậu ngã ngồi, nhìn các bánh răng tiếp tục chuyển động. Chốt hãm nằm gãy ở đáy hộp.
+— Ai móc hàng vào? — cậu hét.
+Hai người khuân hàng cùng quay đầu. Ngoài cầu không có ai. Dưới ánh đèn chao, sợi cáp đang căng dần, những giọt nước bám trên nó rung lên rồi bắn thành bụi. Rento nhìn về miệng giếng. Móc cáp không còn ở chỗ cũ.
+— Nari!
+Cô vừa đặt bát mì xuống thì mặt nước dâng qua thành đá.
+Nước không tràn ra đường. Nó cuộn ngược lên, tự giữ thành một cột tối ở giữa giếng, kéo theo lá rác và những con cá bạc giãy trong dòng. Hơi lạnh đập vào mặt Rento. Qua lớp nước đang xoắn, cậu còn nhìn thấy ánh đèn bên kia bến; rồi bóng tối từ trên cao trườn xuống che khuất tất cả.
+Một mũi tàu ép qua cột nước.
+Lan can bên trái đã mất. Mái khoang bị bóp lõm, những tấm ván cong bật ra ngoài; dưới mũi tàu, sợi cáp của bến mắc vào một vòng sắt lớn. Ai đó trên tàu đã bắt được chiếc móc khi đi xuống. Giờ cả thân tàu đang ghì vào nó, chúi dần về phía mái cầu.
+Tiếng còi Nari rít bên tai.
+— Rời cầu! Hai chú kéo chuông! Gọi người tới giữ đường!
+Rento lao vào cần phanh, dồn cả người lên thanh sắt. Nó chỉ nhúc nhích một chút rồi bật ngược, hất vai cậu vào cạnh máy. Mùi kim loại nóng dâng trong hộp bánh răng; ở chân đế, một đường nứt nhỏ chạy qua lớp vữa.
+— Phanh không ăn! — Rento nói. — Nó tuột từng nhịp. Chân máy sắp bật!
+Nari buộc dây an toàn vào thắt lưng, nhìn từ chiếc tời chính sang xe kéo phủ bạt xanh. Rento thấy ánh mắt ấy trước khi cô mở miệng.
+— Máy kia giữ phụ được không?
+— Phanh của nó còn cũ.
+— Tôi cần qua mở khoang. Nó giữ được bao lâu?
+Cậu nhìn chiếc bạt còn gấp ngay ngắn ở góc xe. Trục máy cũ đủ sức hãm một phần tải, nhưng nếu con tàu giật mạnh, bộ phận gãy trước sẽ là chiếc chốt đồng cậu chưa kiếm được đồ thay. Cậu biết cả chỗ nó sẽ vỡ. Trong đầu Rento, khoảng sàn mẹ vừa dọn vẫn còn sáng, sạch và khô.
+Một tiếng gõ vọng qua nước. Ba tiếng ngắn, ngừng lại, rồi thêm hai tiếng yếu hơn. Qua khe cửa khoang méo lệch, những đầu ngón tay bấu vào gỗ. Có người đang cố đưa bàn tay ra để được nhìn thấy.
+— Một lát — Rento nói. Cậu kéo bạt khỏi xe. — Tôi chỉ dám hứa một lát. Cô phải xuống ngay khi tôi gọi.
+— Tôi nghe.
+Hai người khuân hàng chạy tới giúp đẩy máy tới trụ đá sát cầu. Rento không đặt nó lên sàn trống; cậu luồn xích quanh chân trụ, căng hai đầu, rồi móc dây phụ qua ròng rọc vào nhánh cáp chính. Chiếc tời số bảy vẫn chịu phần lớn sức nặng. Cậu chỉ cần máy nhỏ giữ được mỗi lúc phanh chính tuột, đủ cho con tàu thôi giật.
+— Đứng sau trụ. Đừng ai đứng ngang dây! — Rento gọi, lấy búa đóng nêm giữ cần.
+Khi dây phụ nhận tải, thân máy nhỏ rung dưới bàn tay cậu. Một tiếng rền chạy dọc trụ đá. Con tàu hạ thêm nửa sải rồi chậm lại, treo nghiêng sát đầu cầu. Nari thử dây ngang bụng, buộc đầu còn lại vào cọc neo của bến. Cô đặt tay lên vai Rento một cái để báo mình đi, rồi nhảy qua khoảng trống.
+Cô đáp xuống mạn tàu, khuỵu gối và chống đầu sào lên sàn. Vòng kim loại trên cổ tay lóe sáng; cán sào cong theo sức nặng cú đáp rồi thẳng lại. Nari giữ yên một nhịp mới đứng lên. Rento thấy tay phải cô không rời khỏi chỗ nối giữa vòng và cán.
+Cửa khoang không nhúc nhích khi cô kéo. Bên trong, tiếng ho lẫn với tiếng một đứa bé khóc; có người đập cửa, mỗi cú đập làm tấm ván méo rung lên. Nari giơ tay ra hiệu họ lùi, chèn đầu sào dưới bản lề trên rồi đổi thế chân. Vệt sáng từ vòng cổ tay chạy dọc thân sào. Cô trả phần lực vừa giữ từ cú đáp vào đúng chỗ gỗ đã nứt.
+Bản lề bật khỏi khung. Nari khuỵu xuống, cắn môi một thoáng rồi gượng đứng.
+— Từng người một! Bám dây, nhìn về phía đèn!
+Người đầu tiên bò ra với một đứa bé trên lưng. Hai người khuân hàng đỡ họ qua cầu, quay lại kéo một người đàn ông phải lê chân; vải ở ống quần anh ta sẫm máu. Thêm hai người nữa luồn qua khung cửa. Rento đếm từng người giữa những lần kéo cần phanh: năm, tính cả đứa nhỏ.
+Máy dưới tay cậu giật lên. Nêm gỗ lún thêm vào rãnh, mùi khét từ má phanh cũ len qua hơi nước.
+— Nari! Sắp hết rồi!
+— Còn hai người!
+Cô cúi vào trong khoang rồi dừng lại. Rento nghe tiếng khóc ở phía bến, tiếng chuông trên mái, tiếng người chạy tới. Cậu không còn nghe tiếng đập cửa từ trong tàu nữa.
+Một bàn tay đặt lên khung gỗ ngay cạnh đầu Nari.
+Những ngón tay quá dài. Chúng ép bẹt xuống, trong suốt đến mức Rento nhìn được vết sơn bong phía dưới. Một ngón gập ngược, rồi thêm ngón nữa; những khớp đáng lẽ phải ngăn chuyển động ấy cứ trôi qua nhau. Bàn tay bấu lấy khung cửa. Từ khoảng tối sau nó, một phần vai chậm rãi trồi lên.
+Nari lùi lại, đẩy một người đàn ông đang bò dưới chân mình về phía cầu. Người thứ sáu. Rento thấy hai bàn tay từ bến chộp lấy anh ta đúng lúc thân sào của Nari xuyên vào khối trong suốt. Đầu sào đi được một đoạn rồi dừng, như mắc trong thứ gì đặc hơn nước. Một âm trầm truyền qua thân tàu, qua sợi cáp, rung thẳng vào răng Rento.
+— Còn một người trong đó! — Nari nói.
+Cánh tay dài quật ngang cửa. Cô đỡ bằng sào, hai gót giày trượt trên ván; vòng cổ tay sáng rực, rồi vệt sáng co lại thành một đường mảnh. Nari ghì cán xuống chân lan can, xoay người để thân sào kẹt giữa thanh sắt và khung cửa. Cô không đẩy nổi thứ kia trở vào. Rento nhìn bắp tay cô run lên dưới tay áo ướt.
+— Đừng qua đây! Giữ máy!
+Cậu đã buông một tay khỏi cần. Lời quát khiến Rento ghì lại, vừa kịp lúc tời nảy dưới lòng bàn chân. Cậu biết chẳng ích gì nếu nhảy sang rồi mắc luôn ở đó. Phải có thứ gì trên chiếc tàu này cậu hiểu hơn Nari.
+Dưới bậc lên xuống, ống lấy nước vẫn nối từ mạn tàu vào cột nước. Mỗi khi nó giật, một dải sẫm màu lại chạy qua thân sinh vật. Phần thân dưới của thứ ấy còn lẫn trong khoang ngập; nó trồi lên thêm theo đúng những nhịp ống căng. Rento nhìn liền ba nhịp, rồi nhìn chiếc van nằm khuất sau cánh cửa đang bị chặn.
+— Ống cấp chưa tháo! — cậu gọi. — Nó vẫn hút nước vào!
+Nari liếc xuống mạn. Cô rút một chân khỏi vũng nước đang lan tới giày, thay thế ghì sào.
+— Chặn được từ ngoài không?
+Chiếc kẹp ống treo bên hông xe dụng cụ. Rento đã dùng nó buổi chiều, biết hàm kẹp mở đủ rộng. Cậu gọi một người khuân hàng tới giữ cần, chỉ rõ chỗ không được đặt tay rồi đóng thêm nêm. Mọi động tác thường ngày bỗng trở nên chậm chạp đến khó chịu; cậu phải nhắc mình kiểm tra chốt nối trước khi rời máy.
+— Buộc dây! — Nari quát khi cậu vừa bước ra mép cầu.
+Rento khựng lại. Cậu móc dây ngang bụng, đưa đầu dây cho người ở bến giữ sau cọc neo rồi mới bước sang. Khoảng trống chỉ rộng hơn một bước chân. Vậy mà khi đế giày chạm lên mạn tàu trơn, chân cậu tuột khỏi mép.
+Dây giật căng ngang bụng. Rento đập khuỷu tay vào ván, chụp được chân lan can; nước đen cuộn dưới lưng khiến cậu không dám nhìn lần thứ hai. Người giữ dây kéo, còn cậu cào mũi giày lên thân tàu cho tới khi đầu gối tìm được bậc gỗ. Cậu bò lên, thở không thành tiếng. Từ chỗ cửa khoang, Nari gọi hỏi cậu có bám được chưa.
+— Được rồi.
+— Thế giữ nguyên cái “được rồi” ấy!
+Cậu muốn đáp lại, nhưng không đủ hơi. Rento kéo chiếc kẹp theo, ép sát người vào bậc lên xuống. Ống nước nảy từng nhịp dưới tay; hai lần hàm kẹp trượt khỏi lớp vỏ nhớt, đến lần thứ ba cậu mới chụp được nó vào giữa. Cậu xoay tay quay. Bản ren nghiến ken két rồi đứng cứng.
+Sau lưng, gỗ gãy răng rắc. Rento ngoái lại. Sinh vật đã lách được nửa thân qua cửa; ở nơi lẽ ra là mặt, một khe tối đang hé ra, không có gì bên trong mà cậu nhận được là miệng. Bên dưới cánh tay ghì trên sào, một phụ nữ lớn tuổi nằm nghiêng cạnh chân bàn, ôm túi vải sát ngực. Bà còn cử động. Khoảng giữa bà với cửa chỉ vừa một người bò qua.
+— Nari, tôi cần nó bớt giật!
+— Tôi đang thương lượng đây!
+Giọng cô đứt ở chữ cuối. Nari nhích tay dọc cán sào, nhìn thanh gỗ đã bong khỏi khung phía trên. Cô rời thế ghì đúng một nhịp, để phần lực giữ từ cú quật bật ra ở đầu sào. Thanh gỗ gãy ngang, rơi đập vào cánh tay trong suốt. Nó co lại theo phản xạ, kéo một phần nước khỏi cửa.
+Nari lao vào khoảng trống. Rento nghe cô bảo người phụ nữ buông chân bàn, rồi tiếng vải rách khi cô kéo bà tới cửa. Cậu quay lại với chiếc kẹp, chống cả hai chân vào bậc, dùng bàn tay còn khô hơn siết lấy đầu tay quay. Nếu trượt thêm lần nữa, cậu sẽ không còn đủ sức bám lại.
+Tay quay nhích xuống. Kim loại cắt vào lòng bàn tay. Rento không đổi cách cầm; cậu ghì tiếp, cảm thấy chiếc ống dưới hàm kẹp xẹp dần. Tiếng nước chuyển thành một tiếng rít hẹp. Sau lưng cậu, thân tàu chấn động, rồi một khối lạnh đập lên vai.
+Rento dúi mặt xuống bậc, tưởng cánh tay kia đã chạm tới mình. Nhưng nước tràn qua, kéo theo tiếng va ào vào lan can. Cậu cố giữ kẹp, xoay thêm nửa vòng cho tới khi hai hàm đứng sát nhau. Dòng cấp tắt.
+Khối thân phía cửa mất hình. Những ngón tay bấu trên gỗ rũ xuống thành các dải nước đục, phần vai đổ sụp qua chân Nari. Cô ôm người phụ nữ, ngồi phịch vào vách để khỏi bị cuốn. Khi nước thoát qua mạn vỡ, giữa những thớ ván chỉ còn một lớp cặn xám.
+— Qua bến! — Nari gọi. — Rento, bỏ kẹp lại!
+Cậu định tháo nó theo thói quen. Đến lúc nghe câu thứ hai, Rento mới rời tay, kéo dây báo cho người trên cầu. Hai người khuân hàng đỡ lấy người phụ nữ trước, rồi Nari; Rento bước sau cùng, một tay bám dây. Chân cậu vừa chạm mặt cầu thì từ chỗ trụ đá vang lên một tiếng gãy khô.
+Chiếc tời nhỏ chúi xuống. Xích neo vẫn giữ khung máy, nhưng trục quay đã lệch khỏi bạc đỡ; bánh răng cậu mài ba tối liền vỡ thành hai mảnh. Dây phụ trượt khỏi tang, quất vào trụ rồi rơi tõm xuống giếng. Rento lao nửa bước về phía nó trước khi người giữ dây túm áo cậu kéo lại.
+Con tàu giật lùi. Nari quay phắt về phía tời chính, hét cho mọi người bỏ vùng ngang cáp. Người từ nhà trực đã mang dây dẫn tới; họ cùng ghì, đưa mũi tàu chếch khỏi cầu trong lúc phanh số bảy tuột thêm từng quãng. Mạn tàu va vào bờ đá đối diện, ván vỡ rơi rào xuống giếng. Nó khựng ở đó, mắc nghiêng giữa bờ và nhánh cáp chính.
+Cột nước còn cuộn một lúc mới thấp dần. Khi tiếng va cuối cùng tắt, Rento nhận ra chuông báo động vẫn đang vang. Người chạy từ các ngõ dồn lại sau hàng cọc khô; ai cũng nói, hỏi, gọi tên người quen. Nari đứng chắn lối xuống cầu, yêu cầu chừa đường cho người bị thương. Cô phải nhắc hai lần mới có người nghe.
+Rento đếm những người ngồi dưới mái chòi. Người đàn ông ôm đứa bé. Người bị thương chân, hai bàn tay ép lên miếng vải đỏ sẫm. Ba người nữa tựa vào nhau gần cột. Người phụ nữ lớn tuổi được cứu cuối cùng vẫn giữ chiếc túi trên đùi, trong tay nắm một chìa khóa nhỏ. Bảy người, đủ cả.
+Cậu quay lại chỗ máy. Chiếc chốt đồng nằm cạnh chân trụ, cong gần thành một góc vuông. Rento nhặt lên rồi lập tức đổi tay vì nóng. Bánh răng ở dưới không còn gì để sửa; một nửa đã rơi xuống nước. Cậu cúi tìm nửa còn lại mà không biết để làm gì.
+— Đưa tay đây.
+Nari đứng bên cạnh. Cổ tay phải cô sưng lên dưới vòng kim loại, nhưng cô vẫn đưa tay trái về phía cậu.
+— Tay cô còn tệ hơn.
+— Tôi biết. Đang xếp hàng tới lượt mình.
+Rento chìa bàn tay rách. Cô lấy miếng vải sạch trong túi trực, đặt lên vết cắt rồi bảo cậu tự giữ. Những ngón tay cô khựng lại khi chạm phải vành vòng. Nari quay mặt đi, thử nới khóa bằng tay trái; Rento đỡ đầu dây để cô rút vòng ra. Cả hai im một lúc, chỉ nghe tiếng thở của nhau giữa đám đông.
+— Tôi sẽ ghi chiếc tời của cậu vào biên bản — Nari nói. — Nó đã dùng để cứu người.
+Rento nhìn về nhà trực. Tovan vừa tới, đang đếm những tấm ván gãy ở mép cầu. Người quản bến hỏi ai cho phép đưa máy ngoài sổ vào hệ cáp, rồi nhìn thấy chiếc vòng nằm trong tay Nari.
+— Cứu đủ người rồi phải không? — ông hỏi cô. — Sáng mai nộp danh sách. Chuyện máy riêng để quỹ xét.
+Nari vừa mở miệng thì phía chòi có tiếng gọi người mang cáng. Cô nhìn Rento; cậu đã cúi xuống nhặt chiếc bạt xanh, giũ nước khỏi nó. Tovan đi theo tiếng gọi, không chờ câu trả lời. Những lời vừa nghe quen đến mức Rento chỉ thấy mệt. Cậu quấn phần máy còn lại trong bạt, chừa ra một tay quay vẫn nguyên, như thể sáng mai mẹ có thể muốn xem.
+Một tiếng ho khiến cậu ngẩng lên. Người phụ nữ già đang ngồi sát chân cột, áo mỏng dính vào vai. Rento lấy áo khoác trên xe đưa cho bà. Lúc bà nhận, chiếc chìa khóa trong tay chạm vào khuy áo, kêu một tiếng nhỏ. Cậu chợt muốn về nhà đến mức phải nuốt xuống mới nói được.
+— Bác khoác vào đi. Ở đây lạnh lắm.
+Bà giữ áo, nhưng mắt vẫn nhìn ra ngoài. Qua hàng người đứng chen, những ngôi nhà dọc dốc còn sáng đèn; một đứa trẻ ôm chăn nép ở cửa, bị mẹ kéo vào. Dây cờ chờ mở mùa đập nhẹ dưới mái chợ. Gần quầy cháo, người ta đang dắt một con la sang chỗ khác để nhường lối cáng đi qua.
+— Đây là Arumo? — bà hỏi.
+— Vâng. Bác tới đúng bến rồi.
+— Bến dưới cùng?
+Rento gật đầu. Bàn tay bà siết túi vải chặt hơn. Nari vừa giao xong việc cho người trực chạy tới, ngồi xuống bên còn lại.
+— Bác đi từ đâu? Dấu tuyến đóng trên tàu vẫn còn. Sao họ lại cho tàu xuống đêm nay?
+Người phụ nữ nhìn qua vai cô. Trên mạn tàu mắc nghiêng, con dấu đỏ còn nguyên giữa những thớ gỗ xước; nước nhỏ từ mép dấu xuống, từng giọt sẫm màu. Bà đưa mắt trở lại những mái nhà, chậm rãi như đang tìm một chỗ nào đó trong cảnh trước mặt để tin rằng mình đã nhìn nhầm.
+— Sao dưới này vẫn còn người ở?
+Rento ngừng ấn miếng vải lên tay. Cậu nhìn Nari, nhưng cô cũng đang nhìn người phụ nữ. Chuông báo động vừa dứt. Trong khoảng yên ngắn ngủi ấy, tiếng bà rõ đến mức người khiêng cáng gần đó dừng lại.
+— Các cháu chưa nhận được lệnh sơ tán à?
+Chương 2 — Tên nào nằm trong sổ
+Trong nhà trực, nước từ quần áo người sống sót nhỏ xuống nền thành bảy vũng đen. Nari kéo chiếc ghế cuối cùng tới cạnh lò, nhường lối cho người đỡ cáng đi qua. Mùi len ẩm lẫn mùi dầu đèn khiến căn phòng thấp càng ngột ngạt. Ngoài cửa, người ta đang buộc dây chắn lối xuống giếng cảng; mỗi khi ai bước lên cầu gỗ, cô lại nghe tiếng ván tàu vỡ dưới chân mình.
+Người phụ nữ lớn tuổi ngồi sát người đàn ông bị thương ở chân. Bà vẫn khoác áo của Rento, hai bàn tay ôm túi vải trước bụng. Lời bà hỏi ngoài bến chưa có ai trả lời. Nari cũng chưa biết phải trả lời thế nào.
+— Bác tên gì ạ?
+— Omi.
+Cô ghi tên lên tờ giấy khô duy nhất tìm được. Đầu bút trượt khỏi ngón tay phải. Nari cúi nhặt bằng tay trái, kéo tay áo che cổ tay đang sưng rồi chèn tờ giấy dưới khuỷu tay. Cô có thể viết chậm hơn một chút. Chưa cần ai phải biết cổ tay đã sưng đến đâu.
+Eli mang tới một chồng chăn, cằm tì lên chiếc trên cùng. Cô gái ghi phiếu kho đặt cả chồng xuống bàn, vội tách từng chiếc. Cha đứa bé nhận chăn trước, rồi những người còn lại. Đến người đàn ông trên cáng, Eli vừa cúi xuống thì một bàn tay giữ mép chăn lại.
+— Người này tên gì?
+Tovan đứng cạnh bàn từ lúc nào, áo khoác vẫn cài lệch một khuy. Đại diện nhóm quản bến cúi nhìn tờ danh sách vừa được hong trên nắp lò. Mép giấy cháy quăn, nhưng sáu dòng tên ở giữa còn đọc được.
+— Cháu chưa hỏi được — Eli nói. — Anh ấy rét quá.
+— Sáu tên. Cô lấy bảy chiếc.
+— Tôi đếm bảy người trên tàu — Nari nói.
+— Tôi đang hỏi giấy của người thứ bảy.
+Người đàn ông nghe thấy. Anh chống khuỷu tay định ngồi dậy, nhưng chân vừa xê dịch đã khiến mặt anh tái đi. Omi đỡ vai anh, kéo nửa chiếc chăn của mình sang. Chiếc áo Rento tuột xuống nền. Bà không cúi nhặt nổi, chỉ dùng mũi giày gạt nó tránh vũng nước.
+Eli vẫn giữ đầu chăn bên kia. Tovan không buông. Nari nhìn hai bàn tay ấy rồi nhìn đôi môi đang run trên cáng. Căn phòng bỗng yên đến mức tiếng răng người đàn ông va vào nhau nghe rõ hơn cả tiếng củi nổ.
+— Đưa chăn cho anh ấy — cô nói.
+— Kho có sổ. Thất thoát thì ai chịu?
+— Ghi tên tôi.
+Tovan nhìn phù hiệu ca trực trên ngực cô.
+— Tên cô không bảo đảm được quyền xuất kho.
+Nari biết. Cô biết cả đường kẻ cần chữ ký của người nào, biết phiếu nào phải kẹp theo phiếu nào. Hai năm trước, giữa tiếng người gọi trên một bờ dốc trơn, cô cũng từng chờ cho hai mệnh lệnh hết mâu thuẫn. Đến lúc cô chạy tới, người bạn cùng tập đã không tự đứng dậy được. Nari đưa tay trái giữ chiếc chăn.
+— Vậy gọi người ký tới đây. Chăn để lại.
+Oren bước qua cửa đúng lúc đó, mang theo mùi gió và một cuốn sổ bọc vải dầu. Anh dừng bên cáng, kiểm tra dây nẹp do người sơ cứu vừa buộc, rồi ngồi xuống để nói ngang tầm mắt người bị thương.
+— Anh cứ nằm yên. Có buồn nôn không?
+Người đàn ông lắc đầu. Oren kéo chiếc ghế chắn gió vào sát cửa, bảo người ngoài hiên đi tìm thêm nước ấm. Chỉ sau khi làm xong, anh mới quay về phía chồng chăn.
+— Chăm người trước. Eli, ghi xuất tạm.
+— Mục nào? — Tovan hỏi. — Không có tên trong danh sách tàu, không có người trong làng nhận bảo hộ. Sáng ra ông trình khoản này với ai?
+Oren nhìn tờ phiếu. Một nhịp im lặng trôi qua; Nari cảm thấy tay mình bắt đầu siết quá chặt vào vải. Rồi anh đặt sổ xuống bàn.
+— Phần dự phòng ca đêm. Tôi ký. Những khoản khác đợi đối chiếu sau.
+Eli kéo chăn khỏi tay Tovan, phủ kín người trên cáng. Cô không nhìn ông khi cầm bút. Tovan buông một tiếng thở mạnh, đẩy tờ danh sách sang cho Nari như thể chính cô là người đã làm nó thiếu mất một dòng.
+Đến khi lò cháy đều, Nari mới đưa Omi sang bàn nhỏ cạnh vách. Bà nhất định chờ người bị thương có nước uống rồi mới rời ghế. Phía bên kia phòng, Rento đang tháo đôi giày sũng nước. Cậu ngồi dưới tấm bảng ghi giờ nhận hồ sơ, giữ một bàn chân trần trên nền khô và một bàn tay úp kín trên đầu gối.
+— Bác nói có lệnh sơ tán — Nari bắt đầu. — Bác đã nghe ai đọc, hay tự nhìn thấy?
+— Tôi đọc nó. Dán ở cửa nhà bếp trên trạm. Bảo người trong khu ấy xuống bến chờ chuyển đi.
+— Có ghi cả Arumo không?
+Omi lắc đầu. Bà vuốt những giọt nước trên túi vải, nghĩ một lúc rồi nói tiếp:
+— Tôi chỉ thấy lệnh ở chỗ tôi. Thấy dưới này còn sáng đèn, tôi tưởng các cháu chưa đi kịp.
+Nari gạch bỏ một chữ vừa viết. Lệnh rời trạm và lệnh rời Arumo chưa chắc là cùng một việc. Cô chừa một khoảng trắng bên dưới, đủ để ghi thêm khi hỏi được người khác.
+— Bác còn ai ở trên đó?
+— Con gái. Nó làm hậu cần, ở lại chuyến sau. Nó bảo tôi xuống trước vì cái gối này lên xuống nhiều không chịu nổi.
+Omi đặt tay lên đầu gối. Bà hỏi chuyến sau thường cách bao lâu. Nari nhìn về phía cửa; qua ô kính, bóng con tàu mắc nghiêng che mất một quãng bờ giếng. Không có giờ tàu nào cô có thể hứa vào lúc này.
+— Cháu sẽ nhờ trạm chuyển tin hỏi ngay khi có người nối được liên lạc. Bác cho cháu chỗ con gái bác làm.
+Bà đọc địa điểm thật chậm, bắt cô nhắc lại một lần. Khi Nari chuyển sang người đàn ông không có tên trong danh sách, Omi liền nhìn qua vai cô.
+— Anh ấy ngồi gần cửa khoang — bà nói.
+— Cháu biết. Cháu cần biết anh ấy lên tàu ở đâu.
+— Nếu không có giấy, các cháu đưa anh ấy đi đâu?
+Nari đặt bút xuống. Bà không hỏi mình có bị phạt không. Bà nhìn chiếc chăn mới, rồi nhìn Tovan đang đứng chắn trước cửa kho.
+— Đêm nay anh ấy ở đây để chữa chân. Cháu sẽ ghi điều đó trong sổ trực. Chuyện lên tàu, khi anh ấy đỡ hơn, cháu hỏi cả hai người. Bác không cần nói thay.
+Omi vẫn chưa trả lời câu hỏi. Nhưng lần này bà đặt túi vải xuống bàn, và khi Eli mang nước tới, bà nhận bằng cả hai tay.
+Nari đi lấy sổ. Rento thấy cô tới thì đổi bàn tay giấu dưới đầu gối, hơi chậm. Một vệt đỏ đã in lên quần.
+— Cậu định đợi nó tự khâu lại à?
+— Tôi đang tiết kiệm.
+— Tiết kiệm cả máu?
+Cậu nhếch miệng, đưa tay ra. Nari gọi người sơ cứu tới rửa vết cắt; chính cô giữ đầu băng bằng tay trái. Rento liếc cổ tay phải của cô, rồi nhìn sang ống tay áo phồng bất thường.
+— Cậu cũng đang tiết kiệm à?
+Nari buông đầu băng cho người sơ cứu. Cô định nói xong biên bản sẽ khám, nhưng lời ấy nghe chẳng khác câu Rento vừa nói. Cô kéo tay áo lên. Vệt hằn đỏ của chiếc vòng vẫn nằm ngang chỗ sưng; người sơ cứu nhìn thấy liền bảo cô ngồi xuống ngay.
+Tovan đi qua trong lúc Nari được quấn băng cố định. Ông nhìn chiếc chốt đồng đặt cạnh chân Rento, rồi nhìn bàn tay đang rửa.
+— Máy chưa đủ giấy mà đã đem ra bến. Nhà cậu còn chưa hết chuyện của mẹ cậu đâu.
+Rento ngẩng lên. Cậu vừa định nói gì, nhưng cha đứa bé đã đứng dậy trước.
+— Không có máy của cậu ấy, chúng tôi còn ở trên tàu.
+— Tôi biết các anh vừa gặp nạn. Còn loại máy nào được nhận tiền từ quỹ thì để người hiểu việc xác nhận.
+Tovan quay về phía Nari.
+— Cô đừng ghi thành điều bến đã đồng ý. Chưa ai nhận bồi hoàn cho cậu ta.
+Rento cúi xuống nhặt chốt đồng. Những đầu ngón tay cậu sạch đi sau khi rửa càng làm vệt dầu trong kẽ móng nổi rõ. Nari đã thấy cậu cãi nhau vì một đồng tiền công thiếu, thấy cậu đòi lại dụng cụ ở giữa chợ. Lúc này cậu chỉ lấy mảnh vải bọc chiếc chốt, gấp các mép rất ngay ngắn.
+— Tôi ghi máy đã được dùng — Nari nói. — Tôi nhìn thấy.
+— Cứ ghi đúng là được.
+— Và tôi nhìn thấy chú giữ lại chăn.
+Tovan dừng ở cửa kho. Ngoài hiên, một người đang nói bỗng hạ giọng. Nari nhận ra mọi người vẫn nghe, kể cả những người quay lưng vào lò.
+Gần sáng, người sống sót đã được chuyển vào gian nghỉ phía sau. Eli trải thêm chiếu và đẩy hai ghế lại cho cha đứa bé nằm cạnh con. Rento ra ngoài tìm phần máy còn có thể mang về. Qua cửa, Nari thấy bà bán cháo dúi vào tay cậu một gói nhỏ; cậu lắc đầu, bà cứ giữ tay cậu cho tới khi cậu nhận.
+Nari ngồi lại bàn. Tay phải được kê trên áo khoác cuộn tròn, cô viết bằng tay trái từng chữ xiêu vẹo: “Người thứ bảy chưa xác định giấy tờ, run lạnh sau ngâm nước. Tovan giữ lại chăn, yêu cầu người bảo đảm. Sau khi trưởng bến ký, Eli đã cấp chăn.” Cô thêm giờ ghi theo chiếc đồng hồ trên vách.
+— Xóa dòng giữa đi.
+Tovan đứng ngay bên vai cô. Nari không biết ông đã đọc từ lúc nào. Cô giữ đầu bút trên trang, chờ ông nói tiếp.
+— Viết thế ai đọc cũng nghĩ tôi bỏ mặc người sắp chết.
+— Có chỗ nào sai không ạ?
+Ông đưa tay về phía sổ. Nari kéo nó lại gần; một giọt mực rơi thành chấm đen cạnh chữ “bảo đảm”. Oren vừa quay vào, nhìn từ bàn tay Tovan tới trang giấy.
+— Ghi đủ việc đã làm — anh nói với Nari. — Cả việc người ấy đã nhận chăn. Không kết luận thay ai.
+— Em đã ghi.
+Oren cúi đọc. Anh không bảo cô xóa, cũng không nhìn Tovan khi ký xác nhận ca cứu nạn. Tiếng bút cào trên giấy nghe khô và chậm. Đợi hai người bước ra hiên, Nari mới thở ra, nhận thấy vai mình đã căng cứng từ lúc nào.
+Cô lật lại trang trước để tìm số cuối cùng của ca cũ. Phần lớn là những việc quen: giao chìa khóa, kiểm đèn, một xe hàng đỗ sai chỗ. Giữa những dòng ấy, gần sát nếp gấp, có một mục bị gạch ngang một lần rồi đánh dấu chuyển sang ca sau: “Kiểm tra đường sơ tán.”
+Nari nghiêng cuốn sổ về phía đèn. Ngày ở đầu trang là hôm qua, trước khi chiếc tàu xuất hiện, trước cả ca trực của cô. Ngoài cửa, Oren đang dặn người đưa tin rằng phải hỏi rõ trên trạm đã xảy ra chuyện gì. Nari giữ ngón tay ở dòng chữ cũ, đợi anh nói hết rồi gọi tên anh.
+Chương 3 — Món nợ của một cái tên
+Khi Rento đẩy xe về tới ngõ, người bán bánh đã nhóm xong lò. Khói củi quẩn dưới những mái hiên thấp, mang theo mùi bột nướng và vỏ cây còn ẩm. Trên cao, Asera bắt đầu sáng màu qua lớp mây mỏng; ánh nước hắt xuống các vũng đọng, làm cả con đường lấp lánh như vừa được rắc vụn kính. Một đứa trẻ chạy ngang xe cậu, rồi chạy giật lùi mấy bước để nhìn đống sắt dưới tấm bạt rách.
+— Anh đem cái gì về thế?
+— Một sai lầm hơi đắt. Tránh bánh xe hộ anh.
+Đứa nhỏ né sang bên, vẫn cố ngó. Rento định cười với nó nhưng khóe miệng không nhấc nổi. Đêm qua, khi còn người phải kéo khỏi tàu, cậu chỉ thấy chiếc tời nhỏ cần giữ thêm vài nhịp nữa. Bây giờ con tàu đã nằm yên, bảy người đã có mái che, từng món hỏng trên xe bắt đầu trở lại đúng giá của chúng: cái trục cậu mài lại, bộ phanh, những bánh răng đã mất công tìm đủ. Cậu đã tính đi tính lại suốt quãng đường, và lần nào cũng ra một số tiền mình không có.
+Cửa nhà mở trước khi cậu chạm tay vào. Mira đứng bên trong, tóc buộc vội, tay áo xắn lệch một bên. Bà nhìn chiếc xe, nhìn tấm băng quấn quanh lòng bàn tay con, rồi lùi ra để cậu vào. Rento cúi xuống nâng càng xe qua bậc cửa; vừa gồng tay, một đường đau chạy lên tận khuỷu khiến cậu buông phịch nó xuống.
+— Để đó. Mẹ kê rồi kéo lên.
+— Con làm được.
+Mira lấy chân đẩy một miếng gỗ vào trước bánh. Bà không tranh với cậu; chỉ giữ càng còn lại và chờ đến khi Rento chịu đổi sang tay lành. Hai người kéo xe vào sân sau. Khoảng sân đủ phơi ba chiếc áo, đặt một chậu cây héo và xoay người mà không thúc khuỷu vào tường, miễn là không mang về thêm xác một cái máy.
+— Mẹ nghe chuông lúc nào? — cậu hỏi.
+— Ngay hồi đầu. Có người ở nhà trực qua báo con còn đủ chân tay. Mẹ nhờ họ đếm lại cho chắc.
+Bà kéo ghế ra cạnh bàn, đặt bát cháo còn nóng trước mặt cậu. Rento nhìn vệt dầu trên đầu ngón tay mình. Cậu đã rửa hai lần ở bến mà vẫn chưa hết mùi nước tàu. Mira đợi cậu ngồi xuống mới cầm bàn tay bị thương, xoay về phía sáng; lúc bà chạm gần vết cắt, cậu cố giữ cho các ngón không co lại.
+— Người sơ cứu dặn sao?
+— Đừng để bẩn. Đừng cầm nặng. Mấy yêu cầu rất hợp nghề của con.
+— Vậy hôm nay đổi nghề. Ăn cháo trước.
+Cậu ăn được vài thìa thì Mira ra vén bạt. Bánh răng vỡ nằm giữa những vòng dây rối, phần kim loại sáng ở chỗ gãy vẫn sạch hơn mọi thứ xung quanh. Bà quỳ xuống, dùng hai ngón tay chạm vào trục cong rồi rút lại. Rento biết bà đang tính xem còn giữ được gì. Cậu cũng muốn tính như thế, muốn nghe tên một món chưa hỏng để có thể bắt đầu lại từ đó.
+— Chỗ gần cửa xưởng mẹ dọn rồi, phải không? — cậu hỏi.
+Mira đang quay tai trái về phía cậu nên không đáp. Rento nhận ra, nhích ghế sang bên và hỏi lại, chậm hơn. Bà ngẩng lên, phủ tấm bạt qua phần trục.
+— Dọn rồi. Có sao đâu. Để đồ khác vào được.
+Chính câu ấy khiến cậu phải cúi xuống bát. Một khoảng trống có thể lấp bằng bất kỳ món gì. Còn cậu đã tưởng tượng bao nhiêu lần cảnh chiếc tời chạy ngay ngắn bên cửa xưởng, mẹ không phải nhờ người kéo mỗi bộ máy nặng, những công việc nhỏ được nhận thêm, những đồng tiền đầu tiên dành cho việc mua lại nơi ấy. Cậu chưa kể hết với bà. Kể ra thì nghe như khoe trước khi làm được.
+— Con sẽ tìm cái khác. Lần sau chọn bộ có phanh tốt hơn.
+— Lần sau để mẹ xem cùng. Với lại, mẹ đang hỏi thuê một chỗ có sân rộng hơn.
+— Thuê làm gì? Cứ để dành, mình còn phải—
+Mira nhìn cậu. Rento ngừng lại trước phần cuối câu, khó chịu vì bà vẫn có thể khiến mình làm thế chỉ bằng cách chờ. Ngoài ngõ có tiếng người hỏi mua bánh, tiếng khay gõ vào thành lò. Sau một đêm như đêm qua, hóa ra buổi sáng vẫn đủ bình thường để người ta tranh nhau miếng bánh cháy cạnh.
+— Con định ra quỹ bến — cậu nói. — Nari đã ghi chuyện dùng tời cứu người. Họ có thể trả một phần.
+— Ăn hết đã. Rồi mang về cho mẹ một tờ ghi họ trả lời thế nào.
+Nắng đã tới mái nhà quỹ khi Rento ra khỏi ngõ. Cậu thay áo khô, để xe ở nhà và mang theo phiếu xác nhận cuộn trong ống tre. Dọc đường, vài người gọi hỏi chuyện chiếc tàu. Một bà bán rau dúi thêm hai quả vào túi cậu, bảo mang về cho mẹ; cách đó chưa đầy một quầy hàng, người khác vừa nhận ra cậu đã kéo con mình tránh khỏi tấm băng bẩn. Rento bước nhanh hơn. Cậu không muốn đoán ai đã nói gì về đêm qua.
+Trong nhà quỹ, cửa sổ cao mở ra một sân trắng nắng. Tovan ngồi sau bàn, bên cạnh chiếc cân đồng dùng để kiểm tiền góp; áo ông sạch đến mức Rento chợt ý thức được bùn khô còn bám ở gấu quần mình. Cậu đặt phiếu xuống, kể chiếc tời đã được mắc vào dây chính thế nào. Tovan nghe hết, lật qua mặt sau có xác nhận của ca trực, rồi kéo một quyển sổ khác từ ngăn bàn.
+— Nhà Mira?
+— Vâng. Nhưng tời là con mua.
+— Ta đang xem tư cách nhận từ quỹ. Hộ nhà con còn một mục chưa xử lý.
+Ngón tay Tovan dừng ở dòng mực đỏ. Rento không đọc được chữ vì quyển sổ quay về phía bên kia, nhưng cậu biết dấu gạch ấy. Nó từng xuất hiện trên giấy xin học, giấy nhận việc theo tổ, cả lần Mira hỏi mua trả chậm một bộ dụng cụ mà bà vẫn phải dùng mỗi ngày. Một cái máy khác, một năm khác, vậy mà trang giấy lúc nào cũng biết cách dẫn về tên mẹ.
+— Đêm qua bến dùng máy của con. Việc đó có ghi ở đây.
+— Ta không phủ nhận con có giúp. Nhưng chưa ai duyệt điều động thiết bị riêng này.
+— Con phải xin ở đâu? Trên tàu à?
+Tovan đặt bàn tay lên quyển sổ. Một người đang chờ phía sau khẽ động chân; Rento nghe tiếng dép cọ nền và biết mình vừa nói quá giọng thường dùng ở đây. Cậu nhìn xuống mép bàn, chờ cơn nóng trên mặt lắng bớt. Đập tay vào mặt gỗ sẽ chỉ làm bung vết cắt, rồi người ta lại có thêm một chuyện để kể.
+— Ta sẽ chuyển phiếu lên xem xét — Tovan nói. — Có thể cần xác nhận thêm về tình trạng máy trước khi dùng. Con cũng biết nhà mình từng có chuyện với máy tời.
+Rento nghe rõ tiếng nắp bút gài lại. Trong một thoáng, cậu muốn kéo ông ra ngoài, chỉ cho xem chiếc tàu vẫn mắc nghiêng bên giếng và hỏi nên để nó rơi xuống tới đâu mới đủ thủ tục. Nhưng câu vừa rồi không còn nói về chiếc tàu. Nó kéo theo những khuôn mặt từng đứng trước xưởng, những người đang nhìn mà khi mẹ quay sang lại cúi xuống việc khác.
+— Vậy bác ghi giúp con là chưa trả. Và ghi lý do.
+Tovan nhìn lên, lâu hơn lần trước. Rento giữ hai tay dưới mép bàn để ông không thấy mình đang siết đầu ngón tay vào nhau. Sau cùng, Tovan lấy một tờ phiếu, ghi rằng hồ sơ chờ đối chiếu điều kiện của hộ và xác minh thiết bị, đóng dấu ngày nhận rồi đẩy sang. Cậu đọc từ đầu tới cuối trước khi cất đi. Chỉ một tờ giấy, vậy mà lấy được nó cũng làm vai cậu mỏi rã.
+Khi Rento ra cửa, một thợ già vừa mang hóa đơn tới giữ cậu lại cạnh hiên. Ông liếc vào trong, nói nhỏ rằng ca đêm có ghi giờ đưa tời vào cứu tàu ở một sổ khác, nhớ xin giữ bản ấy. Cậu nhận ra ông từng làm cùng mẹ. Bốn năm trước, trong cuộc họp cuối cùng ở xưởng, ông ngồi ở hàng ghế sát cửa, hai bàn tay chà lên đầu gối, không nói một câu.
+— Lúc đó bác có biết không? — Rento hỏi.
+Ông nhìn cậu rồi nhìn xuống tờ hóa đơn. Mất một lúc ông mới hiểu cậu đang hỏi về năm nào. Ông nói còn mấy miệng ăn ở nhà, rằng những người giao việc cũng có mặt hôm ấy; giọng càng nhỏ khi ông cố giải thích. Rento không hỏi nữa. Cậu cảm ơn lời nhắc về sổ ca, rồi đi trước khi ông kịp đặt tay lên vai mình.
+Đường về ngang sân lớp nghề. Dưới mái hiên, một nhóm học viên đang tập đo trên những miếng gỗ vuông; tiếng người dạy đếm nhịp xen tiếng giũa kéo đều. Rento nhận ra chiếc bàn gần cửa vẫn nghiêng một chút, dù chân sau đã được thay. Mùi mùn gỗ ấm trong nắng khiến cậu nhớ đến một buổi sáng cũng gần mùa mở bến, khi chiếc áo mới còn cứng trên vai và cậu giấu đơn xin học dưới vạt áo để nó khỏi nhăn.
+Năm ấy Rento mười bốn tuổi. Cậu đã đến sớm đến mức sân chưa có ai, đứng nhìn người dạy kê ghế rồi tự hỏi có nên vào giúp không. Đến khi học viên khác kéo tới, ông mới gọi tên cậu. Ông cầm tờ đơn bằng hai đầu ngón tay, trả lại ngay trước bậc cửa và bảo quỹ chưa duyệt cho hộ của mẹ. Phía sau lưng ông, những tấm bảng tập mới xếp trên bàn, mỗi tấm buộc một sợi dây để học viên mang về.
+— Con đóng tiền sau được không? — Rento khi ấy hỏi. — Con sửa máy. Con có thể làm vào buổi tối.
+— Chuyện này thầy không quyết được. Về bảo mẹ giải quyết giấy trước.
+Một cậu trong lớp dịch chiếc ghế bên cạnh ra, làm như chỉ cần có chỗ ngồi thì Rento sẽ được vào. Người lớn đi cùng lập tức kéo ghế trở lại. Rento nhớ rất rõ tiếng chân ghế rê trên nền, nhớ cả cách người bạn kia giả vờ cúi buộc giày sau đó. Cậu nhét đơn vào túi, miết cho mép giấy khỏi thò ra, dù lúc ấy nó đã nhàu đến mức chẳng còn gì cần giữ nữa.
+— Khoan, Rento. Tiện đây xem hộ thầy cái chân bàn này. Nó cứ lắc.
+Cậu đã quay lại. Trong lúc quỳ dưới gầm bàn, nêm từng mảnh gỗ mỏng vào khớp lỏng, cậu còn nghĩ nếu làm thật chắc, có lẽ người dạy sẽ tìm ra một cách. Trên đầu cậu, buổi học bắt đầu bằng tên các dụng cụ cậu đều biết dùng. Khi Rento chui ra, đầu gối dính bụi, ông thử lắc mặt bàn rồi bảo tốt rồi, về đi. Cậu đi hết con ngõ mới nhận ra mình vẫn đang chờ được gọi lại.
+Một tiếng búa rơi trong sân kéo Rento trở về buổi sáng hiện tại. Cậu đứng sát tường, tờ phiếu của nhà quỹ cấn qua lớp áo, bàn tay bị thương đập đau theo nhịp tim. Hôm ấy về nhà, cậu đã nói với mẹ rằng lớp học chán, toàn thứ mình biết rồi. Mira nhìn cậu lâu rồi cất tấm bảng tập bà tự làm vào góc tủ. Cậu không biết bà đã tin được bao nhiêu; cậu cũng chưa từng hỏi.
+— Em đang định đứng đây đợi tới hết khóa à?
+Seika bước ra từ lối hẹp bên sân, mang một cuộn bản đồ dưới tay phải. Rento biết mặt cô qua những buổi tập ngoài giờ ở bến; cậu từng sửa chốt một thùng dụng cụ cho cô, và lần ấy tiền công được trả ngay khi giao đồ. Cô nhìn chiếc cổng lớp rồi nhìn cậu, không hỏi vì sao cậu đứng ngoài.
+— Nếu có tính công đứng thì em cân nhắc — Rento đáp.
+— Có việc tính công. Nhưng không phải đứng đây.
+Cô dẫn cậu tới ghế đá đối diện bến, trải bản đồ lên đầu gối. Từ chỗ ấy có thể thấy mái nhà trực, một góc tàu bị giấu sau dãy cọc và mấy người thay nhau kiểm dây căng. Tiếng chuông đã im, nhưng người đi ngang vẫn nhìn xuống giếng trước khi nhìn đường. Rento ngồi cách cuộn bản đồ một khoảng, giữ tay bị thương trên đùi.
+— Tôi cần người chỉ các đường hút nước và những bộ tời ở bến. Oren cho kiểm những chỗ tiếp cận từ bờ. Nghe nói em làm ở khu này khá lâu.
+— Từ lúc người ta cho em bê được hộp đồ mà không làm rơi. Nhưng em không biết cái thứ trong tàu là gì.
+— Tôi cũng chưa biết. Hôm nay chỉ ghi những gì đang có. Không xuống giếng, không thử giữ nó bằng tay.
+Seika chỉ mấy điểm trên giấy, hỏi cậu chỗ nào đã đổi từ lần vẽ gần nhất. Rento cúi xuống, định chạm một ngón vào đường kẻ rồi dừng lại. Câu hỏi dễ đến mức cậu đã có câu trả lời ngay, và chính điều đó làm cậu ngần ngại. Ngày mười bốn tuổi, cậu cũng biết chính xác phải làm gì với cái chân bàn.
+— Tiền công thế nào? — cậu hỏi. — Ai trả?
+Seika nói mức nửa ngày, lấy từ khoản khảo sát cô được quyền chi, trả khi ghi xong các điểm kiểm. Phần việc của ngày mai sẽ thỏa thuận riêng; nếu cần dùng đồ của cậu thì phải ghi trước. Cô viết các ý ấy lên mặt sau một tờ giao việc rồi đưa cậu đọc. Rento đọc kỹ, cố không tỏ ra nhẹ nhõm quá sớm.
+— Còn đây — cậu nói, giơ bàn tay. — Em chỉ cầm đồ nhẹ được. Em cũng chưa học dùng ấn.
+— Vậy ghi thêm vào. Mai tới sân tập, học cách buộc dây và báo dừng trước khi nhận việc gần mép nước. Tôi không muốn phải kéo một người rất giỏi sửa máy lên lần thứ hai.
+Rento ngẩng lên. Cậu định hỏi Nari đã kể tới đoạn nào, rồi thôi; nếu đêm qua được nhìn từ phía cô, chắc chẳng có đoạn nào khiến cậu đẹp mặt. Seika gấp bản đồ khi cậu ký xong, hỏi có cần về báo nhà trước không. Cậu xin vài phút, mang phiếu về cho Mira và nói rõ mình sẽ đi đâu. Bà đọc qua, hỏi giờ quay lại rồi đặt vào tay lành của cậu một gói bánh. Lần này cậu không hứa sẽ mang về đủ tiền mua một cái tời mới.
+Gần trưa, họ tới cửa hút phía đông. Nước bên ngoài lan can xanh nhạt dưới nắng, khác hẳn màu đen đêm qua; nhìn vào đó, Rento thấy chuyện những ngón tay trong suốt bám trên cửa tàu trở nên khó kể một cách kỳ lạ. Cậu chỉ cho Seika van nhánh vừa được thay, bậc xuống nào trơn và đoạn lan can không nên vịn. Cô đánh dấu từng chỗ, thỉnh thoảng hỏi lại khi cậu nói quá nhanh.
+Người thợ trực kéo giỏ lọc lên để họ xem. Giữa lá vụn và một mẩu dây gai có những sợi xám mỏng mắc qua mắt lưới. Rento ngừng nói. Cậu cúi gần hơn, dùng một mảnh gỗ gạt thử; đám sợi bết lại, để một vệt đục giống hệt thứ đã nằm trên ván tàu khi sinh vật đổ xuống.
+— Có từ bao giờ? — Seika hỏi.
+— Không rõ. Giỏ này tôi mới rửa đầu ca.
+Rento nhìn qua phía chiếc tàu. Nó nằm bên kia giếng, đường ống cấp đã được tháo ra và buộc gọn trên mạn. Cậu nhớ cảm giác hàm kẹp khép kín dưới tay, nhớ từng ngón dài ngoằng mất hình rồi vỡ thành nước. Cậu đã nghĩ, ít nhất, mình biết thứ ấy còn ở đâu.
+Seika bảo người trực giữ giỏ riêng, đừng đổ trả những gì mắc trong đó xuống nước. Rento đứng lùi khỏi mép bậc, nhìn các sợi xám nhỏ nước xuống nền. Bên dưới, cánh guồng của cửa hút vẫn quay đều. Dòng nước đang được đưa vào bến đã không đi qua chiếc tàu.
+BẢN CŨ — CÁC CHƯƠNG 2–4 CHƯA VIẾT LẠI
+Các chương dưới đây thuộc cốt truyện trước, được giữ để tham khảo và chưa nối tiếp ba chương mới ở phía trên.
+Chương 2 – Những sai lệch nhỏ
+
+
+
+
+
+
+Không ai nói về cậu sinh viên áo trắng vào ngày hôm sau. Không phải vì họ đã thỏa thuận — ba người thậm chí chưa đủ thân để thỏa thuận bất cứ điều gì. Chỉ đơn giản là khi buổi sáng hôm sau đến, câu chuyện đó trở nên kỳ lạ theo một cách khác: nó không còn cảm giác cấp bách nữa. Như thể đêm qua đã làm mờ đi những cạnh sắc của nó, bào mòn xuống đến mức chỉ còn là một mảnh ký ức mơ hồ — có gì đó đã xảy ra, nhưng chính xác là gì thì không còn quan trọng lắm.
+Sena nhận ra điều đó lúc đánh răng buổi sáng, nhìn vào gương và cố hình dung lại cái dừng lại của Brell, cái giọng bình thản kỳ lạ của cậu sinh viên kia. Ký ức đó không còn sắc nét như tối qua nữa. Như ảnh phơi nắng một ngày — màu sắc nhạt đi theo những cách không đều nhau, và bạn không thể chỉ ra đúng chỗ nào đã thay đổi, chỉ biết rằng nó khác rồi.
+Cô nhổ nước súc miệng, nhìn lại gương. 
+* Tòa nhà cũ mà cô nghĩ. Bình thường thôi.
+Rồi cô đặt bàn chải xuống và bước ra ngoài, và cố không nghĩ về việc mình vừa dùng đúng cái câu mà tuần trước cô đã quyết định là không đủ.
+
+
+Buổi chiều không có lịch học. Ryou đề nghị ra căng tin vì cậu đói, Sena đồng ý vì cô cũng đói, và Koto đi theo vì không có lý do gì đặc biệt để không đi theo — đó là mức độ của mối quan hệ giữa ba người vào thời điểm đó. Không nhiều hơn, không ít hơn. Đủ để đi cùng nhau, chưa đủ để im lặng mà không thấy ngại.
+Họ đi dọc theo hành lang chính của tầng hai. Hành lang dài đến mức bạn có thể đi hai phút mà không thấy cuối, hai bên là những cánh cửa gỗ tối màu đóng im lìm với biển số bằng đồng đã ố vàng. Ánh đèn trên trần không trắng như các phòng học — vàng hơn, ấm hơn, nhưng ấm theo cái cách của ngọn nến sắp tắt hơn là của một buổi chiều có nắng. Dọc theo chân tường, những vết nứt nhỏ trong lớp vữa tạo thành những đường zích zắc không đều như chữ viết của người đang run tay — và nếu bạn đứng nhìn đủ lâu, bạn sẽ bắt đầu tự hỏi liệu mình có đang đọc được điều gì không. Không ai đứng nhìn đủ lâu. Đó là quy tắc bất thành văn thứ hai của Aesvorn.
+Ở cuối dãy hành lang, treo trên tường giữa hai cánh cửa, là một cái đồng hồ quả lắc.
+Koto không biết nó đã ở đó bao lâu — có lẽ lâu hơn bất kỳ thứ gì khác trong tòa nhà này. Vỏ gỗ sẫm màu như màu của đất ẩm sau mưa, mặt số bằng sứ trắng ngả vàng với những con số La Mã khắc tay, con lắc đung đưa đều đặn với âm thanh tích — tắc chậm rãi đến mức nghe như từng nhịp đang được cân nhắc kỹ lưỡng trước khi xảy ra. Không hiểu sao mỗi lần đi qua cậu đều nhìn lên nó, không phải vì cần biết giờ, mà vì có điều gì đó trong cái đồng hồ đó kéo ánh mắt lại như nam châm kéo kim loại — nhẹ thôi, nhưng không thể phủ nhận.
+Lúc đó là 9h47. Cậu ghi nhớ điều đó mà không biết tại sao.
+Căng tin của Aesvorn nằm ở góc cuối tòa nhà phụ — một căn phòng rộng với trần nhà thấp hơn bình thường và những chiếc bàn gỗ dài đủ chứa mười người nhưng hiếm khi được dùng hết. Mùi ở đây luôn là sự pha trộn kỳ lạ giữa cà phê và gỗ ẩm và thứ gì đó giống mùi sách cũ bị để quên trong ngăn kéo — không khó chịu, chỉ là không hoàn toàn thuộc về một nơi bán đồ ăn. Nắng chiều lọt vào qua hai ô cửa sổ nhỏ ở góc phải, tạo ra hai vệt sáng vàng hẹp trên sàn gạch, và trong hai vệt sáng đó bụi lơ lửng yên tĩnh như thể thời gian ở đây chạy chậm hơn một chút so với phần còn lại của tòa nhà.
+Ba người ngồi xuống bàn gần cửa sổ. Ryou mang về một cái bánh mì kẹp trứng và một ly cà phê đen, đặt xuống bàn với vẻ mặt của người vừa hoàn thành một nhiệm vụ quan trọng. Cái đuôi nâu sẫm quấn quanh hông cậu — thói quen giữ chặt lại mỗi khi vào chỗ đông người, như thể cậu đã học từ lâu rằng không phải ai cũng thoải mái với sự hiện diện của nó — khẽ thả lỏng ra một chút khi cậu ngồi xuống. Dấu hiệu nhỏ của một người đang bắt đầu cảm thấy ổn với chỗ mình đang ngồi.
+* Xong!    - cậu nói.
+* Cuộc đời có ý nghĩa trở lại.
+* Mày vừa mua mỗi một cái bánh mì.   - Sena nói.
+* Đúng!!  Và cuộc đời có ý nghĩa trở lại.  
+ Ryou cắn một miếng lớn, nhai, nhìn lên trần nhà với vẻ mãn nguyện của một triết gia vừa tìm ra chân lý. "Tao không hiểu tại sao người ta hay tìm ý nghĩa cuộc sống ở những chỗ phức tạp thế. Nó ở trong bánh mì kẹp trứng. Luôn luôn là vậy."
+Koto nhìn cậu ta một giây, ăng-ten khẽ nghiêng sang một bên theo kiểu của người đang xử lý thông tin và chưa quyết định được thông tin đó có đáng xử lý không.
+* Mày ăn xong chưa?   - cậu hỏi.
+* Chưa.
+* Thì đừng triết học.
+Sena bật cười — một tiếng cười nhỏ không cố ý, kiểu thoát ra trước khi kịp quyết định có nên cười không. Ryou nhìn sang cô, rồi nhìn sang Koto, rồi gật đầu một cái với vẻ của người vừa được công nhận một cách gián tiếp.
+* Người Namec cũng biết hài hước à!  - cậu nói. 
+* Tao cứ tưởng các mày chỉ thiền và giao tiếp bằng ăng-ten.
+* Chúng tao không giao tiếp bằng ăng-ten.  - Koto nói, giọng bằng phẳng.
+* Ừ nhưng tao để ý mỗi khi mày đang nghĩ thì ăng-ten cụp xuống. Vậy không phải giao tiếp thì là gì?
+Koto im lặng một nhịp. Ăng-ten cậu — như để chứng minh điểm của Ryou — khẽ cụp xuống thêm một chút.
+* Đó là phản xạ. - cậu nói.
+* Phản xạ cũng là ngôn ngữ cơ thể.
+* Mày đang ăn bánh mì hay học ngôn ngữ học?
+Sena cười thêm lần nữa. Có điều gì đó trong cái không khí nhỏ bé ở góc căng tin này — nắng chiều vàng, mùi cà phê, hai người đang tranh luận về ăng-ten trong khi thế giới vẫn đang vận hành bình thường ở bên ngoài — khiến cô thấy nhẹ hơn một chút so với buổi sáng. Không nhiều. Nhưng đủ để nhận ra, và đủ để trân trọng.
+Rồi Ryou đặt ly cà phê xuống, nhìn lên, và kể một câu chuyện cười.
+Cô không nhớ chính xác đề tài — chỉ nhớ đó là chuyện về một giảng viên và một con mèo và một tình huống hiểu nhầm liên quan đến bài tập về nhà. Ryou kể bằng giọng điệu của người biết chính xác chỗ nào sẽ gây cười, nhịp nào cần dừng lại, chỗ nào cần hạ giọng cho đúng lúc. Koto nghe với biểu cảm trung lập theo kiểu trung lập chủ động — không phải không quan tâm mà là đang xử lý trước khi phản ứng. Sena cười ở đúng chỗ, không hẳn vì câu chuyện buồn cười, mà vì cô đột nhiên nhận ra mình đang ngồi ở đây với hai người này và cảm thấy thoải mái theo cái cách mà cô chưa cảm thấy từ ngày đặt chân vào Aesvorn.
+Cảm giác đó kéo dài được đúng đến khi Ryou kể xong câu chuyện.
+Sena nhìn sang cậu ta. Có điều gì đó vừa kéo một sợi dây nhỏ trong đầu cô — không đau, chỉ là bất ổn nhẹ, như khi bạn nghe một bài hát quen và không thể nhớ tên nhưng biết chắc mình đã nghe nó trong một bối cảnh hoàn toàn khác.
+* Câu chuyện đó?  - cô nói chậm. 
+* Mày kể rồi!
+Ryou nhìn cô.
+* Hả?
+* Mày kể câu chuyện này rồi. Hai ngày trước, ở hành lang tầng ba, trước giờ Vật lý ứng dụng.  - Sena đặt tay lên bàn, nhìn thẳng cậu. 
+* Nhưng lúc đó con mèo là con chó. Và giảng viên là nữ, không phải nam.
+Ryou im lặng. Sau một lúc, cậu nói — không phải giọng phân bua, giọng của người thực sự đang cố nhớ lại và không tìm thấy ký ức đó ở đâu cả. Cái đuôi của cậu khẽ co lại một chút, vô thức.
+*  Tao không nhớ là mình đã kể.  
+* Mày kể rồi!  - Sena nói lại, lần này nhẹ hơn. 
+* Tao nghe rõ ràng.
+Một khoảng im lặng nhỏ rơi xuống giữa ba người. Không phải im lặng khó chịu — mà là im lặng của ba người đang nhìn vào cùng một thứ từ ba góc khác nhau và chưa ai biết phải gọi thứ đó là gì.
+Koto là người lên tiếng trước. Giọng cậu thấp và cẩn thận theo kiểu của người đang đặt từng chữ xuống như đặt chân trên băng mỏng.
+* Câu chuyện khác đi ở những chi tiết nhỏ. - cậu nói. 
+* Không phải nội dung chính.
+* Đúng!  - Sena nói.
+* Nghĩa là Ryou nhớ câu chuyện — nhưng nhớ sai phiên bản. Hoặc…  - cậu dừng lại.
+* Hoặc?  - Ryou nhìn sang.
+* Hoặc có hai phiên bản. Và chúng ta không nhớ cùng một cái.
+Cả ba người im lặng với điều đó một lúc.
+* Tao thề là lần này tao kể đúng. - Ryou nói cuối cùng, giọng không còn chắc như lúc đầu.
+* Lần trước mày cũng thề vậy.  - Sena nói.
+Ryou không trả lời. Cậu cầm ly cà phê lên, uống một ngụm, đặt xuống. Nhìn ra cửa sổ nơi hai vệt nắng vàng vẫn nằm im trên sàn gạch, bụi vẫn lơ lửng trong không khí theo cái cách của thứ không bị thời gian làm phiền.
+* Tao không biết!  - cậu nói cuối cùng, và đó là câu thành thật nhất cậu nói trong cả buổi chiều hôm đó.
+
+
+Họ rời căng tin lúc trời bắt đầu đổ màu cam ở phía chân trời. Đi ngược lại hành lang chính, ba người, bước chân không vội, cái im lặng giữa họ bây giờ khác hơn một chút — không còn là im lặng của người chưa đủ thân, mà là im lặng của người đang mang theo cùng một thứ nặng và chưa biết đặt nó xuống ở đâu.
+Koto đi trước. Và khi đến cuối hành lang, cậu nhìn lên cái đồng hồ quả lắc theo phản xạ. 9h52.Cậu dừng lại. Ryou và Sena đi kịp đến ngang cậu, nhìn theo ánh mắt cậu lên mặt đồng hồ. Không ai nói gì trong vài giây đầu. Con lắc vẫn đung đưa, tích — tắc, đều đặn, bình thản một cách không tự nhiên.
+* Sao mày dừng lại?  - Ryou hỏi.
+* Lúc mình đi qua đây lúc nãy…  - Koto nói, giọng bình thường nhưng cái bình thường đó có gắng một chút.
+* Đồng hồ chỉ 9 giờ 47!
+* Ừ thì đi một lúc rồi, giờ khác là đúng chứ.
+* Chúng ta đi bao lâu?
+Ryou mở miệng, rồi khép lại. Cậu lấy điện thoại ra, nhìn giờ, nhìn lại đồng hồ trên tường. Một thứ gì đó thoáng qua mặt cậu — không hẳn là sợ, gần với cái cảm giác khi bạn bước một bậc thang và bậc thang đó thấp hơn bạn tưởng một chút, cái giật mình nhỏ trong người khi mặt đất đến sớm hơn dự kiến.
+* Chưa đến 15 phút.   - cậu nói chậm.
+* Đồng hồ chạy thêm năm phút so với thực tế.  - Koto nói. 
+* Từ lúc chúng ta đi qua đến lúc quay lại. Chúng ta đi mười lăm phút nhưng nó chạy hai mươi phút.
+Sena nhìn lên mặt đồng hồ. Con lắc vẫn đung đưa, tích — tắc, không quan tâm đến việc mình vừa bị đặt câu hỏi. Cô có một cảm giác kỳ lạ khi nhìn vào mặt số ố vàng đó — cảm giác như đồng hồ đang nhìn lại cô, và nó biết nhiều hơn cô về khoảng thời gian vừa qua.
+* Có thể đồng hồ chạy nhanh?  -  cô nói, dù ngay cả khi nói cô cũng không tin vào lý do đó.
+* Tao đứng đây nhìn nó lúc đi qua.  -  Koto nói. 
+* Nó đang chạy đúng nhịp. Không nhanh không chậm.
+Ba người đứng im nhìn cái đồng hồ. Cái đồng hồ không giải thích gì thêm. Nó chỉ tiếp tục đung đưa, tích — tắc, như thể năm phút mất đi đó là chuyện hoàn toàn bình thường — chỉ là một trong nhiều thứ ở Aesvorn mà nếu bạn kể lại, người nghe sẽ gật đầu và nói ừ, tòa nhà cũ mà.
+Ryou nhìn sang Sena. Sena nhìn sang Koto. Koto nhìn lại cái đồng hồ thêm một giây, rồi quay đi.
+* Đi thôi!  -  cậu nói.
+Không ai hỏi đi đâu. Họ chỉ đi, bước chân nặng hơn lúc đến, hành lang dài ra trước mặt với ánh đèn vàng ệch nhạt dần về phía cuối, và ở chỗ ánh đèn cuối cùng cũng bỏ cuộc — ở khoảng tối quen thuộc không ai giải thích được tại sao vẫn ở đó — có một âm thanh.
+Không to. Không rõ ràng. Chỉ là một tiếng vọng nhỏ, như tiếng ai đó vừa đặt tay lên tường ở cuối hành lang và kéo nhẹ theo chiều dài của nó. Một tiếng vọng của một âm thanh không có nguồn gốc.Ba người dừng lại cùng lúc. Nhìn về phía cuối hành lang.
+Không có ai.Chỉ có bóng tối, và tích — tắc của cái đồng hồ quả lắc vang theo sau lưng họ, đều đặn, kiên nhẫn, như thể nó đang đếm một thứ không phải là thời gian.
+Ryou là người phá vỡ im lặng trước. Cậu hắng giọng một cái nhỏ.
+* Tao vẫn còn đói!  - cậu nói.
+Sena nhìn cậu.
+* Mày vừa ăn bánh mì.
+* Ừ. Và tao vẫn còn đói.  -  Cậu quay người đi về hướng khác, đuôi khẽ vẫy một cái như để xua đi điều vừa xảy ra. 
+* Có ai muốn ăn thêm không?
+Không ai trả lời. Nhưng cả hai đều đi theo cậu.
+
+
+Đêm đó, lúc Sena ngồi trên giường cố viết lại những gì xảy ra trong ngày vào trang nhật ký — thói quen cô có từ năm 12 tuổi, cái thứ duy nhất giúp cô cảm thấy những ngày đã qua không hoàn toàn trôi mất — cô viết xuống:
+
+
+ Đồng hồ hành lang tầng hai chạy sai giờ.
+ Câu chuyện của Ryou có hai phiên bản.
+ Koto để ý cả hai.
+
+
+Cô nhìn ba dòng đó. Rồi cô viết thêm một dòng nữa, nhỏ hơn, ở góc dưới trang giấy, theo cái cách người ta viết những thứ họ chưa sẵn sàng nhìn thẳng vào:
+
+
+Và ở cuối hành lang tối, có tiếng của ai đó. Nhưng không có ai.
+
+
+Cô gập nhật ký lại. Tắt đèn. Và nằm im trong bóng tối, nghe tiếng gió bên ngoài cửa sổ phòng ký túc xá, tự hỏi tại sao hơi lạnh của hành lang tầng bốn vẫn cứ theo cô về đến tận đây — mùi đất ẩm, mùi của thứ gì đó chưa sẵn sàng nằm yên — dù cô đã không đi qua đó từ buổi sáng.
+
+
+Chương 3 – Nhịp tay
+
+
+
+
+Cây cổ thụ ở góc tây của khuôn viên Aesvorn không có trong bất kỳ tài liệu giới thiệu nào của học viện.
+Sena tìm thấy nó vào buổi chiều đầu tiên cô đi lạc — không phải đi lạc theo nghĩa không biết đường về, mà đi lạc theo nghĩa của người cần thoát khỏi bốn bức tường một lúc mà không muốn đến bất kỳ nơi nào có tên gọi cụ thể. Cô đi theo bản năng, rẽ vào những lối nhỏ giữa các tòa nhà, và cái cây cứ ở đó như thể nó đã chờ từ trước. Rễ cây xòe rộng trên mặt đất như những ngón tay khổng lồ đang bám lấy điều gì đó bên dưới — điều gì đó mà mặt đất có thể muốn nuốt trở xuống nhưng cái cây không chịu buông. Tán cây rộng đến mức tạo ra một khoảng không gian riêng bên dưới, nơi ánh sáng và bóng tối trộn vào nhau theo những tỉ lệ không giống với phần còn lại của thế giới.
+Cô lấy điện thoại ra định chụp ảnh gửi về nhà cho mẹ. Nhưng ngón tay cô dừng lại trên màn hình và không nhấn nút — không phải vì cô quên, mà vì có điều gì đó trong cô nói rằng cái cây này không muốn được ghi lại. Không phải theo nghĩa đáng sợ. Mà theo nghĩa của thứ quá cũ để quan tâm đến việc được nhớ theo cách đó.
+Cô cất điện thoại vào túi, ngồi xuống dưới gốc cây, lưng tựa vào thân gỗ sần sùi lạnh. Và lần đầu tiên từ khi đặt chân vào Aesvorn — lần đầu tiên kể từ cái hành lang tầng bốn, kể từ cái đồng hồ quả lắc, kể từ cậu sinh viên không có tên trong danh sách — cô thở ra thật sự. Không phải thở để tồn tại. Thở để đặt xuống. Cô không biết mình đã mang theo nhiều thứ nặng đến vậy cho đến lúc đặt được xuống.
+Đó là lý do cô quay lại vào buổi chiều hôm sau. Rồi hôm sau nữa. Rồi không biết từ lúc nào, Ryou và Koto cũng xuất hiện ở đó — không ai rủ ai, họ chỉ cùng đi về một hướng sau giờ học như những mảnh vụn bị kéo về cùng một chỗ bởi thứ lực hút không có tên gọi. Dưới gốc cây có một cái bàn đá nhỏ mà không ai nhớ ai đã đặt ở đó, đủ chỗ cho ba người ngồi quanh mà không phải cố tình nhìn mặt nhau nếu không muốn. Họ bày sách vở ra, tranh luận về những bài tập không ai thực sự muốn làm — và trong khoảng thời gian đó, dù ngắn dù dài, học viện Aesvorn trở nên nhỏ hơn một chút so với khi chỉ có một người ngồi.
+Không ai nói ra điều đó. Nhưng cả ba đều cảm thấy.
+Buổi chiều của ngày thứ Năm, hoàng hôn đến theo cái cách đặc trưng của Aesvorn — đột ngột, không báo trước, như thể bầu trời không thèm hỏi ý kiến những người đang ngồi bên dưới. Ánh sáng cuối ngày đổ qua tán cây tạo ra những mảnh nắng vỡ vụn trên mặt bàn đá, lung linh theo gió như những mảnh gương bị đập nhỏ. Bóng tối bắt đầu tập hợp lại ở những góc xa của khuôn viên — không kín đặc, chỉ là dày hơn bình thường, theo cái cách của thứ có khối lượng, có thể ngồi xuống và ở lại nếu nó muốn.
+Ryou đang tranh luận. Cậu đã nói liên tục được khoảng mười lăm phút về lý do tại sao cách tiếp cận của Sena với phần lý thuyết đầu tiên là sai về mặt nguyên tắc — không có lớp đệm ngoại giao, không có ác ý, chỉ là trực tiếp theo cái cách của người tin rằng nói thẳng là tôn trọng nhau hơn vòng vo. Cái đuôi của cậu đập nhẹ xuống đất trong khi cậu nói, nhịp điệu không đều của người vừa lập luận vừa suy nghĩ.
+Sena để cậu nói xong. Cô không vội. Cô nhìn lại đúng trang cậu vừa chỉ, và khi ngẩng lên giọng cô mang cái tĩnh lặng của người đã chuẩn bị tinh thần cho cuộc tranh luận này từ trước.
+* Công thức này áp dụng cho không gian tuyến tính. Tao biết! – cô nói. 
+* Nhưng ở trường hợp này khi độ cong tiệm cận về không, hai công thức cho kết quả xấp xỉ nhau. Đó là điều tao đang khai thác.
+* Xấp xỉ không phải bằng nhau.  – Ryou nói.
+* Trong giới hạn sai số cho phép thì xấp xỉ là đủ.
+* Tao không chấp nhận đủ trong bài thi.
+Sena nhìn thẳng vào mắt cậu, không chớp.
+* May là tao không cần mày chấp nhận.
+Rồi cô lật trang, bình thản như người vừa kết thúc một cuộc trò chuyện không đáng kéo dài thêm. Ryou mở miệng định nói tiếp, rồi nhìn sang Koto như tìm kiếm đồng minh. Koto đang đọc phần tài liệu riêng của cậu, ăng-ten cụp xuống theo góc quen thuộc của người đang tập trung thật sự.
+* Koto..!!  – Ryou gọi.
+* Sena đúng!  – Koto nói mà không ngẩng đầu.
+Một khoảng im lặng ngắn. Rồi Ryou phì cười — tiếng cười của người không muốn cười nhưng không nhịn được — và cái căng thẳng nhỏ trong không khí tan ra theo. Sena không cười lại, nhưng cô để nó thoát ra ở khóe miệng một chút, đủ để Ryou thấy mà không phải thừa nhận là mình đã thắng.
+Đó là một trong những khoảnh khắc mà về sau Sena sẽ nhớ lại nhiều lần, không phải vì nó quan trọng, mà vì nó đơn giản và thật theo cái cách mà những khoảnh khắc về sau sẽ không còn được như vậy nữa. Ba người, dưới gốc cây cổ thụ, ánh hoàng hôn vỡ vụn qua tán lá, tranh luận về bài tập không ai thực sự muốn làm.
+Bình thường đến mức gần như đẹp. Gần như. Cô không biết ai làm trước.
+Về sau khi cố nhớ lại, cả ba đều không thể trả lời câu hỏi đó — không phải vì ký ức mờ, mà vì thực sự không có người làm trước. Nó xảy ra đồng thời, theo cái cách mà ba cái đồng hồ riêng biệt đột nhiên điểm cùng một giờ dù không ai lên dây cho chúng cùng lúc.
+Ba người đưa tay lên. Và gõ xuống mặt bàn đá. Ba lần. Cùng nhịp. Cùng khoảng cách. Không phải cả bàn tay xòe ra mà là ba ngón tay giữa chụm lại, gõ theo kiểu không ai trong số họ có thể giải thích là mình học từ đâu hoặc từ bao giờ.
+Tốc — tốc — tốc.
+Im lặng.
+Ba người nhìn xuống tay mình. Rồi nhìn lên nhau. Ánh hoàng hôn vẫn vỡ vụn qua tán lá, gió vẫn thổi nhẹ, dưới gốc cây rễ vẫn xòe ra trên mặt đất như những ngón tay đang bám víu. Mọi thứ vẫn ở đúng chỗ cũ, vận hành đúng như cũ. Chỉ có một thứ không đúng — và cả ba đều biết thứ đó là gì mà không cần ai nói ra.
+Ryou là người lên tiếng trước, giọng chậm hơn bình thường, cẩn thận theo cái cách của người đặt chân xuống mặt đất mà chưa chắc chắn mặt đất có ở đó không.
+* Mày vừa làm gì vậy?
+* Tao không biết!  - Sena nói.
+*  Thật sự không biết — tay cô đã chuyển động trước khi não cô kịp ra lệnh, theo cái cách của phản xạ, nhưng không phải phản xạ của thứ gì cô đã từng học.
+Họ nhìn sang Koto. Cậu đang nhìn xuống bàn tay mình, anten dựng thẳng cứng — không phải cụp xuống như lúc tập trung mà dựng thẳng theo cái cách Sena chưa thấy bao giờ, cái cách của thứ gì đó lớn hơn cảnh giác. Cậu không ngẩng lên ngay. Khi cậu lên tiếng thì giọng cậu thấp, đặt từng chữ xuống như đặt chân trên băng mỏng.
+* Tao nghe thấy bốn tiếng.
+Không ai muốn thừa nhận rằng họ cũng nghe thấy bốn tiếng.
+Sena đã nghe — cô chắc chắn với cái chắc chắn của người biết rằng thừa nhận điều này có nghĩa là phải đối mặt với những câu hỏi mà mình chưa sẵn sàng hỏi. Tiếng thứ tư không to hơn hay nhỏ hơn ba tiếng kia. Nó ở đúng chỗ trong nhịp, đúng vị trí, như thể đã được đặt ở đó bởi một bàn tay không thuộc về ai trong số họ. Và nó không đến từ mặt bàn đá — nó đến từ khoảng trống ngay giữa ba người, từ nơi không có gì cả.
+* Thử lại đi.  – Koto nói.
+Ryou nhìn xung quanh một lượt — cái nhìn của người đang cố ra vẻ bình thường và không hoàn toàn thành công. Bóng tối ở những góc xa của khuôn viên đã dày hơn rõ rệt so với mười phút trước, không phải vì trời tối đi nhanh mà vì Sena có cảm giác bóng tối ở đây không chờ trời tối mới xuất hiện — nó chỉ chờ người ta bớt chú ý.
+Nhưng cuối cùng, không ai phản đối.
+Lần này họ cố ý làm khác. Ryou quyết định trong đầu sẽ gõ hai tiếng thay vì ba. Sena quyết định dùng lòng bàn tay thay vì ngón tay. Koto quyết định gõ chậm hơn, khoảng cách giữa các tiếng dài ra gấp đôi. Ba quyết định riêng biệt, được giữ trong đầu riêng biệt, không ai nói ra cho ai.
+Họ đưa tay lên.
+Tốc — tốc — tốc.
+Y hệt lần trước. Cùng nhịp, cùng khoảng cách, cùng ba ngón tay giữa chụm lại — như thể ý chí của họ không tồn tại trong khoảnh khắc đó, như thể tay họ biết điều gì mà đầu họ không biết và không thèm hỏi ý kiến. Và lần này tiếng thứ tư đến rõ hơn. Không phải to hơn — chỉ là rõ hơn, đủ để không thể bào chữa bằng chắc nghe nhầm, đủ để cả ba người cùng rút tay về trong một cử chỉ hoàn toàn đồng bộ và ngồi im nhìn mặt bàn đá như thể mặt bàn đá vừa nói điều gì đó bằng ngôn ngữ mà cơ thể họ hiểu nhưng đầu óc họ chưa được phép biết.
+Họ ngồi thêm một lúc dưới gốc cây mà không ai lấy sách vở ra nữa. Trời tối dần, và trong bóng tối đang dày lên đó cái cây cổ thụ trở nên khác đi — không đáng sợ, chỉ là khác, theo cái nghĩa của thứ ban ngày trông như một thứ và ban đêm trông như một thứ hoàn toàn khác mà bạn không thể chỉ ra điều gì đã thay đổi.
+Ryou kéo cái đuôi lên, ôm vào lòng — một cử chỉ nhỏ, riêng tư, kiểu cử chỉ người ta hay làm một mình. Cô không nghĩ cậu nhận ra mình đang làm vậy. Cậu nhìn lên tán cây, những cành tối sẫm in lên nền trời đang đổi màu, và khi cậu lên tiếng thì giọng cậu không còn cái chắc chắn quen thuộc của người biết mình đang đứng ở đâu.
+* Các mày có bao giờ cảm thấy như mình biết điều gì đó mà mình không nhớ học từ bao giờ không?
+Sena nhìn sang cậu nhưng không vội trả lời. Cô để câu hỏi đó nằm trong không khí một lúc, vì cô biết câu hỏi này không cần trả lời nhanh.
+* Cái nhịp tay đó..!
+ Ryou tiếp tục, chậm hơn, như thể cậu đang tìm từ ngữ cho điều mình chưa bao giờ phải diễn đạt thành lời. 
+* Tao không biết nó từ đâu. Nhưng lúc tay tao làm, nó không có cảm giác là lần đầu tiên.
+ Cậu nhìn xuống bàn tay mình, lật ngửa ra, nhìn vào lòng bàn tay như thể câu trả lời đang nằm ở đó. 
+* Nó có cảm giác như là...
+* Như nhớ lại…   – Koto nói khẽ, thay cậu.
+Ryou ngẩng lên nhìn Koto. Giữa hai người trao đổi điều gì đó không có lời — cái bất ngờ nhỏ khi nhận ra mình không đơn độc trong một điều mình tưởng chỉ có mình cảm thấy.
+* Ừ!!  – cậu nói. 
+* Đúng cái đó.
+Sena nhìn xuống lòng bàn tay mình. Trên đó có ba đường mờ đỏ nhạt từ mặt đá lạnh — ba đường, đúng ba, không hơn không kém. Cô nhìn vào đó và nghĩ rằng cái lạnh đang trên tay cô không phải lạnh của đá. Nó là lạnh của thứ gì đó đã chạm vào rồi rút đi, để lại dấu vết không phải bằng nhiệt độ mà bằng sự vắng mặt của ấm áp.
+Như nhớ lại.
+Cô lặp lại câu đó trong đầu, không nói ra thành lời. Và thứ lạ lẫm nhất không phải là câu hỏi cái nhịp đó đến từ đâu — mà là câu hỏi tại sao, khi tay cô làm điều đó, có một phần rất nhỏ trong cô cảm thấy đúng. Không phải đúng như giải được một bài toán khó. Mà đúng theo cái nghĩa sâu hơn, cũ hơn — như người đi xa lâu ngày đặt chân về nhà và nhận ra mình vẫn còn nhớ bậc thang nào kêu.
+Gió thổi qua tán cây, một tiếng xào xạc dài rồi tắt đột ngột như thể có ai đó vừa đặt tay lên miệng nó. Và trong cái khoảng lặng sau tiếng xào xạc đó — trong cái khoảng lặng không hoàn toàn là lặng — có một âm thanh rất nhỏ vẫn còn vang trong không khí.
+Tốc.
+Một tiếng. Một mình. Không có tay nào gõ.
+Cả ba người nghe thấy nó. Cả ba người không nói ra.
+Họ thu dọn sách vở, đứng dậy, và đi về ba hướng ký túc xá của họ mà không hẹn nhau hôm sau sẽ gặp lại. Nhưng cả ba đều biết rằng họ sẽ gặp lại — không phải vì họ muốn, không phải vì họ hẹn, mà vì có điều gì đó đã bắt đầu dưới gốc cây cổ thụ đó vào buổi chiều hôm đó, điều gì đó không hỏi ý kiến họ trước khi bắt đầu.
+Và những thứ không hỏi ý kiến bạn trước khi bắt đầu, thường cũng không hỏi ý kiến bạn trước khi kết thúc.
+Đêm đó Sena nằm trên giường nhìn lên trần phòng tối, và lần đầu tiên từ khi đến Aesvorn cô không nghĩ về hành lang tầng bốn hay cái đồng hồ quả lắc hay cậu sinh viên áo trắng không có trong danh sách. Cô chỉ nghĩ về tiếng gõ. Về cái cảm giác vừa đau vừa nhẹ nhõm — theo cái cách của những thứ mâu thuẫn nhau nhưng vẫn cùng tồn tại — rằng cái nhịp đó không xa lạ.
+Rằng có điều gì đó trong cô đã biết nó từ trước. Rằng điều đó không đáng sợ. Và cái không đáng sợ đó, kỳ lạ thay, lại là thứ đáng sợ nhất trong tất cả.
+Chương 4 – Vết nứt
+
+
+
+
+Ba ngày sau tiếng gõ dưới gốc cây, Sena phát hiện Ryou đã không làm điều cả ba ngầm đồng ý: giả vờ như chuyện đó chưa từng xảy ra.
+Cậu xuất hiện ở căng tin vào cuối buổi chiều với một cái bánh mì kẹp trứng trong miệng, bốn tờ sơ đồ cuộn dưới nách và vẻ mặt của người vừa tìm được câu trả lời nhưng chưa kịp kiểm tra xem câu trả lời ấy có muốn giết mình hay không. Koto đi phía sau, tay cầm một mảnh giấy nhỏ đã ngả vàng ở mép.
+Ryou trải bốn tờ sơ đồ lên bàn, đè các góc bằng ly nước, hộp bút và phần bánh mì còn lại. Ba bản đầu là sơ đồ hiện tại của Aesvorn. Bản thứ tư cũ hơn, giấy mỏng đến mức ánh đèn có thể xuyên qua. Khi chồng chúng lên nhau, mọi hành lang và cầu thang đều khớp, trừ một chỗ ở cuối hành lang B.
+Trên ba bản mới, nơi đó chỉ có một bức tường. Trên bản cũ là một khoảng trống dài và hẹp, không ghi tên, giống như một căn phòng đã bị người ta xóa khỏi trí nhớ của tòa nhà nhưng quên xóa phần diện tích nó chiếm chỗ.
+Mười tám mét sáu. – Ryou nói, rút miếng bánh mì khỏi miệng. – Tao đã đo mặt ngoài tòa nhà và cộng chiều dài các phòng phía trong. Bị thiếu đúng mười tám mét sáu.
+Sena nhìn cậu. – Mày đã dành ba ngày để đo tường?
+Tao dành hai ngày. Nửa ngày còn lại để chắc rằng tao không dốt toán.
+Kết quả? – Koto hỏi.
+Tao dốt nhiều thứ khác. Toán thì không.
+Koto đặt mảnh giấy vàng xuống giữa những tờ sơ đồ. Trên đó chỉ có một mũi tên vẽ bằng bút chì và một dòng chữ ngắn: Sau tủ sách cuối hành lang B. Đẩy sang phải.
+Ryou tìm thấy nó trong ngăn bàn ở giảng đường số 3, ngay dưới chỗ cậu vẫn ngồi. Tờ giấy cũ nhưng nét chì còn mới. Koto đã lấy đầu ngón tay miết rất nhẹ lên mặt giấy và nhận ra bụi bám ở hai mép không giống nhau; nó từng được gấp lại trong một thời gian dài, rồi mới được mở ra gần đây.
+Đây là bẫy. – Sena nói.
+Có thể. – Ryou đáp.
+Mày nói nghe bình thản ghê.
+Tao đang ăn. Hoảng loạn khi nhai dễ mắc nghẹn.
+Koto nhìn sang cậu. – Lý do thuyết phục nhất từ đầu buổi đến giờ.
+Sena không cười. Cô nhìn mũi tên trên giấy, rồi nhìn khoảng trống trên tấm sơ đồ cũ. Từ sau tiết học có cậu sinh viên áo trắng, mọi chuyện ở Aesvorn đều có chung một đặc điểm: chúng chỉ vô lý khi đứng riêng lẻ. Đặt cạnh nhau, chúng bắt đầu giống những phần của một thứ lớn hơn. Một cái tên không thể nhớ. Một cái bóng tách làm hai. Năm phút xuất hiện thêm trên đồng hồ. Ba bàn tay cùng nhớ một nhịp mà chủ nhân của chúng chưa từng học.
+Và bây giờ là một căn phòng bị xóa khỏi bản đồ.
+Chúng ta chỉ nhìn thôi. – Sena nói sau một lúc. – Không tách nhau. Không chạm vào thứ gì nếu chưa nói trước. Có chuyện lạ là quay ra ngay.
+Ryou gật đầu quá nhanh.
+Mày đừng có tỏ ra vui.
+Tao không vui. Tao chỉ thấy kế hoạch của mày thiếu phần đồ ăn.
+Mười giờ mười tối nay. – Koto nói. – Sau lượt tuần tra cuối.
+Sena nhìn cậu. – Hai đứa bây đã bàn trước rồi đúng không?
+Không. – Koto đáp. – Nhưng tao biết kiểu gì mày cũng đi.
+Câu đó khiến Sena khó chịu chủ yếu vì nó đúng.
+Mười giờ mười, hành lang B không còn giống nơi dành cho người sống.
+Ban ngày, khu này chỉ cũ hơn phần còn lại của học viện một chút. Ban đêm, dưới những bóng đèn sự cố màu xanh nhạt, các cánh cửa gỗ đóng kín trông như một hàng miệng đang ngậm chặt. Tiếng bước chân của ba người vang xa hơn bình thường, dội lại từ cuối hành lang với một nhịp chậm hơn, như thể có người thứ tư đang đi theo nhưng luôn hụt một bước.
+Sena mang hai đèn pin, pin dự phòng và một cuộn dây mảnh. Koto cầm phấn trắng cùng con dao gấp dùng trong giờ thực địa. Ryou có điện thoại, thước cuộn và ba thanh bánh ngọt nhét trong túi áo.
+Đừng nhìn tao như vậy. – Cậu nói khi bắt gặp ánh mắt Sena. – Nếu bị nhốt qua đêm, hai đứa sẽ cảm ơn tao.
+Nếu bị nhốt qua đêm, tao sẽ dùng mày làm lương thực trước. – Sena nói.
+Koto đi trước, nhưng khóe miệng cậu động nhẹ. Đó là dấu hiệu gần nhất với một nụ cười mà Sena từng thấy ở cậu.
+Tủ sách cuối hành lang B cao chạm trần, hai cánh kính phủ mờ bởi bụi. Koto ngồi xuống, dùng phấn kẻ một đường ngang từ chân tủ xuống nền gạch. Nếu cái tủ dịch chuyển, đường phấn sẽ gãy. Ryou bật đồng hồ bấm giờ. Sena nhìn màn hình điện thoại: 22 giờ 11, sóng đầy, pin tám mươi sáu phần trăm.
+Cả ba đặt tay vào cạnh tủ.
+Đẩy. – Sena nói.
+Tủ sách trượt sang phải gần như không phát ra tiếng. Nó không nặng như vẻ ngoài; dưới chân tủ là một đường ray kim loại sạch và bóng, được tra dầu không lâu trước đó. Chi tiết ấy khiến cả ba cùng im lặng. Một căn phòng có thể bị quên. Một cánh cửa được chăm sóc đều đặn thì không.
+Phía sau tủ là một cánh cửa thấp không có tay nắm. Từ khe dưới cửa, luồng khí lạnh mang theo mùi giấy mục và đất ẩm len ra hành lang.
+Koto mở dao, luồn sống dao vào khe. Ổ khóa bật ra bằng một tiếng tách nhỏ.
+Tao vào trước. – Cậu nói.
+Sena định phản đối, nhưng Koto đã cúi người bước qua. Hai phần phụ cảm giác trên đầu cậu dựng thẳng, hướng về bóng tối phía trong. Sena theo sát. Ryou vào cuối cùng và chèn cửa bằng một miếng cao su mang theo từ phòng thực hành.
+Thư viện cũ rộng hơn phần không gian đáng lẽ có thể chứa nó.
+Những dãy kệ cao đứng san sát dưới mái vòm đá, kéo sâu vào một khoảng tối mà đèn pin không chạm tới. Gần trần có ba ô cửa sổ hẹp. Sau lớp kính là ánh sáng trắng đục giống ánh trăng, dù bức tường này nằm hoàn toàn bên trong tòa nhà và phía bên kia của nó, theo mọi tấm sơ đồ, chỉ có hai phòng học.
+Ryou đo khoảng cách từ cửa đến chiếc bàn đọc sách ở giữa phòng. Hai mươi ba mét.
+Cậu nhìn con số trên màn hình, đo lại. Vẫn hai mươi ba.
+Nếu phép đo này đúng, – cậu nói nhỏ, – cái bàn đang nằm giữa sân phía Tây.
+Không có gió trong phòng, nhưng những trang giấy đâu đó vẫn xào xạc. Âm thanh chạy dọc các kệ, lúc gần lúc xa, không theo hướng nào rõ ràng. Sena có cảm giác căn phòng đang thở rất chậm, mỗi lần hít vào lại kéo những dãy kệ gần nhau thêm một chút.
+Koto đánh dấu cột đá cạnh cửa bằng một nét phấn. – Nhìn đủ rồi thì quay ra.
+Không ai nhắc cậu chính là người đang bước sâu hơn.
+Bụi trên sàn dày đến mức giữ lại từng dấu giày của họ. Giữa lớp bụi có một lối hẹp sạch hơn, chạy từ cửa đến chiếc bàn giữa phòng rồi dừng đột ngột. Không có dấu chân quay lại. Bên cạnh bàn, một chiếc ghế bị lật nghiêng, mặt ghế phủ bụi nhưng bốn chân ghế sạch bóng như vừa được cầm lên.
+Trên bàn là một cuốn sổ nhỏ bìa da nâu, được buộc bằng sợi chỉ đỏ.
+Mọi thứ quanh nó đều phủ một màu xám cũ kỹ. Riêng mặt bàn dưới cuốn sổ hiện ra một đường viền sạch, chứng tỏ nó đã nằm ở vị trí khác trong phần lớn thời gian rồi mới được đặt lại đây. Koto đưa tay đến gần nhưng chưa chạm vào.
+Có người vừa ở đây. – Cậu nói.
+Bao lâu? – Sena hỏi.
+Không biết. Nhưng không lâu.
+Ryou chiếu đèn vào lối bụi. – Vậy người đó ra bằng đường nào?
+Koto không trả lời.
+Sena lấy điện thoại chụp chiếc bàn. Trong ảnh, cái ghế, lớp bụi và bàn tay Koto đều hiện rõ. Cuốn sổ thì không. Nơi nó nằm chỉ là một khoảng mặt gỗ trống, đúng hình chữ nhật, như thể máy ảnh đã ghi lại một phiên bản của căn phòng trong đó cuốn sổ chưa từng được đặt xuống.
+Cô chụp lần nữa. Kết quả không đổi.
+Ryou nhìn màn hình rồi cất thanh bánh đang cầm dở vào túi. Lần đầu tiên trong tối đó, cậu không nghĩ đến chuyện ăn.
+Koto đeo găng tay, tháo sợi chỉ đỏ. Nút buộc lỏng ra dễ dàng, nhưng khi cậu đặt nó xuống bàn, sợi chỉ tự co lại thành một vòng tròn nhỏ. Không ai chạm vào nó thêm lần nữa.
+Ba trang đầu của cuốn sổ trắng trơn. Dưới ánh đèn xiên, Sena nhìn thấy những hàng xước li ti chạy ngang mặt giấy. Chữ viết từng tồn tại ở đó đã bị cạo đi, từng dòng một, cẩn thận đến mức vài chỗ giấy mỏng như sắp thủng.
+Một cảm giác quen thuộc ép lấy ngực cô. Nó giống lúc cô cố nhớ gương mặt cậu sinh viên áo trắng: không phải ký ức chưa từng được tạo ra, mà là một khoảng trống do thứ gì đó cố ý để lại.
+Trang thứ tư vẫn còn chữ.
+VẾT NỨT HƯ KHÔNG.
+Bên dưới là một hình vẽ bằng bút chì. Một đường nứt ngoằn ngoèo nằm giữa nhiều vòng tròn nhỏ nối với nhau bằng những nét mảnh. Ở góc cuối trang có ba chấm đứng sát nhau, được khoanh lại bởi một vòng tròn nhạt đến mức gần như đã bị tẩy.
+Ba chấm. – Ryou nói.
+Sena nghe tiếng máu chạy trong tai mình. Koto khép cuốn sổ lại, nhưng trước khi bìa chạm xuống, một trang giấy phía sau tự lật lên. Rồi thêm một trang nữa. Những trang trắng chạy qua dưới ngón tay cậu, nhanh dần, dù căn phòng hoàn toàn không có gió.
+Ở cuối thư viện, một cuốn sách rơi xuống sàn.
+Âm thanh không lớn. Nhưng ngay sau đó, từng tiếng động nhỏ nối tiếp nhau xuất hiện giữa các dãy kệ: tiếng gáy sách cọ vào kim loại, tiếng giấy lật, tiếng chân ghế kéo rất chậm trên nền đá. Chiếc ghế cạnh họ vẫn nằm im. Tiếng kéo ghế đến từ sâu hơn trong bóng tối.
+Ra ngoài. – Sena nói.
+Lần này không ai phản đối. Koto buộc tạm sợi chỉ quanh cuốn sổ rồi giấu nó vào trong áo. Sena định hỏi tại sao mang theo, nhưng một phần trong cô đã biết câu trả lời: nếu để nó lại, sáng hôm sau cả ba có thể sẽ không còn nhớ mình từng tìm thấy gì.
+Họ quay theo dấu giày cũ. Sau dãy kệ thứ nhất, lối đi tách làm hai.
+Lúc vào không có chỗ rẽ. – Ryou nói.
+Koto soi xuống sàn. Dấu giày của họ chia đều sang cả hai hướng.
+Ba người đứng sát lại. Trong một thoáng, Sena nhận ra nhịp thở của mình đang trùng với tiếng trang giấy lật ở phía sau. Cô cố thở chậm đi. Âm thanh kia cũng chậm theo.
+Koto chọn lối trái. Cậu không giải thích, chỉ đặt tay lên vách đá và đi theo nơi bề mặt lạnh hơn. Ryou ở giữa, liên tục nhìn đồng hồ. Sena đi cuối, cố không quay lại dù tiếng ghế kéo đã ngừng và sự im lặng phía sau khiến cô nghĩ đến một người vừa đứng dậy.
+Họ đi qua ba dãy kệ rồi trở lại đúng chiếc bàn ban đầu.
+Chiếc ghế đã được dựng thẳng.
+Trên mặt bàn không còn dấu viền sạch nơi cuốn sổ từng nằm. Bụi phủ kín bề mặt, phẳng và nguyên vẹn, như thể chưa có bàn tay nào chạm vào suốt nhiều năm.
+Koto quay đèn về phía cột đá cạnh cửa. Nét phấn của cậu xuất hiện trên hai cột khác nhau, một ở bên trái, một ở sâu trong dãy kệ phía phải. Cả hai đều có vết miết ở cuối giống hệt chuyển động tay của cậu.
+Tao chỉ đánh dấu một lần. – Koto nói.
+Ryou nhìn đồng hồ bấm giờ. 11 phút 23 giây. Con số chớp một cái rồi đổi thành 26 phút 23 giây. Cậu khóa màn hình, mở lại. Lúc này nó hiện 11 phút 24 giây.
+Tao bắt đầu nghĩ cái bánh ngọt không còn là vấn đề lớn nhất nữa. – Cậu nói.
+Một luồng lạnh lướt qua gáy Sena. Từ nơi rất xa, hoặc rất gần, có tiếng ai đó hít vào để chuẩn bị gọi tên cô.
+Cô không chờ âm thanh ấy thành lời. – Đi.
+Họ chọn lối không có dấu phấn. Koto vẫn giữ tay trên tường, đi nhanh hơn. Những kệ sách hai bên dường như không di chuyển, nhưng khoảng cách giữa chúng hẹp dần. Vai Ryou cọ vào gáy sách. Một cuốn rơi xuống sau lưng Sena và tự mở, các trang lật liên tục cho đến khi dừng ở giữa. Trên đó không có chữ, chỉ có ba vết lõm tròn như dấu đầu ngón tay.
+Cuối lối đi là một bức tường đá kín.
+Cửa phải ở đây. – Ryou nói. – Tao đếm bước rồi.
+Koto rà tay trên mặt tường. Không khe cửa, không ổ khóa, không vết xước do con dao để lại. Phía sau, tiếng giấy lật đang tiến gần, từng dãy một.
+Sena đặt tay lên tường. Đá lạnh đến mức đau buốt. Dưới lòng bàn tay cô có một rung động nhỏ, đều và sâu, giống nhịp mạch nằm trong cơ thể một sinh vật đang ngủ.
+Ryou giơ tay định gõ tìm khoảng rỗng.
+Tốc — tốc — tốc.
+Ba tiếng vang lên đúng cái nhịp dưới gốc cây. Ryou rút tay về ngay lập tức. Mặt cậu trắng đi.
+Tao không định gõ như vậy.
+Từ phía bên kia bức tường, một tiếng thứ tư đáp lại.
+Koto đẩy Sena sang bên. Một đường mảnh hiện ra trên đá, từ trên xuống dưới, rồi mở rộng thành khe cửa. Cả ba cùng dồn sức. Cánh cửa bật ra đúng lúc tiếng trang giấy lật dừng lại ngay sau lưng họ.
+Họ lao qua. Koto đi cuối. Khi cậu lách khỏi khe cửa, sợi chỉ đỏ quấn quanh cuốn sổ mắc vào mép đá và đứt. Một nửa nằm trong tay cậu; nửa còn lại rơi về phía thư viện trước khi cánh cửa khép kín.
+Tủ sách vẫn mở. Ba người đẩy nó trở lại rồi ngồi bệt xuống nền hành lang, không ai đủ sức giả vờ rằng mình chỉ hơi mệt.
+Ánh đèn xanh vẫn sáng. Không khí vẫn có mùi chất lau sàn. Ở cuối hành lang, một chiếc quạt thông gió kêu đều đều. Những thứ bình thường ấy đáng lẽ phải khiến Sena yên tâm, nhưng sau căn phòng vừa rồi, chúng giống một màn kịch được dựng quá vội để thuyết phục họ rằng thế giới chưa từng thay đổi.
+Ryou nhìn điện thoại. Màn hình khóa chỉ 22 giờ 18. Đồng hồ bấm giờ bên trong đã chạy hơn ba mươi phút.
+Hai cái đồng hồ trong cùng một máy đang cãi nhau. – Cậu nói. Giọng vẫn run, nhưng đã có lại một chút gì đó quen thuộc. – Tao không biết nên tin đứa nào.
+Tin đứa nào giúp mình không bị phạt vì ra ngoài sau giờ giới nghiêm. – Koto đáp.
+Sena bật cười một tiếng rất nhỏ. Nó thoát ra vì căng thẳng nhiều hơn vì buồn cười, nhưng Ryou nghe thấy và thở ra. Trong khoảnh khắc đó, cả ba cùng hiểu rằng họ vừa sợ thật sự; và cũng hiểu không ai trong ba người đã bỏ người còn lại chạy trước.
+Koto kiểm tra vai Ryou. Sena xem vết xước trên tay Koto. Ryou lấy trong túi ra một miếng băng cá nhân in hình con thú tròn đang ngủ rồi đưa cho Sena, dù cô chỉ có một vết rách nhỏ ở lòng bàn tay.
+Đừng hỏi. Loại thường đắt hơn. – Cậu nói.
+Họ đứng dậy. Trước khi rời đi, Koto cúi nhìn chân tủ sách.
+Đường phấn cậu kẻ lúc đầu vẫn còn nguyên. Nó chạy liền từ nền gạch lên chân tủ, không gãy, không nhòe. Theo dấu phấn ấy, cái tủ chưa từng dịch chuyển dù chỉ một phân.
+Không ai chụp ảnh.
+Không ai muốn biết trong ảnh sẽ thiếu thứ gì.
+Gần đến chỗ rẽ về khu ký túc, Sena yêu cầu Koto lấy cuốn sổ ra. Cô muốn chắc rằng họ đã thật sự mang được nó khỏi căn phòng, rằng nó có trọng lượng, có bìa da, có thể nằm trong tay một người mà không biến mất khi người đó chớp mắt.
+Koto mở áo khoác.
+Cuốn sổ nằm trong túi cậu, được buộc kín bằng sợi chỉ đỏ.
+Sợi chỉ nguyên vẹn. Không có đầu đứt. Không có nút buộc tạm. Nó quấn quanh bìa đúng như lúc họ nhìn thấy lần đầu trên chiếc bàn phủ bụi.
+Koto vẫn đang nắm nửa sợi chỉ bị đứt trong bàn tay còn lại.
+Ba người nhìn hai sợi chỉ. Không ai nói được điều gì.
+Rồi, từ bên trong cuốn sổ đang buộc kín, vang lên tiếng một trang giấy chậm rãi lật sang.
+LONG ẤN KÝ — HỒ SƠ NHÂN VẬT
+Hồ sơ làm việc • 8 nhân vật nòng cốt và 12 nhân vật phụ Arumo
+Mục đích: làm tài liệu gốc để viết truyện nhất quán, sau đó mới chuyển những thông tin phù hợp sang game. Đây là hồ sơ dành cho người viết, có cả bí mật và hướng phát triển nhân vật; không phải phần văn xuôi đưa nguyên vào truyện.
+Trạng thái: Chương 1–3 mới đã được viết trong thẻ Phần 1. Bộ hồ sơ phân biệt chi tiết đã vào bản văn với phương án sáng tác còn có thể chỉnh. Phần nhân vật phụ 0.3 bên dưới bổ sung mười hai chân dung, quá khứ, quan hệ và giọng nói; phần thiết kế NPC cho game được theo dõi riêng trong Sheets.
+01. Phạm vi và những gì đang có
+Tám nhân vật nòng cốt dẫn chặng Arumo; mười hai nhân vật phụ hỗ trợ đời sống, xung đột và các công việc cụ thể. Mỗi vai phụ chỉ bước vào truyện khi cảnh cần người đó. Các hồ sơ nền của nhóm chính được đọc cùng phần bổ sung 0.2 tại trang T04 của Sheets.
+Đã có trong Chương 1: Rento làm việc với máy tời ở bến Arumo; Nari trực gác và dùng vòng tay cùng cây sào để giữ rồi trả lực va chạm; sông Asera nằm trên trời; một con tàu xuất hiện sớm mười một ngày, trong mùa bến chưa đón tàu; có bảy người được cứu. Rento hy sinh chiếc tời đã mua bằng bốn tháng tiền công và sửa suốt ba tuần, vốn định mang về xưởng của mẹ. Người phụ nữ cuối cùng hỏi vì sao Arumo chưa sơ tán.
+Sau ba chương mới, Omi đã cho biết mình là người đi từ trạm trên; Mira và Seika đã xuất hiện; Tovan và Eli đã có hành động cụ thể. Tuổi, những phần quá khứ chưa kể và thiết kế NPC trong hồ sơ vẫn là dữ liệu dành cho người viết, chưa tự trở thành điều nhân vật biết. Varo là tên làm việc của đơn vị vận hành đường sông.
+02. Nền chung để nhân vật không mâu thuẫn
+Thế giới nhìn từ đời sống
+Arumo là một thị trấn bến dưới, sống nhờ mùa tàu, sửa máy, vận chuyển hàng và các trạm dịch vụ. Asera đi qua nhiều tầng địa hình; tại những điểm cố định, cột nước nối dòng sông trên cao với giếng cảng phía dưới. Mùa nước đứng là thời gian những đường nối này ổn định rất kém, vì vậy tàu thường ngừng chạy. Cảnh vật kỳ lạ là điều bình thường với cư dân; điều khiến họ sợ là những quy luật quen thuộc bắt đầu sai.
+Năng lực và cái giá
+Phương án nền: ấn là đường dẫn được chế tác trên vật dụng, hoạt động cùng kỹ năng của người sử dụng. Với loại ấn đang thấy ở Nari, lực phải có nguồn, đường truyền và điểm tựa; giữ quá mức sẽ làm hỏng vật dẫn hoặc gây chấn thương. Một người có thể thắng nhờ quan sát, thể lực, nghề nghiệp, đồng đội và địa hình. Mỗi nhân vật chỉ cần một sở trường nhận ra được và một giới hạn có tác dụng thật trong tình huống khó.
+Rento chưa có năng lực bẩm sinh đặc biệt. Hướng phát triển của cậu là học cách nối kiến thức cơ khí với kỹ thuật dùng ấn, tạo công cụ và làm việc cùng người chiến đấu. Long Ấn tạm được đặt làm tên hệ thống điều tiết cổ dưới các tuyến sông, có đường dẫn phân nhánh như thân rồng; nguồn gốc đầy đủ sẽ thuộc bước dựng thế giới. Ở giai đoạn hồ sơ này, không dùng huyết thống bí mật hay lời tiên tri để giải thích tài năng của Rento.
+Tông truyện và điểm nhìn
+Phiêu lưu kỳ ảo là trục chính; kinh dị đến từ dấu hiệu bất thường, cảm giác mất an toàn và hậu quả con người phải chịu. Tình bạn, luyện tập và những cuộc đối đầu tạo sức sống giữa các đoạn căng thẳng. Phần lớn cảnh đầu đi sát nhận thức của Rento. Khi đổi điểm nhìn, phải có ranh giới cảnh rõ và lý do kể chuyện cụ thể.
+Chất trẻ nằm ở cách nhân vật phản ứng, trêu nhau, tự ái, ngại nói thật và tìm cách giữ thể diện. Có thể dùng cách nói gần Gen Z như “nghe hơi lỗ”, “căng đấy”, “để tôi đoán” với liều lượng vừa phải. Không ép tất cả nhân vật nói cùng một giọng, không chen trò đùa vào lúc nó làm nhẹ đi nỗi đau của người đang bị nạn.
+03. RENTO — người luôn muốn tự sửa mọi thứ
+Căn cước và diện mạo
+Mã nhân vật: NV01. Nam, 18 tuổi; đọc tên: Ren-tô. Sinh và lớn lên ở Arumo, hiện làm thợ phụ sửa tời và thiết bị kéo hàng. Cao khoảng 1,71 m, dáng gọn, cẳng tay rắn hơn vẻ ngoài; tóc đen cắt ngắn không đều, thường có vệt dầu ở cạnh tai. Tay phải thuận, ngón trỏ trái có vết bỏng nhỏ do học nghề. Mặc áo làm việc màu đất, áo khoác chàm đã vá, giày đế bám và túi dụng cụ gọn bên hông. Diện mạo dựa trên đời sống lao động, không dùng tóc hoặc trang phục sao chép một nhân vật có sẵn.
+Gia đình và xuất thân
+Mẹ là Mira, từng sở hữu một xưởng nhỏ ở bến. Cha mẹ chia tay khi Rento còn nhỏ; cha còn sống, làm việc ở một tuyến khác và liên lạc không đều. Đây là một quan hệ gia đình thiếu gần gũi, không được biến thành bí mật cha là chiến binh huyền thoại. Rento được mẹ và những người làm ở bến dạy nghề, quen với bữa ăn theo ca và những lời hứa “sửa xong rồi nghỉ”. Cậu không sống trong cảnh thiếu ăn thường xuyên, nhưng luôn phải tính xem một khoản tiền đủ mua dụng cụ hay sửa mái nhà.
+Quá khứ có ảnh hưởng đến hiện tại
+Năm 8 tuổi, Rento được giao phân loại ốc và phụ mẹ mang đồ tới tàu. Cậu nhớ cảm giác người lớn thôi xua mình ra xa khi mình làm được việc. Năm 14 tuổi, một bộ tời do xưởng bảo dưỡng gặp tai nạn: Banu, một công nhân, bị thương nặng, Mira mất phần lớn thính lực bên trái. Mira bán xưởng để chi trả phần trách nhiệm và chữa trị, rồi nhận làm thuê tại chính nơi đó. Rento nhìn việc ấy như một món nợ mình phải trả, dù mẹ chưa từng đòi cậu lấy lại xưởng.
+Từ 16 tuổi, cậu nhận thêm việc nhỏ và giữ một cuốn sổ ghi giá máy cũ. Gần đây, cậu mua chiếc tời phế liệu bằng bốn tháng tiền công, sửa nó trong ba tuần và hứa sẽ đưa về chỗ mẹ làm. Rento xem đây là bước đầu lấy lại xưởng. Mira lại nghĩ con mang về một công cụ dùng chung. Sự khác nhau ấy cần được giữ: lời hứa lớn chủ yếu do Rento tự đặt ra.
+Điều muốn, điều cần và điều sợ
+Mục tiêu trước mắt: giao chiếc tời hoạt động được, nhận đủ tiền công và tiếp tục tích góp. Mục tiêu tự đặt: mua lại xưởng cũ để mẹ không phải làm thuê. Điều thật sự cần học: hỏi mẹ muốn sống thế nào, chia việc và cho phép người khác giúp mình. Nỗi sợ sâu nhất là trở thành người vô dụng khi gia đình gặp chuyện. Niềm tin sai: “Nếu vẫn cần người khác gánh giúp, mình chưa đủ khả năng lo cho mẹ.”
+Tính cách, đời thường và giọng nói
+Rento quan sát tốt, chịu khó và biết nhớ nhu cầu nhỏ của người khác; cậu cũng tự ái, hay giấu việc quá sức và có thói quen trả lời “được” trước khi tính hết cái giá. Cậu thích mặc cả ở chợ đồ cũ, ghét bị gọi là nhóc khi đang làm việc, thích được khen tay nghề nhưng lúng túng nếu được khen là người tốt. Khi căng thẳng, cậu xoay một chiếc đai ốc trong túi. Giọng nói nhanh, hay bẻ lại một ý bằng chuyện thực tế; sự hài hước dùng để che ngại ngùng, không phải lúc nào cũng pha trò.
+Mẫu giọng: “Cứu được. Còn sửa lại hết bao nhiêu thì cho tôi thở đã.” Mẫu nội tâm: cậu có thể nghĩ mình chỉ tiếc cái máy, rồi nhận ra điều khó chịu hơn là lại phải về nhà mà chưa giữ được lời. Trong văn xuôi, dùng suy nghĩ gắn với một lựa chọn trước mắt; tránh biến cậu thành người tự phân tích tâm lý quá thông suốt.
+Năng lực, giới hạn và cách hành động
+Sở trường: đọc vết mòn, nghe máy lệch nhịp, ước lượng đường truyền lực ở thiết bị quen thuộc và ứng biến từ đồ có sẵn. Cậu biết bơi ở mức tự cứu, không đủ sức cứu người giữa dòng mạnh; chưa biết lái tàu hay sử dụng thành thạo ấn. Khi chưa từng gặp một thiết bị, cậu phải quan sát, hỏi hoặc thử, có thể đoán sai. Điểm yếu trong nguy hiểm: nhìn chăm vào lỗi máy nên bỏ sót người bên cạnh; sợ bị coi là chậm nên đôi khi bỏ bước an toàn.
+Cách chiến đấu tương lai: dây, móc, điểm neo và dụng cụ dẫn lực; giữ vị trí, mở đường, vô hiệu hóa cấu trúc thay vì thắng mọi đối thủ bằng sức mạnh. Mỗi nâng cấp phải đến từ học và thất bại. Dụng cụ có thể gãy; kiến thức cơ khí không tự biến thành hiểu biết mọi loại sinh vật hoặc cổ thuật.
+Quan hệ, điều giấu và giới hạn đạo đức
+Với Mira: thương mẹ nhưng thường quyết định thay mẹ. Với Nari: đã quen qua những ca sửa đồ ở bến; cậu thấy cô kiểm tra quá kỹ, cô thấy cậu đánh giá thấp hậu quả. Với Dagan: dễ coi việc nhận tiền trước là ích kỷ, rồi phải học rằng người làm thuê cũng đang gánh một gia đình. Rento giấu khoản tích góp và phần việc ngoài ca để mẹ khỏi ngăn. Cậu không chủ động dùng người không biết gì làm mồi cho kế hoạch; nếu một phương án khiến đồng đội chịu rủi ro, việc giấu thông tin phải được xem là sai lầm có hậu quả.
+Hướng thay đổi và cách hé lộ quá khứ
+Đầu chặng: tự chứng minh bằng việc gánh hết. Giữa chặng: một lần giấu giới hạn của dụng cụ khiến kế hoạch chung hỏng và lòng tin bị tổn thương. Cuối chặng: cậu vẫn dám nhận việc khó nhưng nói rõ mình biết gì, chưa biết gì và cần ai. Thành quả cảm xúc là chọn được một tương lai cùng mẹ, không mặc định phải lấy lại đúng căn xưởng cũ.
+Hé lộ ba lớp: trước hết để cuốn sổ giá máy và thói quen nhận việc cho thấy mục tiêu; sau đó, lúc phải dùng tời riêng cứu tàu, cho một hồi ức ngắn về khoảng sàn mẹ đã dọn; cuối cùng, trong cuộc bất đồng hiện tại với Mira, mới kể đủ vì sao xưởng được bán. Cảnh quá khứ đầy đủ chỉ xuất hiện khi nó buộc Rento sửa lại cách hiểu về mẹ và quyết định tiếp theo.
+04. NARI — người sợ một quyết định chậm hơn một nhịp
+Căn cước và diện mạo
+Mã nhân vật: NV02. Nữ, 19 tuổi; đọc tên: Na-ri. Hộ vệ tập sự đã đủ điều kiện trực một ca thông thường, chưa có quyền chỉ huy cả bến. Cao khoảng 1,66 m, dáng cân đối, tóc đen buộc cao gọn, dưới mái có một lọn hay tuột vì mũ trực. Áo ngắn màu xanh sẫm, đai dụng cụ, ủng nhẹ; vòng dẫn lực ở cổ tay phải và sào ngắn có thể nối dài là hai vật nhận diện. Băng cổ tay dùng bảo vệ khi tập, không phải dấu ấn bí mật.
+Gia đình và xuất thân
+Nari lớn lên ở khu sửa buồm phía đông Arumo. Gia đình còn đủ cha mẹ, sống bằng nghề may buồm và làm dây; tình cảm ổn nhưng cha mẹ coi công việc hộ vệ là nguy hiểm, thu nhập bấp bênh. Cô có một em trai đang học việc, thường nhờ cô bênh rồi lại chê cô quản nhiều. Nari vào lớp hộ vệ bằng kết quả tuyển thực hành, muốn có một nghề được tin cậy và tự quyết con đường của mình.
+Quá khứ có ảnh hưởng đến hiện tại
+Năm 15 tuổi, Nari nhập khóa căn bản, tiến bộ nhờ tập đều và ghi chép kỹ hơn nhờ thiên phú. Năm 17 tuổi, trong một buổi diễn tập gặp nước dâng thật, cô nhận hai chỉ dẫn trái nhau và chờ xác nhận quá lâu. Seli, bạn tập cùng tuổi, bị thương ở chân. Người bạn đó hồi phục và chuyển sang làm dây cứu hộ; họ vẫn có thể gặp nhau. Nari giữ lại bản ghi buổi tập, thường đọc phần thời điểm mình chần chừ mà bỏ qua những yếu tố khác của sự cố.
+Ở tuổi 19, cô bắt đầu được giao ca riêng dưới quyền Oren. Nari tin mình đã trưởng thành vì thuộc quy trình, nhưng lần cứu chiếc tàu sớm mùa sẽ buộc cô quyết định trong tình huống chưa có bài mẫu. Quá khứ này giải thích sự cẩn thận của cô; nó không chứng minh mọi quyết định cứng nhắc đều đúng.
+Điều muốn, điều cần và điều sợ
+Mục tiêu trước mắt: hoàn thành ca, bảo đảm người ở bến được an toàn và giữ tư cách làm việc chính thức. Mục tiêu dài hơn: đủ năng lực dẫn một tổ cứu hộ thực địa. Điều cần học: quyết định từ thông tin đang có, thừa nhận sai và tạo điều kiện để đồng đội báo lỗi. Nỗi sợ: một người khác bị thương vì cô chọn quá muộn. Niềm tin sai: “Làm đúng đủ các bước thì mình có thể kiểm soát hết hậu quả.”
+Tính cách, đời thường và giọng nói
+Nari đáng tin, nhớ lời hứa nhỏ và thường âm thầm kiểm tra đồ cho người khác. Khi lo, cô trở nên khó giao việc và dễ nói như ra lệnh. Cô thích đồ cay nhưng chịu cay kém, hay giả vờ do món ăn nóng; giỏi trò xếp dây, vụng việc vá áo dù lớn lên trong nhà may buồm. Cô có kiểu đùa tỉnh bơ, nói ít nhưng không phải nhân vật lạnh lùng. Khi bị hỏi chuyện riêng, cô có thể chuyển sang hỏi người kia đã làm xong việc chưa.
+Mẫu giọng: “Tôi tin cậu. Cái nút cậu vừa buộc thì chưa.” Nội tâm nên chứa giằng co giữa điều cô nhìn thấy và điều sổ quy định yêu cầu. Nếu cảnh đang theo Rento, chỉ thể hiện nội tâm Nari qua lời nói, động tác và những gì cô chịu kể; không tự ý chuyển vào đầu cô giữa đoạn.
+Năng lực, giới hạn và cách hành động
+Nari có thể nhận một phần lực va chạm qua vòng và sào, giữ trong thời gian ngắn, rồi trả theo đường dẫn khi tư thế đúng. Cô mạnh ở đỡ, đổi hướng, mở lối và cứu hộ. Không tạo lực từ hư không, không hấp thụ vô hạn, không điều khiển ý nghĩ hay nước. Mất điểm tựa, tổn thương cổ tay hoặc vật dẫn nứt sẽ khiến kỹ thuật suy giảm rõ. Với đòn quá mạnh, lựa chọn tốt có thể là tránh thay vì cố đỡ.
+Trong Chương 1, nguồn của hai lần trả lực phải nhìn thấy được: cú tiếp đất và cú quật của sinh vật. Sau đó cổ tay sưng, ảnh hưởng tới buổi làm việc tiếp theo. Cô chưa biết chắc sinh vật là gì; có thể suy luận nó theo dòng nước, nhưng không được bỗng giải thích toàn bộ nguồn gốc chỉ bằng một lần nhìn.
+Quan hệ, điều giấu và giới hạn đạo đức
+Với Rento: quý tay nghề và việc cậu giữ lời, mệt vì thói quen liều rồi mới báo. Với Seika: muốn được cô đánh giá tốt, khó chịu khi bị hỏi “vì sao” thay vì được chỉ đáp án. Với Oren: biết ơn người giao cơ hội, vì thế việc nghi ngờ mệnh lệnh của anh sẽ có giá cảm xúc thật. Với Dagan: mâu thuẫn giữa chứng chỉ và kinh nghiệm, dần học được cách phân công theo khả năng hiện có.
+Cô giấu mức đau cổ tay vì sợ mất ca chính thức. Giới hạn đạo đức: không bỏ một người chỉ vì họ thiếu giấy tờ hoặc đang bị nghi ngờ; vẫn có thể kiểm soát và bảo vệ họ trong khi xác minh. Tình cảm với Rento để phát triển qua việc hiểu và chọn tin nhau; hồ sơ chưa mặc định họ là một cặp.
+Hướng thay đổi và cách hé lộ quá khứ
+Đầu chặng: muốn mình đúng để mọi người an toàn. Giữa chặng: đồng đội giấu sai sót vì sợ phản ứng của cô, khiến cô nhận ra cách chỉ huy của mình cũng tạo rủi ro. Cuối chặng: vẫn chuẩn bị kỹ nhưng phân quyền, yêu cầu phản biện và dám chịu trách nhiệm cho một quyết định chưa chắc chắn.
+Hé lộ ba lớp: cảnh kiểm dây quá lâu bộc lộ thói quen; cuộc cãi nhau sau một nhiệm vụ hé phần chờ xác nhận; cuộc gặp lại người bạn cũ cho thấy Nari không thể thay người đó quyết định họ nên sống thế nào. Hồi tưởng phải đặt ở lúc tạm nghỉ, kiểm tra dụng cụ hoặc sau nhiệm vụ; không ngắt một đòn đánh đang xảy ra bằng nhiều trang quá khứ.
+05. DAGAN — người không thể sống bằng một lời hứa trả công
+Căn cước và diện mạo
+Mã nhân vật: NV03. Nam, 20 tuổi; đọc tên: Đa-gan. Người hộ tống hàng tự do ở Arumo, chưa hoàn tất chứng chỉ hộ vệ. Cao khoảng 1,79 m, vai rộng, tóc nâu sẫm cắt sát hai bên, có khoảng da chai ở các khớp tay. Mặc áo vải dày màu nâu đỏ, giáp cẳng tay cũ được bảo dưỡng cẩn thận và giày tốt hơn phần còn lại của bộ đồ. Anh coi việc bảo vệ bàn chân và bàn tay là bảo vệ kế sinh nhai.
+Gia đình, xuất thân và quá khứ
+Dagan sống cùng cha và hai em trong khu nhà thuê gần bến. Mẹ làm theo mùa ở một trạm dịch vụ khác, có gửi tiền về; gia đình không bị bỏ rơi nhưng các nguồn thu thiếu ổn định. Năm 16 tuổi, Dagan vào học hộ vệ. Năm 18 tuổi, cha bị thương khi bốc hàng, khoản tích góp cạn nhanh hơn thời gian hồi phục. Anh tạm nghỉ học để đi hộ tống, rồi những chuyến sau liên tiếp làm lỡ kỳ quay lại.
+Anh từng nhận một chuyến nguy hiểm vì lời hứa tiền thưởng, sau đó phải tự đòi tiền nhiều tuần trong lúc cả nhà chờ. Từ đó, anh hỏi giá, điều kiện và đường rút trước khi nhận việc. Bề ngoài Dagan thường chê học viện xa thực tế; mỗi tối anh vẫn học lại vài trang tài liệu cũ. Điều này là sự xấu hổ vì một ước muốn chưa làm được, không phải bằng chứng anh lười hoặc thiếu trí tuệ.
+Mục tiêu, tính cách và giọng nói
+Mục tiêu: có nguồn thu ổn định, hoàn tất chứng chỉ và lập một tổ hộ tống trả công rõ ràng. Anh cần học cách giữ giá trị của mình khi không phải người khỏe nhất trong phòng. Sợ bị thương đến mức trở thành người cần gia đình nuôi. Niềm tin sai: “Không nắm phần chủ động thì trước sau người khác cũng để mình chịu thiệt.”
+Dagan thẳng, giữ hẹn, trả phần tiền chung sòng phẳng, nhưng thích chốt quyết định nhanh và hay hiểu lời góp ý thành coi thường. Ngoài việc, anh nấu món rẻ mà no khá ngon, có thói quen mang phần về cho em, thích những trò thi sức vụn vặt và rất bực khi thua trò cần khéo tay. Mẫu giọng: “Giúp thì giúp. Nhưng đừng lấy công của tôi ra hứa thay.”
+Năng lực và giới hạn
+Sở trường: áp sát, giữ hành lang hẹp, di chuyển khi mang tải và đọc dấu hiệu một cuộc gây hấn. Giáp tay dẫn lực giúp anh ghì và đẩy ở cự ly ngắn; anh không giữ lực tinh như Nari. Điểm yếu là tiêu hao nhanh khi kéo dài, dễ bị dẫn khỏi vị trí bởi đối thủ khéo, ít kinh nghiệm với thiết bị phức tạp. Anh cần đội hình và nghỉ thật sau các đợt dùng sức; không biến thành người đấm xuyên mọi vật cản.
+Quan hệ và hành trình
+Với Rento: hai người đều gánh gia đình nhưng nhìn nhau sai; Rento thấy người chỉ nói tiền, Dagan thấy cậu thợ thích liều rồi để người khác thu dọn. Với Nari: anh ghét bị đánh giá chỉ qua chứng chỉ, cô không thể giao quyền chỉ vì anh tự tin. Với Seika: anh nhận việc ở lớp ngoài giờ để đổi lấy buổi học, ban đầu nói đó chỉ là hợp tác cho đỡ ngại. Ba người trẻ phải có những lần bất đồng vẫn làm việc được, không dùng mọi cuộc tranh luận để dẫn tới đánh nhau.
+Điều giấu: Dagan đã xin lịch thi lại nhưng chưa báo nhà. Anh không bán vị trí của người vô tội để lấy tiền; khi cần vay hoặc nhận việc đáng ngờ, truyện phải cho thấy anh biết đang chọn điều gì. Hướng thay đổi: từ cố làm người không thể thay thế đến xây một tổ mà người khác cũng đủ khả năng gánh việc. Một cột mốc phù hợp là anh chủ động nhường vị trí đánh chính cho Nari để giữ đường cứu hộ.
+Cách đưa quá khứ vào truyện
+Đầu tiên để việc trả công và một phần cơm mang về cho thấy trách nhiệm gia đình. Lần sau, Rento phát hiện tập vở học cũ trong lúc tìm một món đồ cần dùng; Dagan có quyền khó chịu vì bị chạm vào riêng tư. Khi phải quyết định giữa một chuyến kiếm tiền và một kỳ thi, mới kể đủ lý do anh nghỉ học. Mâu thuẫn hiện tại phải khiến quá khứ có tác dụng, không giới thiệu cả tiểu sử ở lần xuất hiện đầu.
+06. SEIKA — người dạy học trò tự quyết
+Căn cước, xuất thân và đời sống
+Mã nhân vật: NV04. Nữ, 35 tuổi; đọc tên: Sê-ka. Cựu chỉ huy tổ hộ vệ đường sông, hiện hướng dẫn thực địa và thẩm định an toàn cho các chuyến ngắn. Cao khoảng 1,68 m, tóc buộc thấp, vai trái vận động hạn chế; áo khoác xám bạc màu, gậy ngắn và bộ thẻ bài tập là vật thường mang. Xuất thân từ một gia đình làm vườn ở vùng cao, học nghề hộ vệ qua chương trình có hỗ trợ học phí. Gia đình còn liên lạc; hiện sống một mình gần sân tập.
+Quá khứ và điều còn mắc lại
+Năm 29 tuổi, Seika chỉ huy cứu một đoàn tàu mắc ở đoạn nước xoáy. Cô giữ hành lang rút cho hành khách, giao đội phó và ba người tìm nhóm còn kẹt. Hai người trong tổ tìm kiếm không trở về; hồ sơ cứu nạn ghi nhận quyết định giữ đường rút đã cứu phần lớn đoàn. Một số gia đình vẫn không chấp nhận lời giải thích ấy. Seika có thể bảo vệ lý do của mình và đồng thời thừa nhận cái giá người khác phải gánh.
+Chấn thương vai trong nghề khiến cô thôi nhận ca chiến đấu dài. Cô chuyển sang dạy nhưng nhận ra nhiều học viên chỉ muốn chép một đáp án để được an toàn. Seika mở lớp căn bản ngoài giờ cho lao động không đủ điều kiện nhập học, trong đó có Dagan. Lớp dùng bài tập an toàn và không tự cấp chứng chỉ; mâu thuẫn với nơi làm việc nằm ở thời gian, quyền sử dụng sân và cách đánh giá học viên.
+Mục tiêu, tính cách và giọng nói
+Seika muốn đào tạo những người có thể tự quyết khi mất liên lạc với chỉ huy, đồng thời giữ quyền hướng dẫn để lớp còn hoạt động. Nỗi sợ là mình đang đẩy học trò vào nghề nguy hiểm rồi gọi đó là trao cơ hội. Niềm tin sai: “Giữ khoảng cách thì mình sẽ ra quyết định công bằng hơn.” Vì vậy cô đôi khi từ chối một cuộc nói chuyện riêng mà học viên thật sự cần.
+Cô kiên nhẫn với người hỏi thật, khó chịu với lời hứa quá nhanh, thích trò xếp hình và trồng những cây không cần chăm nhiều nhưng vẫn thường quên tưới. Không phát biểu câu nào cũng như châm ngôn. Mẫu giọng: “Em chọn phương án đó vì đã tính, hay vì ngại nói mình chưa biết?”
+Năng lực, giới hạn và quan hệ
+Sở trường: đọc tư thế, chọn đường rút, tổ chức một nhóm nhỏ và dùng đòn ngắn để tạo khoảng trống. Vai yếu khiến cô không giữ lực lớn liên tiếp và không thể giải quyết thay học trò mọi trận. Cô thường thắng một bài thực hành bằng việc thấy sai sót sớm, nhưng có thể thiếu thông tin, đoán nhầm người hoặc đến quá muộn.
+Với Nari: cần giúp cô bớt nhầm tuân thủ với bảo đảm tuyệt đối. Với Rento: buộc cậu nói ra giới hạn của dụng cụ trước khi người khác dùng. Với Dagan: đánh giá những gì anh làm được, đồng thời yêu cầu học lại phần an toàn anh né tránh. Với Oren: tôn trọng trách nhiệm giữ bến nhưng không đồng ý khi anh lấy việc chờ xác minh làm lý do hoãn bảo vệ dân.
+Điều giấu, hướng thay đổi và cách kể
+Seika vẫn gửi hỗ trợ đều cho gia đình một đồng đội đã mất, nhưng không xem tiền là quyền yêu cầu họ tha thứ. Điều này chưa cần thành bí mật gây sốc. Hướng thay đổi: cho học trò thấy quá trình mình cân nhắc và phần mình chưa chắc, thay vì chỉ đưa ra kết luận. Cô không cần chết để chứng minh học trò trưởng thành.
+Hé lộ bằng vai trái khi thị phạm; một người ở bến không chịu nhận lời chào của cô; sau cùng, một nhiệm vụ có lựa chọn tương tự buộc cô kể đúng giới hạn thông tin lúc đó. Hồi tưởng cứu nạn cũ phải phân biệt điều Seika đã biết ở thời điểm ra lệnh và điều chỉ biết sau này. Tránh dùng lời kể để tự tuyên bố cô vô tội hoặc đáng bị kết tội.
+07. MIRA — người mẹ có một kế hoạch riêng
+Căn cước, xuất thân và diện mạo
+Mã nhân vật: NV05. Nữ, 43 tuổi; đọc tên: Mi-ra. Mẹ Rento, thợ cơ khí từng sở hữu xưởng ở Arumo. Cao khoảng 1,58 m, tóc có vài sợi bạc sớm, bàn tay nhiều vết xước nhỏ; thường đứng lệch để hướng tai phải về người nói. Mặc áo vải sáng, tạp dề làm việc và kính bảo hộ đã thay quai. Học nghề từ một đoàn sửa tàu lưu động, dành gần mười năm tích góp trước khi mở xưởng riêng.
+Sự thật về quá khứ
+Bốn năm trước, một bộ tời được đưa tới xưởng trong thời gian dồn việc. Mira đã cho phép đưa thiết bị trở lại sử dụng trước khi hoàn tất thử tải, vì tin việc thay bộ phận chính đã đủ và vì hợp đồng đang cần tiền. Máy gặp tai nạn; Banu bị thương nặng, còn Mira mất phần lớn thính lực bên trái. Hồ sơ không kết luận mọi trách nhiệm thuộc về bà, nhưng phần bỏ bước kiểm tra là lựa chọn của bà và bà biết điều đó.
+Mira bán xưởng để trả phần chi phí mình cam kết, rồi tiếp tục làm thuê tại đó. Rento mới biết chuyện tai nạn và bồi thường, chưa biết chính xác bước kiểm tra bà đã bỏ. Mira từng định kể khi con lớn hơn, rồi mỗi lần thấy con tự hào về mẹ lại trì hoãn. Vết nứt giữa hai mẹ con đến từ sự trì hoãn ấy, không phải một âm mưu xóa trí nhớ hoặc việc bà bí mật là chiến binh. Việc bán xưởng hoặc thương tật không tự xóa trách nhiệm với người công nhân; khi người đó xuất hiện, họ cần có đời sống và quan điểm riêng, không được dùng chỉ để tha thứ cho Mira.
+Mong muốn, tính cách và đời thường
+Mira muốn thuê một chỗ nhỏ ngoài vùng bến đông, nhận sửa những máy vừa sức và dạy nghề cho vài đứa trẻ. Bà đã đặt cọc một căn có sân, chưa nói vì biết Rento đang dành tiền lấy lại xưởng cũ. Niềm tin sai: “Giữ chuyện khó cho mình sẽ giúp con nhẹ gánh.” Bà cần nói thật và chấp nhận con có thể giận.
+Bà chăm người khác bằng việc chuẩn bị, hay để phần ngon trong nồi rồi nói mình ăn rồi; đồng thời rất cứng đầu về cách sắp dụng cụ. Thích mặc cả cây cảnh nhưng ít khi nhận mình mua cho vui. Giọng thực tế, có thể hài hước, không phải mọi câu đều dạy con. Mẫu giọng: “Mẹ hỏi con muốn làm gì. Con kể kế hoạch của mẹ làm gì?”
+Năng lực, giới hạn và quan hệ
+Mira giỏi đọc vết mòn, cảm rung bằng tay và hướng dẫn nghề. Thính lực hạn chế khiến bà khó xác định hướng âm thanh giữa bến đông; bà chọn vị trí làm, dùng tín hiệu tay và yêu cầu người khác nhắc lại khi cần. Không dùng khiếm thính làm chi tiết gây cười hoặc biến nó thành khả năng siêu phàm. Bà không có kỹ năng chiến đấu chuyên nghiệp.
+Với Rento: tình thương đi kèm xung đột quyền quyết định. Với Nari: quý tính cẩn thận nhưng sẽ hỏi rõ trách nhiệm nếu cô mời Rento vào nhiệm vụ. Với Seika: trao đổi như hai người làm nghề có trách nhiệm, không chỉ là người mẹ xin thầy giữ con. Khi biến cố xảy ra, Mira có thể tổ chức người sửa xe, đóng nẹp và chuẩn bị phương tiện sơ tán.
+Hành trình và cách hé lộ
+Hành trình: từ giấu sai lầm để giữ hình ảnh một người mẹ vững vàng đến công khai giới hạn và chủ động lựa chọn cuộc sống mới. Bà vẫn có thể sợ, tức và làm sai; quyền quyết định không chuyển toàn bộ sang Rento sau khi cậu cứu được người.
+Gieo sớm: bà hướng tai phải về phía con; bà hỏi tiền thuê một căn khác; bà nhắc thử tải kỹ hơn mức Rento thấy cần. Hồi tưởng chính đặt sau một cuộc tranh luận về chuyện Rento cũng giấu rủi ro với đồng đội. Bà kể tai nạn bằng những việc mình đã làm, chưa làm và biết lúc đó, rồi hai mẹ con phải chọn cách xử lý một việc đang chờ.
+08. OMI — người mang theo điều mình đã chứng kiến
+Căn cước, xuất thân và diện mạo
+Mã nhân vật: NV06. Nữ, 62 tuổi; đọc tên: Ô-mi. Phụ trách bếp và kho thực phẩm tại một trạm phục vụ tàu phía trên Asera; là người phụ nữ được cứu cuối cùng trong Chương 1. Cao khoảng 1,52 m, tóc bạc buộc thành búi nhỏ, đầu gối trái đau khi đi cầu thang. Túi vải và chiếc chìa khóa trong tay đều là vật đời thường: chìa khóa mở tủ giấy tờ và tiền sinh hoạt ở nhà, không phải chìa khóa kích hoạt một di tích.
+Gia đình và quá khứ
+Omi từng bán cơm dọc các bến, nuôi hai con sau khi chồng mất vì bệnh nhiều năm trước. Hiện một người con sống ở xa, con gái Luma, 34 tuổi, làm việc tại trạm phía trên. Bà nhận việc bếp và kho để có thu nhập đều. Kinh nghiệm chia suất ăn khiến bà nhớ số người, ca trực, thói quen và những lần hàng tiếp tế về thiếu; đó là kiến thức nghề nghiệp, không phải trí nhớ hoàn hảo.
+Vài ngày trước chuyến tàu đến Arumo, trạm nhận lệnh rời khu vực. Omi nhìn thấy bản lệnh tại bảng trực và nghe trưởng ca xác nhận, nhưng không biết toàn bộ mạng lưới đã nhận cùng thông tin hay chưa. Con gái ở lại hỗ trợ chuyến sau, còn bà được giao đi cùng nhóm đầu vì đầu gối yếu. Khi tàu chuẩn bị rời bến, bà tự ý cho một người bị thương lên dù danh sách chưa có tên anh ta. Trên tàu đến Arumo có sáu người trong danh sách và một người ngoài danh sách; tổng vẫn là bảy.
+Mục tiêu, tính cách và giọng nói
+Omi muốn bảo vệ những người vừa thoát nạn, liên lạc với con gái và buộc người ở bến coi cảnh báo là việc thật. Bà sợ mình đã rời đi quá sớm và bỏ con ở lại. Niềm tin sai: “Muốn bảo vệ một người thì phải tự giữ kín phần dễ khiến họ gặp rắc rối.” Sự im lặng của bà có thể làm người điều tra đánh giá sai một bằng chứng.
+Bà chăm người bằng đồ ăn, nhớ ai không ăn được món nào, nhưng không hiền với mọi người và không tự nhiên tin người trẻ chỉ vì họ là nhân vật chính. Khi bị hỏi dồn, bà cắt ngang và yêu cầu giải thích câu hỏi dùng để làm gì. Mẫu giọng: “Bà kể điều bà nhìn thấy. Phần còn lại, cháu đừng điền hộ.” Có thể đùa về những chuyện vụn sau khi đã yên, không nói lời tiên tri mơ hồ để cố tạo bí ẩn.
+Năng lực, giới hạn và quan hệ
+Omi biết sơ cứu cơ bản, quản kho, đọc lịch tiếp tế và nhận ra bất thường ở nước dùng hằng ngày. Bà không biết tên hay nguồn gốc sinh vật trong tàu, không giải được mọi mã kỹ thuật. Mệt, lạnh và hoảng loạn có thể khiến thứ tự bà kể thiếu chính xác; người khác cần kiểm chứng mà vẫn tôn trọng bà. Đau đầu gối giới hạn chạy và leo, không làm bà mất mọi khả năng tự quyết.
+Với Rento: biết ơn cậu cứu mạng nhưng có thể từ chối để cậu giữ túi hay xem đồ riêng. Với Nari: vừa cần cô bảo vệ vừa sợ quy trình khiến người ngoài danh sách bị bỏ mặc. Với Oren: đòi một câu trả lời cụ thể về cảnh báo. Omi chưa quen riêng Garan; những gì bà biết về anh ta đến từ bảng lệnh và người ở trạm.
+Điều giấu, hướng thay đổi và cách kể
+Điều bà giấu là việc tự ý đưa người đàn ông bị thương lên tàu ngoài danh sách. Bà sẽ phải lựa chọn khai thật để nhóm đối chiếu đúng hành trình, đồng thời yêu cầu bảo đảm an toàn cho người đó. Hướng thay đổi: từ tự giữ mọi chuyện tới chia sẻ sự thật có kiểm chứng và tham gia chăm sóc người sơ tán bằng chính nghề của mình.
+Lần đầu xuất hiện: chỉ thấy bà siết chìa khóa, quan sát nhà còn sáng đèn và hỏi về lệnh sơ tán. Lần hai: một chi tiết trong lời kể không khớp danh sách dẫn tới tranh luận. Lần ba: khi có cách bảo vệ người bị thương, bà nói thật và cùng người khác dựng lại chuyến đi. Chuyện con gái được bộc lộ qua hành động tìm tin, không cần kể trọn gia phả ngay lúc vừa được cứu.
+09. OREN — người giữ bến và giữ cả uy tín của mình
+Căn cước, xuất thân và diện mạo
+Mã nhân vật: NV07. Nam, 32 tuổi; đọc tên: Ô-ren. Trưởng ca phụ trách an toàn và điều phối tại bến Arumo, cấp trên trực tiếp của Nari. Cao khoảng 1,75 m, tóc cắt gọn, áo trực được vá nhưng luôn sạch, thường mang sổ giao ca và còi. Sinh trong gia đình buôn bán ở Arumo; có vợ làm ở chợ, chưa có con. Anh biết nhiều người ở bến qua việc làm hằng ngày.
+Quá khứ và sự hình thành niềm tin
+Oren đi lên từ công việc ghi sổ, phân chuyến rồi quản ca. Một mùa trước, anh tổ chức di chuyển hàng và người khỏi một kho xuống cấp bằng các bước rõ ràng, không có ai bị thương. Thành công ấy khiến anh tin rằng thông tin phải qua đúng đầu mối, nếu ai cũng tự hành động thì chính việc cứu hộ sẽ gây hỗn loạn. Anh chưa từng phải xử lý một sự cố lan qua nhiều tầng sông.
+Quan hệ công việc với Varo giúp bến có vật tư và tiền trả công đúng hạn. Khi xuất hiện dấu hiệu bất thường, Oren ban đầu muốn có xác nhận từ cấp trên trước khi phát thông báo lớn. Anh có thể đồng thời tổ chức cứu nạn tại chỗ; việc thận trọng về thông tin không được viết thành đứng nhìn người chết.
+Mục tiêu, tính cách và giọng nói
+Mục tiêu: bảo vệ dân, duy trì bến và tránh một quyết định khiến hàng trăm hộ mất mùa làm ăn vô ích. Điều cần học: thông tin chưa đầy đủ không miễn trách nhiệm chuẩn bị cho nguy cơ lớn. Nỗi sợ riêng là người quen nhìn anh như một người thăng chức nhờ ghi sổ nhưng không làm được việc khi thật sự cần.
+Anh có tổ chức, nhớ tên người làm, thường tự kiểm tra ca cuối. Mặt hạn chế là khó nhận mình đổi ý và có xu hướng sửa câu chữ báo cáo để chúng nghe chắc chắn hơn tình hình. Ngoài việc, anh thích sửa đồ chơi cho trẻ quanh chợ và rất tệ khi nói lời xin lỗi trực tiếp. Mẫu giọng: “Tôi cần biết tin này từ đâu trước khi bảo cả bến bỏ nhà. Trong lúc chờ, chuẩn bị xe và chỗ trú trước.”
+Năng lực, điều giấu và giới hạn
+Oren mạnh ở hậu cần, phân người, chọn địa điểm tập trung và nắm quan hệ địa phương; có kỹ năng tự vệ và cứu hộ cơ bản nhưng không đấu ngang Seika. Quyền lực của anh nằm ở lệnh trực, kho vật tư và quyền phát tín hiệu, có giới hạn bởi hội đồng thị trấn và Varo.
+Điều anh giấu về sau: đã nhận một cảnh báo sơ bộ yêu cầu kiểm tra đường sơ tán, nhưng chuyển nó thành ghi chú bảo trì và không báo hết cho tổ trực vì tin nguy cơ chưa đủ chắc. Thời điểm nhận, nội dung và người chuyển phải được ghi rõ khi dựng mạch. Anh chưa nhận lệnh sơ tán toàn diện giống bản Omi thấy; không được đánh tráo hai loại giấy này để tạo cú lật.
+Quan hệ, hướng thay đổi và cách kể
+Với Nari: anh thật lòng muốn cô tiến bộ, đồng thời xem việc cô chất vấn công khai là mất kỷ luật. Với Seika: bất đồng về thời điểm cần hành động khi chưa có xác nhận. Với Garan: mang ơn hệ thống đã giúp bến hoạt động nhưng phải chịu trách nhiệm cho quyết định ở phần việc của mình. Anh là người có thể sửa sai bằng hành động, không mặc định trở thành tay sai tàn nhẫn.
+Hành trình: từ bảo vệ độ chắc chắn của báo cáo đến công khai điều mình đã bỏ qua và dùng quyền đang có tổ chức sơ tán. Việc sửa sai không xóa hậu quả hoặc bảo đảm giữ chức. Hé lộ bằng cách anh chọn từ khi giao việc, một chỗ gạch sửa trong sổ và cuộc đối chiếu giữa bản gửi với bản nhận. Chưa cần một chương hồi tưởng dài về tuổi thơ.
+10. GARAN — người tin mình có quyền quyết định ai phải chịu thiệt
+Căn cước, xuất thân và diện mạo
+Mã nhân vật: NV08. Nam, 46 tuổi; đọc tên: Ga-ran. Người điều hành vùng của Varo, đơn vị quản lý một phần trạm điều tiết và vận tải Asera. Cao khoảng 1,82 m, tóc điểm bạc, trang phục kín đáo và thực dụng; găng tay kỹ thuật có dấu sử dụng, không mặc như người chỉ ngồi bàn giấy. Sinh trong gia đình vận hành trạm, học kỹ thuật điều tiết rồi chuyển sang quản lý. Có gia đình sống ở khu cao; họ có quan điểm riêng và không chỉ tồn tại để bị bắt làm con tin.
+Quá khứ và cơ sở của niềm tin
+Khi còn làm kỹ thuật, Garan từng phối hợp nhiều trạm để chuyển dòng qua một đoạn hư, giữ được nước dùng và đường tiếp tế cho cả vùng. Anh được thăng chức nhờ kết quả thật. Những năm sau, anh quen giải quyết bất đồng bằng cách tập trung quyền ra quyết định và chỉ cung cấp cho cấp dưới phần thông tin anh cho là cần.
+Niềm tin hình thành từ thành công: nếu nhìn được bức tranh lớn hơn người khác, anh cho rằng mình có quyền quyết định phần thiệt hại họ phải chịu. Anh không bắt đầu vì muốn hủy diệt một thị trấn. Sự đối đầu nảy sinh khi anh giữ một phương án điều tiết đặt bến dưới vào nguy cơ cao, trì hoãn công bố để phương án không bị ngăn và coi cư dân là số liệu cần quản lý.
+Mục tiêu và trách nhiệm trong mạch đề xuất
+Mục tiêu: duy trì đường cấp nước và vận chuyển của khu cao, tránh hệ thống sụp dây chuyền và giữ quyền chỉ huy việc xử lý. Phương án đang cân nhắc cho truyện: Garan tiếp tục một thử nghiệm chuyển tải trong mùa nước đứng dù đã có dấu hiệu mất ổn định. Khi hậu quả xuất hiện, anh chọn kiểm soát thông tin và dồn tải về các nhánh dưới thay vì công khai để cả vùng cùng quyết định.
+Đây là trách nhiệm ở hiện tại, không phải bí mật anh đứng sau mọi tai nạn trong đời các nhân vật. Tai nạn xưởng của Mira, việc Dagan nghỉ học và sự cố đào tạo của Nari vẫn có nguyên nhân riêng. Sinh vật trên tàu có thể là hậu quả điều kiện dòng nước thay đổi; nguồn gốc cuối cùng thuộc bước dựng thế giới và mạch truyện, chưa được xác nhận trong Chương 1.
+Tính cách, đời thường và giọng nói
+Garan bình tĩnh, giỏi nghe một phản biện kỹ thuật và có thể sửa con số nếu bằng chứng tốt; anh khó chấp nhận người khác có quyền từ chối cái giá dù họ đã hiểu số liệu. Anh nhớ tên những trạm mình từng làm, dùng vật cũ lâu năm, quan tâm gia đình theo cách chu cấp rồi sắp lịch thay họ. Những nét đời thường làm anh có chiều sâu, không dùng để miễn trách nhiệm cho việc gây hại.
+Mẫu giọng: “Anh có thể bác phương án của tôi. Vậy đường cấp nước nào sẽ thay nó trước sáng?” Điểm yếu nằm trong câu hỏi: anh yêu cầu người khác chứng minh ngay một lời giải hoàn hảo, trong khi phương án mình chọn cũng có rủi ro và đang thiếu sự đồng thuận.
+Quyền lực, năng lực và giới hạn
+Garan hiểu cấu trúc trạm, có quyền điều phối người, thiết bị, giấy phép và một phần dữ liệu vận hành. Anh từng được đào tạo tự vệ và dùng vật dẫn lực hạng nặng ở trạm, nhưng không phải người mạnh nhất về giao đấu. Anh bị giới hạn bởi năng lực vật lý của hệ thống, các đơn vị ngoài quyền quản lý, hồ sơ có thể bị đối chiếu và những cấp dưới có quyền từ chối.
+Để ngăn Garan, nhóm cần bảo vệ người, chứng minh rủi ro và thực hiện được một phương án kỹ thuật khả thi; thắng một cuộc đấu không tự làm dòng sông an toàn. Anh có thể bị thuyết phục về một phép tính mà vẫn phải chịu trách nhiệm cho việc đã làm. Không giải quyết toàn bộ xung đột bằng một bài nói khiến anh đổi con người ngay lập tức.
+Quan hệ, bí mật và hướng phát triển
+Với Rento: ban đầu thấy một thợ trẻ hữu dụng, có thể đưa cơ hội và thiết bị thật để kéo cậu vào công việc. Với Mira: nếu hai người gặp nhau, bất đồng nằm ở quyền quyết định của người chịu hậu quả; chưa xác lập quen biết từ trước. Với Oren: dùng nỗi lo mất sinh kế của bến để yêu cầu kiểm soát thông tin. Với Seika: tôn trọng kinh nghiệm nhưng xem việc cô trao quyền cho học viên là khó kiểm soát.
+Bí mật cốt lõi đề xuất: có bản đánh giá cảnh báo rủi ro cho vùng dưới từ trước khi anh cho phép tiếp tục thử nghiệm. Hồ sơ phải chỉ ra anh biết đến mức nào và đã chọn gì, không chỉ có một con dấu đủ kết tội mọi thứ. Hành trình đi theo hướng ngày càng phải lựa chọn giữa thừa nhận giới hạn và tăng kiểm soát; kết quả cuối sẽ được xác lập ở bước mạch truyện.
+Cách giới thiệu và hé lộ quá khứ
+Cho độc giả gặp hậu quả quyết định của Garan trước khi gặp anh: lịch đổi chuyến, vật tư bị điều sang nơi khác, cảnh báo được viết quá nhẹ. Khi anh xuất hiện, cho thấy anh xử lý được một việc thật và hiểu vấn đề. Chuyện thành công thời trẻ chỉ cần qua người từng làm cùng hoặc hồ sơ; chỉ dùng hồi tưởng dài nếu một quyết định hiện tại cần được đối chiếu trực tiếp.
+11. Các vai phụ và mối đe dọa cần quản lý
+Bảy người trên chuyến tàu
+Sổ nhân vật phải giữ đúng bảy người: một người cha và đứa trẻ anh cõng; một người đàn ông bị thương ở chân, được Omi cho lên ngoài danh sách; hai người làm việc trên tàu thoát ở đợt đầu; một người đàn ông bò ra khi Nari giữ sinh vật; cuối cùng là Omi. Năm người qua trước, người thứ sáu được kéo khỏi cửa, Omi là người thứ bảy. Vai phụ chỉ được đặt tên khi có hành động hoặc quan hệ cần độc giả nhớ.
+Người ngoài danh sách hiện mới được xác lập là người bị thương cần được cứu. Anh chưa mặc định là kẻ phản bội, người nắm toàn bộ bí mật hay một chiến binh ẩn danh. Khi dựng mạch, nếu anh trở thành nhân chứng quan trọng thì phải bổ sung nghề, lý do có mặt, điều thật sự biết và bằng chứng kiểm tra được; tránh dùng sự mập mờ để thay đổi thân phận tùy tiện.
+Dàn nhân vật phụ Arumo — bản làm việc 0.3
+Mười hai hồ sơ dưới đây bổ sung đời sống của làng cảng và chuẩn bị nhân vật do game điều khiển (NPC). Tovan, Eli đã được gọi tên trong bản văn; Fara, Kiro và Bero là tên đề xuất cho ba vai đã xuất hiện. Banu, Seli và Luma phát triển từ những quan hệ đã có trong hồ sơ. Veni, Doro, Paku và Yori là vai mới để đưa vào khi có công việc cụ thể.
+Cách dùng: ngoại hình, xuất thân, quan hệ và giới hạn hiểu biết thuộc hồ sơ truyện. Đoạn chân dung là bản viết mẫu, chỉ chọn chi tiết phù hợp khi nhân vật bước vào cảnh. Tương tác, nhiệm vụ, hoạt ảnh và trạng thái trong game nằm ở trang “12 - T09 Nhân vật game” của Sheets; chưa phải tính năng đã làm.
+Mỗi người cần có việc đang làm và điều muốn giữ trước khi gặp nhóm chính. Khi vào cảnh, ưu tiên một hành động dễ nhớ, một nét ngoại hình và một câu thoại; quá khứ được hé khi ảnh hưởng lựa chọn. Không giới thiệu cả danh sách trong một chương. Những tên và chi tiết mới vẫn có thể sửa theo góp ý.
+NPC-01 • TOVAN — đại diện nhóm quản bến, duyệt quỹ bảo hộ và sở hữu một kho hàng
+Căn cước và trạng thái: Nam, 48 tuổi. Đã có tên và hành động trong Chương 1–3; tuổi, ngoại hình và đời riêng là phần thiết kế bổ sung.
+Diện mạo, phục trang và cử chỉ: Người đậm, cổ ngắn, tóc đen rẽ bên đã bạc ở thái dương. Áo dài chàm than phủ áo trong màu ngà; cổ tay sờn nhưng thân áo luôn phẳng. Một chùm chìa khóa đồng ngắn đeo sát hông, sổ bìa nâu thường ép dưới nách. Dáng đứng chiếm vừa đủ cửa ra vào; khi nghe lời phản đối, ông khép sổ trước rồi mới nhìn người nói.
+Đoạn chân dung dùng khi viết cảnh: Tovan đứng dưới mái che, phần gấu áo tránh được cả những giọt nước hắt lên từ cầu gỗ. Ông không cao, nhưng cứ dừng ở đâu là người phía sau phải nhích sang một bên. Chùm chìa khóa chạm nhẹ vào hông khi ông đổi chân đứng; cuốn sổ dưới nách vẫn khô, ngay cả lúc mọi người quanh đó đã ướt đến tận vai.
+Xuất thân và quá khứ: Lớn lên trong nhà buôn hàng ở Arumo, từng giữ được kho qua một mùa tàu ngừng chạy bằng cách chia hàng và vay tiền. Ông lấy thành công ấy làm lý lẽ rằng hộ đóng góp nhiều phải được xét trước. Sau tai nạn xưởng, ông ủng hộ treo bảo hộ cả hộ Mira; việc này vừa giữ quyền xét quỹ vừa khiến người làm thuê khó rời nhóm chủ hàng.
+Điều muốn, điều sợ và giới hạn: Muốn kho hoạt động lại sớm, giữ quyền quyết định và để con gái tiếp quản một cơ sở còn đứng vững. Sợ bị người cùng góp quỹ xem là mềm yếu. Niềm tin sai: người gánh tiền có quyền chọn ai phải chờ. Ông tránh bạo lực trước mặt người khác, nhưng sẵn sàng dùng thiếu giấy làm lý do trì hoãn việc thiết yếu.
+Quan hệ: Gây sức ép lên Eli bằng trách nhiệm kho; cần Oren ký nhưng thường đẩy việc khó sang cấp dưới. Xem Rento là thợ cần việc hơn là người có quyền đòi công. Có thể đứng cùng Doro khi muốn giữ xe cho hàng; mỗi người vẫn chịu trách nhiệm riêng.
+Phạm vi hiểu biết: Biết sổ quỹ, hồ sơ bảo hộ, tình trạng kho của mình và chữ ký đã yêu cầu. Không biết cơ chế sinh vật nước hay toàn bộ thử nghiệm của Garan. Không tự trở thành người gây tai nạn của mọi nhân vật.
+Cách vào truyện và hướng phát triển: Đã vào truyện bằng việc giữ tiền công ở Chương 1, giữ chăn ở Chương 2 và trì hoãn bồi hoàn ở Chương 3. Các cảnh sau cần cho thấy quyền của ông bị giới hạn bởi chứng từ, người làm chứng và quyết định cứu hộ; một lần bị phản đối chưa khiến ông thay đổi.
+Giọng nói — câu mẫu 1: “Tôi không bảo không giúp. Tôi hỏi ai chịu trách nhiệm ký.”
+Giọng nói — câu mẫu 2: “Cậu cứ để phiếu đấy. Tôi đã nói là sẽ xem.”
+Nhịp sống và biến đổi theo sự kiện: Bình thường: sáng ở nhà quỹ, chiều kiểm kho. Khẩn cấp: tới bàn điều phối, phản đối lấy xe chở hàng cho người sơ tán; lệnh cứu hộ có thể bác yêu cầu. Sau khủng hoảng: tiếp nhận đối chiếu dưới giám sát, lời thoại đổi theo việc đã công khai.
+NPC-02 • ELI — nhân viên kho và ghi phiếu ca trực dưới Oren
+Căn cước và trạng thái: Nữ, 23 tuổi. Đã có tên và hành động cấp chăn trong Chương 2; đời riêng và diện mạo là thiết kế bổ sung.
+Diện mạo, phục trang và cử chỉ: Thấp người, tóc đen tết gọn sau gáy, trán thường có vài sợi tóc dính mồ hôi. Áo xanh xám tay xắn và tạp dề nâu nhạt nhiều túi nhỏ. Ngón giữa dính một vệt mực khó rửa; một chiếc thước gỗ ngắn nhô khỏi túi trước. Khi lo, cô vuốt đi vuốt lại góc tờ phiếu thay vì nhìn thẳng.
+Đoạn chân dung dùng khi viết cảnh: Eli ôm chồng chăn cao tới cằm, phải nghiêng đầu mới thấy đường qua những đôi chân ngồi sát lò. Một chiếc thước gỗ gõ vào thành bàn khi cô đặt chăn xuống. Cô vội giữ nó lại, rồi dùng mu bàn tay đẩy mấy sợi tóc khỏi trán; vết mực bên ngón giữa theo đó thành một chấm nhỏ trên thái dương.
+Xuất thân và quá khứ: Mới có việc ổn định tại kho sau nhiều ca kiểm hàng thuê, đang sống cùng em gái trong phòng trọ gần chợ. Từng tự bỏ tiền bù một khoản lệch vì không giữ phiếu giao ca, nên tin giấy tờ sẽ bảo vệ mình. Vụ cứu tàu buộc cô nhận ra một tờ phiếu thiếu cũng có thể được dùng để bỏ mặc người ngay trước mặt.
+Điều muốn, điều sợ và giới hạn: Muốn học lên điều phối kho và trả tiền phòng đúng hạn. Sợ mất việc vì một chữ ký vượt quyền. Dám ghi điều mắt thấy nhưng còn cần người cùng xác nhận. Cô không sửa số lượng để làm vừa lòng người có quyền, kể cả khi việc đó giúp nhóm chính dễ thắng hơn.
+Quan hệ: Nari giúp cô giữ việc cấp chăn trong biên bản; Oren phải ký và chịu phần quyết định. Omi hiểu chuyện đếm suất, có thể cùng cô lập danh sách thực nhận. Eli chưa đủ thân để biết quá khứ gia đình Mira.
+Phạm vi hiểu biết: Biết số hàng, người thực nhận, giờ xuất kho, ai yêu cầu giữ chăn. Không biết vụ xưởng bốn năm trước hoặc lệnh điều hành vùng ngoài công việc mình nhận.
+Cách vào truyện và hướng phát triển: Hành động đầu đã có: giữ đầu chăn đối diện Tovan, rồi cấp khi Oren ký. Cảnh phát triển phù hợp là Eli tự bổ sung người ngoài danh sách và yêu cầu cấp trên ký vào đúng mệnh lệnh, dù tay còn run.
+Giọng nói — câu mẫu 1: “Em ghi bảy người. Em đã phát chăn cho bảy người.”
+Giọng nói — câu mẫu 2: “Phần việc em làm, em ký. Phần lệnh, anh ký giúp em.”
+Nhịp sống và biến đổi theo sự kiện: Bình thường: kiểm kho và giao ca. Khẩn cấp: làm bàn cấp vật tư với người phụ trách thay ca. Sau khủng hoảng: công khai danh sách cấp phát đã bỏ thông tin riêng không cần thiết, tiếp tục sửa các mục sai.
+NPC-03 • BANU — người bị thương trong tai nạn xưởng Mira, nay kiểm hàng nhẹ và sửa ghế
+Căn cước và trạng thái: Nam, 41 tuổi. Vai người công nhân đã có trong hồ sơ nền; tên, tuổi và đời sống hiện tại là đề xuất bổ sung.
+Diện mạo, phục trang và cử chỉ: Vai rộng, thân trên chắc do nhiều năm bốc hàng, chân phải bước ngắn hơn chân trái. Tóc cắt sát lẫn bạc, ria mép gọn; áo nâu đất tay ngắn, quần vải màu than, một miếng đệm da ở đầu gối trái khi quỳ làm việc. Thường ngồi trên ghế thấp, xoay cả món đồ về phía mình thay vì rướn người.
+Đoạn chân dung dùng khi viết cảnh: Banu đặt chiếc ghế con lên đùi, gõ nhẹ từng mối nối bằng cán đục. Hai cánh tay ông vẫn rắn, nhưng lúc đứng dậy, ông phải kéo chân phải về gần chiếc bàn rồi mới đẩy người lên. Thấy Rento đưa tay định đỡ, ông chỉ sang thanh nẹp còn nằm dưới đất: “Nhặt hộ cái kia. Tôi cần cái kia trước.”
+Xuất thân và quá khứ: Bốn năm trước làm ở vị trí bị tời hỏng kéo ngã trong vụ Mira bỏ bước thử tải. Chân phải chịu lực kém sau điều trị, khiến ông mất những ca bốc hàng dài. Bạn đời làm may, hai người chia việc để có thu nhập đều. Ông phải nghe người khác nói thay mình trong các cuộc xét lỗi và dần mệt với việc ai cũng cần một câu tha thứ.
+Điều muốn, điều sợ và giới hạn: Muốn được trả phần bồi thường đúng thỏa thuận và nhận việc hợp sức. Sợ trở thành cái cớ để người khác thương hại hoặc trừng phạt gia đình Mira. Có thể làm chứng đúng sự thật trong khi vẫn còn giận; không nhận tiền để đổi lời khai.
+Quan hệ: Mira phải nói rõ lỗi mình với ông. Rento mang mặc cảm nhưng cần học cách hỏi ông muốn hỗ trợ gì. Bero biết công việc cũ, phải tự chịu phần im lặng của mình. Banu không phải cha Dagan và không phải người bị thương trên tàu.
+Phạm vi hiểu biết: Biết vị trí mình đứng, các thao tác mình thấy và quá trình chi trả đã nhận. Không tự biết toàn bộ trao đổi giữa Mira, người thúc tiến độ và bên nhận máy.
+Cách vào truyện và hướng phát triển: Đưa vào bằng một công việc đang làm được: kiểm bánh xe chuẩn bị sơ tán, rồi từ chối để người khác gạt câu hỏi của mình sang một bên. Mở đủ tai nạn khi Mira cần đối chiếu sự thật theo mạch Chương 12.
+Giọng nói — câu mẫu 1: “Tôi chưa nói là tôi hết giận.”
+Giọng nói — câu mẫu 2: “Kê sang trái giúp tôi. Ừ, thế thì tôi tự làm được.”
+Nhịp sống và biến đổi theo sự kiện: Bình thường: làm tại nhà và ca kiểm hàng ngắn. Khẩn cấp: kiểm xe ở điểm tập kết, có ghế và người mang đồ tới. Sau khủng hoảng: làm việc theo sức và tiếp tục hồ sơ bồi thường.
+NPC-04 • SELI — thợ làm dây cứu hộ, bạn cùng khóa cũ của Nari
+Căn cước và trạng thái: Nam, 19 tuổi. Vai bạn tập sống sót và chuyển nghề đã có trong hồ sơ; tên, tuổi và diện mạo là đề xuất bổ sung.
+Diện mạo, phục trang và cử chỉ: Mảnh người, tóc nâu buộc thấp bằng đoạn dây gai đã tháo xoắn. Áo ngắn màu xanh rêu, tay áo cuộn cao; thắt lưng vải treo một con thoi gỗ và dao cắt dây có bao. Các đầu ngón tay chai, móng cắt sát. Dáng ngồi hơi nghiêng khi làm lâu, đứng lên thường thử đặt chân một nhịp trước khi bước.
+Đoạn chân dung dùng khi viết cảnh: Seli vừa nghe Nari nói vừa luồn sợi dây qua mấy ngón tay, nhanh đến mức nút mới đã nằm gọn trong lòng bàn tay khi cô nói hết câu. Anh kéo hai đầu, nhìn đoạn dây chứ chưa nhìn cô. Chiếc con thoi bên hông chạm vào ghế. “Cậu định nhận cả phần việc của tôi luôn à?”
+Xuất thân và quá khứ: Hai năm trước, buổi diễn tập gặp nước thật; Seli lao ra đỡ người đang trượt khi hai lệnh mâu thuẫn chưa được xử lý, rồi bị thương ở chân. Anh hồi phục, chọn học nghề dây và nhận ra mình thích giải một nút khó hơn việc chạy đua để chứng minh đã khỏe. Bị gọi mãi là người Nari phải bù đắp khiến anh thấy nghề mới bị xem như thất bại.
+Điều muốn, điều sợ và giới hạn: Muốn đơn hàng được chọn vì tay nghề và được đứng tên thiết kế dây. Sợ người thân quyết thay mình từ lòng tốt. Anh có thể nhận việc khó trong giới hạn đã thống nhất; không chứng minh tình bạn bằng liều mạng khi dây chưa đủ sức.
+Quan hệ: Thân với Nari nhưng khó chịu khi cô giúp quá mức. Có thể tranh luận cùng Dagan về cách buộc nhanh; cả hai cần thử tải thay vì hơn thua. Tôn trọng Seika khi cô hỏi sức chịu của cả dây lẫn người.
+Phạm vi hiểu biết: Nhớ hai chỉ dẫn mình nghe, vị trí mình lao ra và thương tích. Không biết ai sửa biên bản sau đó nếu chưa nhìn bản gốc hoặc gặp người ký.
+Cách vào truyện và hướng phát triển: Gieo bằng dây có dấu nút riêng trong buổi tập. Cuộc gặp đầy đủ phù hợp với Chương 13: Nari hỏi nhu cầu hiện tại trước khi nói chuyện lỗi cũ; Seli cần một hợp đồng thật, không chỉ một lời xin lỗi.
+Giọng nói — câu mẫu 1: “Nút đẹp đấy. Giờ thử xem nó chịu được người không.”
+Giọng nói — câu mẫu 2: “Hỏi tôi muốn làm gì trước đã, Nari.”
+Nhịp sống và biến đổi theo sự kiện: Bình thường: làm tại giàn dây có mái. Khẩn cấp: nhận đơn theo nhóm việc, chuẩn bị dây ở hậu tuyến. Sau khủng hoảng: mở bàn dạy nghề có trả công và học viên đăng ký.
+NPC-05 • LUMA — nhân viên hậu cần trạm trên, con gái Omi
+Căn cước và trạng thái: Nữ, 34 tuổi. Con gái Omi ở lại hỗ trợ chuyến sau đã được nhắc trong Chương 2; tên và hồ sơ chi tiết là đề xuất bổ sung.
+Diện mạo, phục trang và cử chỉ: Tóc đen cắt ngang vai, thường vén sau một tai bằng kẹp gỗ sẫm. Áo khoác ngắn màu đất nung phủ áo ngà; quần xám buộc ống và túi vải sâu đựng phiếu chuyến. Một vòng dây chìa khóa cột trong túi để không đánh rơi. Dáng đi nhanh, khi dừng nói chuyện vẫn giữ mắt về người đang chờ ở bàn giao hàng.
+Đoạn chân dung dùng khi viết cảnh: Luma giữ một mép bản kê bằng khuỷu tay để gió khỏi lật, tay kia đẩy thùng sang vạch đã kẻ trên sàn. Tóc tuột khỏi kẹp che một bên mắt, cô hất nó bằng mu cổ tay rồi tiếp tục đọc số. Chỉ khi nghe tên Omi, cô mới dừng bút. Vết mực cuối dòng kéo dài hơn các nét còn lại.
+Xuất thân và quá khứ: Lớn lên theo những quán cơm mùa tàu của mẹ nên luôn muốn có nơi ở và lịch làm ổn định. Cô chọn việc trạm vì tưởng giờ giấc sẽ đều hơn, rồi dần thành người thường phải ở lại khi ca sau thiếu người. Lệnh rời khu vực đến, cô đưa mẹ yếu gối đi trước và ở lại hỗ trợ chuyến tiếp, có điểm rút và người nhận bàn giao.
+Điều muốn, điều sợ và giới hạn: Muốn hoàn tất việc bàn giao để tự xuống an toàn và tìm mẹ. Sợ bị xem là vô trách nhiệm khi rời ca, nhưng cũng giận việc ai cũng mặc nhiên trông chờ mình ở lại. Cần nói rõ giới hạn số người và thời gian có thể hỗ trợ; không bỏ người mắc kẹt để giấu một bản kê sai.
+Quan hệ: Thương Omi, đôi lúc cáu vì mẹ quyết giúp người khác rồi giấu phần rắc rối. Hợp tác với Veni ở việc chuyển tin có biên nhận. Nhóm Rento phải gặp một người đang thực hiện kế hoạch của mình, không chỉ một người chờ cứu.
+Phạm vi hiểu biết: Biết hàng đã chuyển, người còn ở trạm, giờ chuyến đổi và bản lệnh cục bộ cô được đọc. Không nắm bản đánh giá đầy đủ của Garan. Tin về cô phải đi qua thư, người chuyển tin hoặc đối chiếu tại trạm.
+Cách vào truyện và hướng phát triển: Trước hết xuất hiện qua tin kiểm chứng ở chặng trạm trên, dự kiến Chương 7. Khi gặp trực tiếp, cô đang lựa chọn phần hàng buộc phải để lại để đủ chỗ cho người; thông tin được kể theo việc nhóm cần làm.
+Giọng nói — câu mẫu 1: “Mẹ xuống trước là việc mình đã bàn. Con ở lại không có nghĩa là con ở mãi.”
+Giọng nói — câu mẫu 2: “Cho tôi giờ chốt. ‘Cố thêm chút’ không phải một cái giờ.”
+Nhịp sống và biến đổi theo sự kiện: Trước sơ tán: kho trạm. Trong sơ tán: bàn tập kết cạnh lối rút, rời khi hoàn tất hoặc chạm giờ chốt. Sau đó: điểm tiếp nhận ở vùng an toàn; dịch vụ quan trọng chuyển tới đây theo truyện.
+NPC-06 • FARA — người bán cháo ở lối từ bến về chợ
+Căn cước và trạng thái: Nữ, 54 tuổi. Đề xuất sáng tác; gắn tên cho bà bán cháo đã xuất hiện ở Chương 2, chưa coi là chi tiết được duyệt.
+Diện mạo, phục trang và cử chỉ: Người thấp, vai tròn, da rám; tóc muối tiêu búi sau gáy. Áo nâu đất, tạp dề vàng nghệ bạc màu, khăn xanh rêu; tay thường cầm vá gỗ cán ngắn. Hay gạt thức ăn rơi trên mép bát bằng cạnh vá. Giọng khàn, nói nhanh khi đông khách; lúc hỏi chuyện riêng lại hạ giọng.
+Đoạn chân dung dùng khi viết cảnh: Fara nghiêng nồi, vét phần cháo cuối cùng vào bát. Hơi nóng làm mấy sợi tóc bạc bên thái dương bà quăn lại; bà lấy cổ tay gạt chúng lên, để lại một vệt ẩm trên má. Thấy Rento còn đứng ngoài mái hiên, bà đẩy chiếc ghế thấp ra bằng chân, rồi đặt bát xuống chỗ vừa lau sạch.
+Xuất thân và quá khứ: Sinh ở Arumo, từng bán chung với chồng rồi mở quầy riêng khi ông chuyển sang làm buồm. Một mùa bến đóng khiến bà phải vay tiền gạo; từ đó bà nhớ rất rõ ai cần bữa ăn trước khi cần một lời khuyên.
+Điều muốn, điều sợ và giới hạn: Muốn giữ quầy đủ lời để tự chủ; sợ thương người quá sức rồi mắc nợ. Có thể cho ăn thiếu, nhưng không đổi đồ ăn lấy lời khai hay bắt người nhận phải mang ơn.
+Quan hệ: Biết Mira qua chợ; quý Rento vì sửa nắp nồi đúng hẹn. Vẫn phàn nàn khi cậu làm bẩn ghế. Bà giúp người, chưa đủ can đảm đứng ra đối đầu nhà quỹ.
+Phạm vi hiểu biết: Biết nhịp khách và người làm ca đêm; không biết hồ sơ tai nạn của Mira hoặc nguyên nhân chiếc tàu đến sớm.
+Cách vào truyện và hướng phát triển: Giữ cảnh Chương 2: gần sáng, bà dúi gói thức ăn vào tay Rento ngoài nhà trực; tên Fara được gọi tự nhiên ở lần quay lại quầy. Tạo một nơi nhân vật có thể thở, đồng thời cho thấy lòng tốt cũng chịu áp lực tiền chợ.
+Giọng nói — câu mẫu 1: “Ăn đi. Để nguội rồi lại chê cháo của tôi.”
+Giọng nói — câu mẫu 2: “Cho nợ được. Bảo tôi không cần tiền thì không được.”
+Nhịp sống và biến đổi theo sự kiện: Nấu từ khuya để bán cho ca đêm tới hết buổi sáng; chiều nghỉ, vá khăn và kiểm tiền gạo cùng chồng. Trong khủng hoảng: bếp chuyển về điểm trú an toàn, nấu theo lượng gạo đã nhận. Sau sơ tán: mở nồi chung tại nơi ở tạm; chỉ trở lại quầy cũ khi bến được phép hoạt động lại.
+NPC-07 • KIRO — người phụ trách sơ cứu theo ca tại bến Arumo
+Căn cước và trạng thái: Nam, 28 tuổi. Đề xuất sáng tác; gắn tên cho người sơ cứu ở Chương 2, chưa coi là chi tiết được duyệt.
+Diện mạo, phục trang và cử chỉ: Cao vừa, vai hẹp, mắt thâm vì thiếu ngủ; tóc đen cắt sát tai. Áo xanh xám xắn tay, khăn trắng ngà buộc eo, túi băng vải bên hông; dáng luôn hơi cúi để nghe người đau nói. Rửa tay trước khi trả lời câu hỏi dài. Giọng nhỏ, câu ngắn; càng căng thẳng càng nói chậm.
+Đoạn chân dung dùng khi viết cảnh: Kiro kéo chiếc ghế về phía cửa cho đủ sáng. Tay áo xanh xám tuột xuống, anh dùng cằm giữ nó trong lúc buộc lại cuộn băng. Dưới mắt anh có hai quầng thâm; mỗi lần người đối diện rụt tay, anh đều dừng, đợi họ thả lỏng rồi mới làm tiếp. Ngoài hiên, tiếng gọi đã sang lượt thứ ba.
+Xuất thân và quá khứ: Từng phụ vận chuyển thuốc giữa hai trạm, sau theo người sơ cứu cũ học nghề. Có lần nghe bệnh nhân giấu đau để kịp chuyến việc, anh cho đi quá sớm; người ấy phải quay lại điều trị lâu hơn. Anh học cách hỏi kỹ thay vì tin câu 'không sao'.
+Điều muốn, điều sợ và giới hạn: Muốn ca trực có đủ người và đồ dùng; sợ bỏ sót thương tích. Không ký chứng nhận khỏe để người thuê ép thợ làm tiếp, nhưng cũng không hứa chữa điều vượt khả năng.
+Quan hệ: Phối hợp với Eli lấy vật dụng, thường nhắc Nari nghỉ tay. Tôn trọng Oren khi anh chịu bổ sung người trực; vẫn phản đối nếu bến đẩy quá nhiều việc sang ca sơ cứu.
+Phạm vi hiểu biết: Biết thương tích quan sát được; không suy ra sức mạnh, bệnh lạ hay tội của người bị thương.
+Cách vào truyện và hướng phát triển: Giữ cảnh Chương 2: rửa vết cắt của Rento, nhận ra cổ tay Nari đang sưng và yêu cầu cô ngồi xuống để cố định. Cho thương tích thời gian hồi phục và làm rõ hậu quả của những lần cố chịu đau.
+Giọng nói — câu mẫu 1: “Ngồi xuống đã. Cậu nói chuyện tiếp, tôi vẫn nghe.”
+Giọng nói — câu mẫu 2: “Tôi nghe cậu nói ổn rồi. Giờ cho tôi nhìn bàn tay.”
+Nhịp sống và biến đổi theo sự kiện: Đầu ca kiểm vật dụng, giữa ca tiếp người bị thương, cuối ca bàn giao bằng sổ; ngủ ở phòng thuê sau chợ. Trong khủng hoảng: chuyển việc theo lệnh điều phối và giới hạn nghề. Sau khủng hoảng: Yêu cầu bến thêm người trực và ghi rõ ngày tái khám. Rento, Nari vẫn có giới hạn vận động cho đến khi hồi phục trong truyện.
+NPC-08 • BERO — thợ bảo trì lâu năm, hiện nhận việc nhẹ ở bến
+Căn cước và trạng thái: Nam, 57 tuổi. Đề xuất sáng tác; gắn tên cho thợ già xuất hiện ở Chương 3, chưa coi là chi tiết được duyệt.
+Diện mạo, phục trang và cử chỉ: Lưng hơi còng, cằm rộng, tóc thưa chải sang một bên. Áo chàm vá khuỷu, quần xám, dây da treo thước gấp; ngón trỏ có vết chai dày. Dáng đứng nép sát mép cửa. Vuốt phẳng hóa đơn trước khi nói việc khó. Giọng đều khi bàn máy móc; gặp người có quyền giao việc thì hay bỏ dở câu.
+Đoạn chân dung dùng khi viết cảnh: Bero đứng nép bên cửa nhà quỹ, tờ hóa đơn đã được vuốt phẳng đến mềm mép. Ông nhìn bàn tay quấn băng của Rento rồi cúi xuống chiếc thước gấp bên đai. Một miếng vá khác màu nằm ngay khuỷu áo chàm. Khi cậu bước qua, ông hé miệng, khép lại, cuối cùng mới gọi đủ lớn để cậu nghe.
+Xuất thân và quá khứ: Làm ở bến từ trẻ, từng hướng dẫn Mira sửa bộ phanh. Trong buổi xét vụ tai nạn bốn năm trước, ông im lặng vì sợ mất việc nuôi gia đình. Sự im lặng giúp ông giữ thu nhập, cũng khiến Mira phải tránh mặt một người từng thân.
+Điều muốn, điều sợ và giới hạn: Muốn nghỉ nghề mà không còn né mẹ con Mira; sợ lời khai muộn bị coi là lấy lòng. Sẵn sàng xác nhận điều tận mắt thấy, không dựng chuyện để xóa lỗi cho Mira.
+Quan hệ: Có nợ tinh thần với Mira và Rento; hiểu áp lực sinh kế của Dagan nhưng dễ dùng nó để tự bào chữa.
+Phạm vi hiểu biết: Nhớ cuộc họp và một phần quy trình sửa máy; không biết toàn bộ giấy tờ hoặc động cơ của từng người.
+Cách vào truyện và hướng phát triển: Giữ Chương 3: chỉ Rento giữ sổ ca, giải thích sự im lặng cũ; Rento rời đi trước khi ông đặt tay lên vai. Cho người từng im lặng một cơ hội hành động có giá, mà không mặc định được tha thứ.
+Giọng nói — câu mẫu 1: “Giữ cả bản ghi ca. Phiếu này chưa kể hết được đâu.”
+Giọng nói — câu mẫu 2: “Tôi có nghe hôm ấy. Tôi đã không nói.”
+Nhịp sống và biến đổi theo sự kiện: Sáng sửa đồ nhẹ, trưa mang cơm về nhà, cuối ngày chép khoản vật tư; thường chọn lối tránh xưởng cũ của Mira. Trong khủng hoảng: chuyển việc theo lệnh điều phối và giới hạn nghề. Sau khủng hoảng: Nếu đã đứng tên xác nhận, tiếp tục trả lời đối chiếu dù bị giảm việc. Mira có thể nhận lời khai mà chưa muốn thân lại.
+NPC-09 • VENI — người chuyển thư và thông báo giữa các trạm gần Arumo
+Căn cước và trạng thái: Nữ, 24 tuổi. Đề xuất sáng tác mới; thời điểm vào truyện cần được bố trí sau Chương 3.
+Diện mạo, phục trang và cử chỉ: Người cao mảnh, chân dài, tóc tết ngắn; một bên lông mày mọc lệch. Áo khoác vàng đất tới hông, quần xanh sẫm, túi thư vuông đeo chéo và tấm che mưa cuộn sau lưng. Dùng ngón cái kiểm khóa túi khi đang nghĩ. Nói nhanh, nhớ giờ giỏi; thấy người nghe lo lắng thì chủ động nhắc lại câu quan trọng.
+Đoạn chân dung dùng khi viết cảnh: Veni dựng túi thư lên mép bàn, đặt lòng bàn tay dưới đáy để lớp vải ướt không chạm sổ. Vạt áo vàng đất của cô còn nhỏ nước xuống ủng. Hai người đàn ông vẫn nói đè lên nhau; cô mở khóa túi, rút tờ biên nhận rồi dùng đầu ngón tay giữ đúng dòng ghi giờ, chờ họ nhìn xuống.
+Xuất thân và quá khứ: Lớn lên ở trạm nhỏ sống nhờ tàu hàng. Từng nghe lời người giao nhờ, đưa một thông báo miệng không có người nhận ký; khi lịch hàng sai, cô bị đổ hết trách nhiệm. Nay cô luôn ghi rõ ai giao, ai nhận và lúc nào.
+Điều muốn, điều sợ và giới hạn: Muốn mở tuyến thư độc lập, sợ mang tiếng làm thất lạc. Không tự đọc thư kín hay bán chuyện riêng; khi thấy nguy hiểm, cô báo qua tuyến trực thay vì tự đổi nội dung thư.
+Quan hệ: Quen Luma qua những lần giao đồ ở trạm; nể Eli vì ghi nhận cẩn thận. Với Oren, cô lịch sự nhưng đòi ký đủ.
+Phạm vi hiểu biết: Biết lộ trình và dấu giờ của chuyến mình; không biết mọi thông báo trong mạng trạm hoặc âm mưu của Garan.
+Cách vào truyện và hướng phát triển: Đến bến đúng lúc hai người tranh nhau giờ nhận giấy; cô dựng túi lên bàn và yêu cầu họ phân biệt giờ giao với giờ đọc. Giúp truy dấu cách tin tức bị chậm hoặc truyền sai bằng những mốc kiểm chứng được.
+Giọng nói — câu mẫu 1: “Tôi nhớ giờ nhận. Chuyện xảy ra trước giờ ấy thì anh phải hỏi người gửi.”
+Giọng nói — câu mẫu 2: “Đọc thư của người ta không giúp chân cô chạy nhanh hơn đâu.”
+Nhịp sống và biến đổi theo sự kiện: Nhận thư buổi sớm, chạy tuyến đã phân, về ghi bàn giao trước tối; nghỉ ăn ở quầy Fara khi tuyến qua Arumo. Trong khủng hoảng: chuyển việc theo lệnh điều phối và giới hạn nghề. Sau khủng hoảng: Đề nghị hai nơi ghi riêng giờ nhận và giờ công bố. Tuyến thư đổi theo đường đã mở lại, không lập tức nối toàn bộ mạng trạm.
+NPC-10 • DORO — chủ hai xe hàng, nhận thầu những chuyến ngắn trong làng
+Căn cước và trạng thái: Nam, 38 tuổi. Đề xuất sáng tác mới; chưa gắn vào bất kỳ người thuê việc có tên nào trong bản truyện.
+Diện mạo, phục trang và cử chỉ: Thân chắc, bụng vừa, tóc cắt bằng; râu cằm tỉa sát. Áo đỏ gạch cộc tay, đai nâu giữ túi tiền và phấn đánh dấu; khăn be quấn cổ, bước ngắn nhưng nhanh. Gõ đồng tiền lên ngón tay khi tính giá. Giọng thân mật lúc thuê, chuyển sang đếm từng khoản khi bị hỏi tiền.
+Đoạn chân dung dùng khi viết cảnh: Doro vừa giữ bánh xe khỏi nghiêng vừa ngoái nhìn kiện hàng mắc ở cổng. Khăn cổ màu be đã thấm mồ hôi, còn vệt phấn trắng chạy từ ngón cái lên tận tay áo đỏ gạch. Người thợ nhắc đến tiền chờ; ông ngừng gọi phu kéo, lấy đồng tiền trong túi ra gõ một nhịp lên móng tay.
+Xuất thân và quá khứ: Từng kéo xe thuê trước khi góp tiền mua chiếc đầu tiên. Một chuyến bị giữ hàng khiến ông vay để trả công thợ; nay sợ chậm chuyến đến mức thường đẩy thời gian chờ không lương sang người làm. Ông nhận ra điều đó nhưng vẫn gọi là cách giữ việc.
+Điều muốn, điều sợ và giới hạn: Muốn giữ hai xe và khách quen; sợ trở lại cảnh mắc nợ. Có thể ép giá, viện cớ giảm tiền; không nhận chở người bị giữ trái ý và phải chịu trách nhiệm khi chính ông làm sai hợp đồng.
+Quan hệ: Từng thuê Dagan; cần Rento sửa xe nhưng khó chịu khi cậu báo giá rõ từng phần. Mua chỗ kho của Tovan theo từng đợt, không phải tay sai hay người biết mọi việc của ông ta.
+Phạm vi hiểu biết: Biết giá thuê, đường hàng và phiếu giao của mình; không biết nguồn gốc sinh vật trên tàu.
+Cách vào truyện và hướng phát triển: Tranh tiền chờ với người đẩy xe trong lúc tự cầm bánh xe hỏng để khỏi mất cả buổi giao. Tạo xung đột tiền công có người chịu thiệt cụ thể; việc từng khổ không miễn trách nhiệm cho cách ông đối xử với thợ.
+Giọng nói — câu mẫu 1: “Tôi trả đủ chuyến. Chuyện chờ ở cổng ai trả cho tôi?”
+Giọng nói — câu mẫu 2: “Được, ghi tiền chờ riêng. Nhưng giờ bắt đầu phải rõ.”
+Nhịp sống và biến đổi theo sự kiện: Sáng nhận đơn ở chợ, trưa coi xe, chiều chốt công; khi rỗi tự sửa món nhỏ để bớt phí thuê. Trong khủng hoảng: chuyển việc theo lệnh điều phối và giới hạn nghề. Sau khủng hoảng: Điều khoản đã ký buộc ông trả phần chờ tương ứng. Ông có thể giữ lời vì muốn giữ thợ, chưa trở thành người rộng rãi sau một lần thua lý.
+NPC-11 • PAKU — người học việc phân loại đồ cũ tại sân tái dụng ở chợ
+Căn cước và trạng thái: Nam, 16 tuổi. Đề xuất sáng tác mới; các việc được giao diễn ra ban ngày trong khu phân loại an toàn.
+Diện mạo, phục trang và cử chỉ: Nhỏ con, tóc xoăn dựng ở gáy, răng cửa hơi lệch. Áo xanh lam quá rộng, quần nâu xắn gấu, khăn cam giữ tóc; mang khay gỗ chia ô và vòng kính phóng đại rẻ tiền. Xếp đồ theo hàng ngay cả khi nói chuyện. Nói hào hứng, dễ nói quá khi được khen rồi tự chữa lại.
+Đoạn chân dung dùng khi viết cảnh: Paku đặt hai bánh răng vào hai ô khác nhau, rồi đổi chỗ chúng lần nữa. Chiếc kính nhỏ tuột khỏi ngón tay, cậu vội chụp lấy trước khi nó chạm bàn. Khăn cam trên trán đã lệch hẳn sang bên; cậu chẳng buồn sửa, cứ nhìn mặt dưới của món đồ, môi mấp máy như đang tập một câu hỏi.
+Xuất thân và quá khứ: Sống cùng mẹ và chị, tranh thủ học nghề ngoài giờ học chữ. Từng phân nhầm món đồ chỉ giống nhau ở lớp sơn; người mua mang trả, cả sân phải kiểm lại. Từ đó Paku giỏi nhớ dấu nhỏ nhưng hay sợ hỏi sẽ bị coi là chậm.
+Điều muốn, điều sợ và giới hạn: Muốn đủ tay nghề để tự định giá; sợ bị xem mãi là đứa trẻ chạy việc. Có thể giấu một lỗi vì ngại, nhưng không cố bán linh kiện nứt sau khi biết nó có thể gây hại.
+Quan hệ: Thích hỏi Rento về máy; đôi khi khiến cậu sốt ruột. Bero có thể dạy cách đo cơ bản. Người lớn ở sân chịu trách nhiệm kiểm lại và xử lý đồ nguy hiểm.
+Phạm vi hiểu biết: Nhớ vật đã đi qua bàn phân loại; không biết đồ lấy từ đâu nếu người bán không khai, càng không nhận diện được Long Ấn chỉ bằng nhìn.
+Cách vào truyện và hướng phát triển: Giữ riêng hai bánh răng nhìn giống nhau, cố tìm cách giải thích vì sao cậu chưa dám bán chiếc thứ hai. Tạo quan hệ Rento hướng dẫn người khác, cho thấy tri thức có thể được truyền theo cách cậu từng thiếu.
+Giọng nói — câu mẫu 1: “Cái này em biết. Khoan, cho em xem mặt dưới đã.”
+Giọng nói — câu mẫu 2: “Bán được thì vui đấy, nhưng người ta đem lắp rồi gãy thì sao?”
+Nhịp sống và biến đổi theo sự kiện: Học chữ buổi sáng, phân loại đồ nhẹ buổi chiều dưới người lớn trông coi; nghỉ trước tối và dành thời gian chơi với bạn. Trong khủng hoảng: chuyển việc theo lệnh điều phối và giới hạn nghề. Sau khủng hoảng: Được giao tự ghi nhãn một ngăn đồ đã kiểm an toàn. Khi phát hiện món đáng ngờ, cậu gọi người phụ trách thay vì tự tháo.
+NPC-12 • YORI — người đo mực nước và kiểm tuyến đi bộ dọc bờ đông Arumo
+Căn cước và trạng thái: Nữ, 29 tuổi. Đề xuất sáng tác mới; giới hạn hiểu biết ở đoạn bờ và lịch đo được giao.
+Diện mạo, phục trang và cử chỉ: Cao vừa, chân chắc, mặt dài có tàn nhang; tóc đen búi thấp. Áo xanh rêu ngắn, quần xám, ủng nâu; đeo thước xếp, sổ bọc dầu và cọc sơn trắng đỏ. Dừng lại nhìn một mốc cố định trước khi ghi số. Giọng bình, thường nói rõ mình đã quan sát tới đâu; không thích bị thúc phải đoán cho xong.
+Đoạn chân dung dùng khi viết cảnh: Yori cắm cọc xuống bãi đất chắc, thử bằng một lần kéo mạnh rồi mới cúi mở thước. Bùn bám quanh ống ủng nâu thành hai vệt không đều. Cô nhìn mốc trắng trên đá, ghi một dòng vào cuốn sổ bọc dầu, sau đó nhìn lại. Đám người chờ phía sau bắt đầu sốt ruột; cô giơ một tay xin thêm chút nữa.
+Xuất thân và quá khứ: Từng phụ người nhà chở hàng ven bờ rồi được thuê ghi mực nước. Có lần dùng lại số cũ khi mốc bị bùn che, khiến một đoàn phải quay đầu vì đường không còn đi được. Không ai chết, nhưng họ mất hàng và tiền công; Yori đã làm thêm để trả phần mình.
+Điều muốn, điều sợ và giới hạn: Muốn tuyến đi có bản ghi đáng tin; sợ sai số của mình đẩy người khác vào rủi ro. Chấp nhận ghi 'chưa đo được' dù bị chê vô dụng; không sửa số cho vừa lịch mở đường.
+Quan hệ: Trao đổi với Veni về đường chuyển thư; cần Rento sửa dụng cụ. Có thể bất đồng với Seika về cách kiểm tra nhưng chịu đổi ý khi cùng thấy bằng chứng.
+Phạm vi hiểu biết: Biết biến đổi nước, dấu sạt và mốc giờ ở khu được giao; không biết hệ thống Long Ấn, kế hoạch Garan hay mọi tuyến thượng nguồn.
+Cách vào truyện và hướng phát triển: Ngăn đoàn đi theo cọc cũ, cúi cạo bùn khỏi mốc rồi đề nghị cả nhóm chờ lần đo thứ hai. Cho nhân vật công cụ phân biệt cảm giác bất an với một biến đổi có thể kiểm chứng.
+Giọng nói — câu mẫu 1: “Tôi đo tới khúc đá trắng. Qua đó, tôi chưa dám dẫn.”
+Giọng nói — câu mẫu 2: “Mực nước thấp hơn không có nghĩa đường dưới kia chịu được thêm người.”
+Nhịp sống và biến đổi theo sự kiện: Đo cùng mốc giờ mỗi ngày, rà biển tuyến sau mưa rồi nộp sổ ở bến; đổi ca nếu thời tiết vượt giới hạn công việc. Trong khủng hoảng: chuyển việc theo lệnh điều phối và giới hạn nghề. Sau khủng hoảng: Ghi lại mốc mới và nơi chưa thể đo; tiếp tục kiểm tra trong nhiều ngày trước khi đề nghị mở đủ tuyến.
+Quan hệ phụ tạo cảnh và thứ tự đưa vào
+Fara ↔ Kiro: bếp và ca sơ cứu cần chia giờ ăn, người nghỉ và phần vật tư; họ có thể bất đồng mà vẫn giúp nhau. Eli ↔ Veni: một người xác nhận hàng, một người xác nhận tin; dấu giờ chỉ có giá trị trong phần việc từng người thực sự chứng kiến. Paku ↔ Bero: người học muốn hỏi còn người dạy phải tập thừa nhận lúc mình chưa chắc.
+Doro ↔ Tovan: thuê kho và thuê xe tạo lợi ích chung, nhưng quyết định nào thuộc ai phải ghi riêng. Banu ↔ Bero: người bị thương có quyền hỏi vì sao người chứng kiến đã im lặng. Seli ↔ Yori: dây đủ chắc và tuyến đủ an toàn là hai điều khác nhau; cảnh hợp tác buộc họ kiểm cả hai trước khi cho người đi.
+Nhịp xuất hiện đề xuất: giữ Tovan và Eli trong các cảnh hiện có; gọi tên Fara, Kiro, Bero ở lần gặp lại; đưa Seli qua dụng cụ trước cuộc gặp đầy đủ; gặp Veni hoặc Yori khi nhóm cần kiểm tin và đường; Luma vào đúng chặng trạm trên. Paku và Doro thuộc nhánh đời sống có thể chen vào khoảng nghỉ. Banu được giới thiệu bằng công việc hiện tại trước khi mở toàn bộ vụ tai nạn.
+Bộ thử game đầu chỉ cần sáu NPC phụ: Tovan, Eli, Fara, Kiro, Paku và Yori, cộng những nhân vật chính mà cảnh đã cần. Sáu người còn lại mở theo mạch sau. Có hồ sơ cho mười hai người giúp giữ nhất quán, không đồng nghĩa phải sản xuất cả mười hai ngay trong bản chơi đầu.
+Sinh vật nước ở Chương 1
+Chức năng hiện tại: biến tai nạn cập bến thành bằng chứng rằng một điều bất thường đang đi theo dòng sông. Dấu hiệu đã có: thân trong suốt, hình dáng chưa ổn định, những dải sẫm co theo dòng nước, mất hình khi đường cấp bị chặn và để lại cặn xám. Tạm chưa đặt tên riêng hay cho nó phát biểu. Quy luật này chỉ được áp dụng cho sinh vật đã gặp; không vội kết luận mọi mối đe dọa sau đều bị hạ bằng một chiếc kẹp ống.
+Phân biệt khi viết: nhân vật quan sát thấy điều gì; họ suy đoán điều gì; người viết đã quyết định điều gì nhưng chưa tiết lộ. Rento và Nari phải được phép đoán sai mà truyện vẫn giữ một quy luật nhất quán.
+12. Mạng quan hệ và những xung đột có thể tạo cảnh
+Rento ↔ Mira: cùng muốn gia đình sống tốt; bất đồng về việc phải giành lại quá khứ hay tạo một nơi mới. Cảnh phù hợp: tranh luận trước món đồ đã mua, hợp đồng thuê nhà hoặc một quyết định nghề nghiệp; không chỉ nói “mẹ lo cho con”.
+Rento ↔ Nari: ứng biến và chuẩn bị cần nhau nhưng dễ coi nhẹ nhau. Cảnh phù hợp: cùng lập phương án, nhận ra mỗi người đã giấu một giới hạn, rồi phải sửa cách giao việc. Sự gần gũi phát triển qua giữ lời, xin lỗi và tôn trọng quyền từ chối.
+Rento ↔ Dagan: đều gánh trách nhiệm gia đình, một người che nó bằng lý tưởng, người kia nói thẳng thành giá. Cảnh phù hợp: chia tiền, nhận một chuyến hộ tống hoặc xác định ai được quyền quyết rủi ro. Không biến Dagan thành người chỉ tồn tại để thua Rento.
+Nari ↔ Dagan: kiến thức có chứng nhận gặp kinh nghiệm chưa được công nhận. Cảnh phù hợp: bài thực hành Dagan làm nhanh nhưng thiếu bước an toàn; tình huống thật Nari thuộc quy trình nhưng thiếu hiểu biết về thói quen người làm bến. Mỗi người phải có lúc đúng và lúc cần học.
+Ba người trẻ ↔ Seika: học cách tự quyết trong khi vẫn phải chứng minh mình đủ khả năng. Cảnh phù hợp: một bài tập có nhiều phương án hợp lý; Seika yêu cầu họ giải thích cái giá chứ không công bố một đáp án thần kỳ.
+Omi ↔ Nari/Oren: nhu cầu được bảo vệ gặp yêu cầu xác minh. Cảnh phù hợp: đối chiếu danh sách với người vừa cứu, thống nhất cách bảo vệ người bị thương rồi mới lấy lời khai. Tránh dựng người làm quy trình thành vô cảm chỉ để người giúp tự phát luôn đúng.
+Oren ↔ Garan: người phụ trách bến cần nguồn lực từ người có quyền vận hành. Cảnh phù hợp: đề nghị cấp phương tiện đi kèm yêu cầu trì hoãn thông báo. Đặt rõ ai có quyền làm gì và ai chịu hậu quả.
+Rento ↔ Garan: cùng tin có thể hiểu và sửa một hệ thống. Điểm tách nằm ở việc người khác có quyền biết, phản đối và chọn rủi ro cho mình hay không. Garan đưa cơ hội thật khiến Rento phải cân nhắc, thay vì chỉ đe dọa để cậu dễ từ chối.
+13. Dòng thời gian chung của nhân vật
+Mốc hiện tại T0 là đêm con tàu đến Arumo sớm mười một ngày. Tuổi ở hồ sơ tính tại T0, chưa đặt ngày tháng lịch riêng. Mỗi sự kiện hồi tưởng về sau phải được so với mốc này.
+T−10 năm: Rento 8 tuổi, phụ việc nhỏ trong xưởng. T−6 năm: Seika 29 tuổi, chỉ huy vụ cứu nạn khiến hai người trong tổ tìm kiếm không trở về. Hai sự kiện độc lập.
+T−4 năm: Rento 14, Mira 39; tai nạn máy tời xảy ra, Mira bán xưởng rồi ở lại làm thuê. Cùng khoảng thời gian này, Nari 15 và Dagan 16 bắt đầu đào tạo ở các lớp phù hợp; chưa mặc định mọi người chung một khóa hoặc đã thân nhau.
+T−2 năm: Nari 17 trải qua sự cố chờ xác nhận; người bạn tập bị thương rồi hồi phục. Dagan 18 nghỉ học vì gia đình mất nguồn thu. Đây là những việc khác nhau, không gộp thành một biến cố duy nhất để tiết kiệm giải thích.
+T−3 tuần: Rento mua tời bằng khoản dành dụm có giá trị tương đương bốn tháng tiền công, rồi sửa trong ba tuần. Chưa ấn định thời điểm cậu bắt đầu dành tiền. T−vài ngày: trạm của Omi nhận thông báo rời khu vực; bà đi chuyến đầu, con gái còn hỗ trợ chuyến sau. Thời điểm chính xác các lệnh và việc thử nghiệm của Garan sẽ được khóa ở bước mạch truyện.
+T0: sự cố tàu, bảy người được cứu, tời riêng hỏng, Nari bị đau cổ tay và câu hỏi về sơ tán. T0 chỉ là mốc khởi phát chung của nhóm; không phải ngày mọi người được kể hết quá khứ hoặc gặp đầy đủ cả tám nhân vật.
+14. Đưa quá khứ vào truyện ở đâu và bằng cách nào
+Nguyên tắc dùng hồi tưởng
+Một đoạn quá khứ cần làm được ít nhất một việc cụ thể: khiến hành động hiện tại dễ hiểu hơn; làm thay đổi cách người đọc đánh giá một quan hệ; hoặc đưa thông tin khiến nhân vật phải chọn khác đi. Nếu bỏ đoạn đó mà cảnh hiện tại không đổi, nên rút lại hoặc để dành.
+Ba độ dài để lựa chọn: một liên tưởng ngắn ngay khi nhân vật chạm vật hoặc nghe câu quen; một đoạn nhớ có tình huống rõ trong khoảng nghỉ; một cảnh hồi tưởng hoàn chỉnh khi cần cho thấy lựa chọn cũ và hậu quả. Không dùng cùng một kiểu cho mọi người. Một người kể quá khứ có thể nhớ lệch; khi viết phải phân biệt lời kể với sự kiện đã được xác lập.
+Cách chuyển vào: một chi tiết của hiện tại đánh thức một ký ức cụ thể, kèm mốc thời gian đủ rõ. Cách trở lại: âm thanh, động tác hoặc lời gọi kéo nhân vật về việc đang chờ, rồi họ làm một điều có liên hệ với phần vừa nhớ. Không dùng hồi tưởng dài giữa thời gian tính bằng vài giây của một pha cứu người.
+Vị trí dành cho từng người — chưa gán số chương
+Rento: GIEO ở lúc tính tiền và nhìn tời; HÉ ở quyết định hy sinh máy; MỞ ĐỦ khi đối diện kế hoạch sống riêng của Mira. Kết quả cần đạt: cậu phải hỏi điều mẹ muốn và thay đổi cách nhận trách nhiệm.
+Nari: GIEO qua kiểm dây và phản ứng trước chỉ dẫn mâu thuẫn; HÉ khi giấu đau làm nhóm gặp khó; MỞ ĐỦ khi gặp lại bạn cũ trước một nhiệm vụ cần tự quyết. Kết quả: cô giao quyền và cho phép đồng đội nói điều mình không muốn nghe.
+Dagan: GIEO qua việc chốt giá và mang cơm về; HÉ qua tập vở cũ; MỞ ĐỦ khi kỳ thi trùng một cơ hội kiếm tiền. Kết quả: nhóm hiểu nhu cầu thật để thống nhất cách chia việc, Dagan thôi hạ thấp việc mình vẫn muốn học.
+Seika: GIEO qua giới hạn vai và sự dè dặt của một gia đình; HÉ khi học viên phản đối cách cô giữ khoảng cách; MỞ ĐỦ khi nhóm gặp một lựa chọn cứu hộ có cái giá tương tự. Kết quả: học viên được thấy cô cân nhắc, không nhận một bài học rằng người giỏi luôn cứu được tất cả.
+Mira: GIEO bằng hướng nghe, yêu cầu thử tải và chuyện thuê sân; HÉ qua việc bà không hào hứng với mục tiêu mua lại xưởng; MỞ ĐỦ khi sai lầm giấu rủi ro của Rento chạm tới chính lựa chọn bà từng làm. Kết quả: mẹ con nói thật và có một kế hoạch chung.
+Omi: GIEO bằng cách nhìn thị trấn và giữ chìa khóa; HÉ qua tìm tin con gái, thông tin tiếp tế và danh sách lệch; MỞ ĐỦ khi có cơ chế bảo vệ người ngoài danh sách. Kết quả: dòng thời gian chuyến tàu trở nên kiểm chứng được.
+Oren: GIEO qua lời giao việc quá chắc; HÉ qua bản cảnh báo bị hạ mức; MỞ ĐỦ bằng đối chiếu sổ nhận và quyết định của anh. Kết quả: anh phải công khai, hành động và chấp nhận hậu quả. Hình thức phù hợp chủ yếu là điều tra và đối thoại, không cần hồi tưởng tuổi thơ.
+Garan: GIEO qua quyết định tác động xuống bến; HÉ qua năng lực thật cùng cơ hội anh đưa ra; MỞ ĐỦ bằng bản đánh giá rủi ro và lựa chọn tiếp tục. Kết quả: nhóm hiểu đúng đối thủ và phải đưa ra phương án có thể thực hiện, không chỉ tìm một người để đánh bại.
+15. Từ hồ sơ nhân vật đến phần, chương và cảnh
+Thứ tự làm việc từ đây: hoàn thiện nhân vật → dựng chuỗi sự kiện có nguyên nhân và hậu quả → sắp mạch bí ẩn, quan hệ và phát triển năng lực → chia thành các phần có bước ngoặt → chia từng phần thành chương → lập cảnh của từng chương → viết văn xuôi và biên tập. Bản hiện tại hoàn thành bước hồ sơ nền; các mục dưới là cấu trúc dùng cho bước tiếp theo, chưa phải số phần và chương đã chốt.
+Bước kế tiếp: dựng mạch từ lựa chọn của nhân vật
+Điểm khởi phát đã có: con tàu đem cảnh báo tới một thị trấn vẫn sinh hoạt bình thường. Các động lực để nối mạch: Rento phải xử lý cái giá của việc cứu tàu; Nari cần xác minh và bảo vệ người sống sót; Omi muốn tìm tin phía trên; Oren cân nhắc phát thông báo; Seika có thể hỗ trợ đánh giá; Dagan cần công việc rõ ràng; Mira có người và thiết bị cần bảo vệ; Garan muốn kiểm soát phương án vận hành. Mỗi lần nhóm đi tới địa điểm mới phải xuất phát từ một nhu cầu hoặc thông tin cụ thể của những người này.
+Trước khi đếm chương, cần khóa: hệ thống dòng nước hoạt động thế nào; thử nghiệm nào gây hậu quả gì; ai biết thông tin vào lúc nào; vì sao lệnh tới trạm trên mà chưa tới Arumo; phương án cứu dân cần thời gian, vật tư và người nào; nhóm phải trả cái giá gì để làm được. Đếm chương trước khi biết những quan hệ này dễ tạo phần thừa hoặc ép nhân vật hành động trái tính.
+Một phần truyện cần có gì
+Mỗi phần sẽ ghi: trạng thái của nhóm lúc bắt đầu; mục tiêu chung; xung đột chính; điều độc giả đang muốn biết; nhân vật thay đổi nhiều nhất; sự thật được trả lời; bước ngoặt cuối phần và điều bị mất hoặc đạt được. Số chương sẽ theo số biến chuyển cần kể, không ép mọi phần dài bằng nhau.
+Một chương cần có gì
+Mỗi chương sẽ có một phiếu: tiêu đề làm việc; người giữ điểm nhìn; thời gian và địa điểm; mục tiêu hiện tại; trở ngại; các cảnh theo thứ tự; đoạn đối thoại tạo thay đổi; nội tâm ở quyết định chính; chi tiết quá khứ được hé; thông tin cũ được trả lời; thông tin mới được mở; trạng thái nhân vật ở cuối. Chương phải làm tình hình thay đổi, không chỉ đưa thêm tên và giải thích.
+Một cảnh cần có gì
+Dựng chỗ đứng và điều nhân vật đang làm → cho họ muốn một việc → gặp cản trở → chọn cách xử lý → nhận một kết quả → dẫn tới cảnh sau bằng thời gian, địa điểm hoặc nhu cầu mới. Mô tả cảnh nên đi qua sự chú ý của người trong cảnh. Đoạn văn theo một cụm diễn biến hoặc ý nghĩ; đổi người nói thì xuống đoạn. Chỉ tách một câu riêng khi nhịp truyện thật sự cần nhấn.
+16. Những điểm phải giữ nhất quán khi viết
+Tuổi và quan hệ: Rento 18, Nari 19, Dagan 20, Seika 35, Mira 43, Omi 62, Oren 32, Garan 46. Chưa chốt họ đầy đủ, lịch sinh, chủng tộc ngoài hình hài người, chuyện tình cảm cuối cùng hay hệ thống môn phái hoàn chỉnh; chỉ bổ sung khi cần cho thế giới và mạch truyện.
+Kiến thức: không ai biết mọi việc. Omi thấy lệnh ở trạm; Oren biết phần cảnh báo mình nhận; Garan biết đánh giá rủi ro và quyết định vận hành; Rento hiểu máy ở bến; Nari hiểu kỹ thuật được học. Một thông tin chỉ chuyển sang người khác khi có cảnh, lời kể, thư hoặc bằng chứng thể hiện điều đó.
+Hậu quả: máy hỏng cần tiền và thời gian sửa; cổ tay đau ảnh hưởng thao tác; lời nói dối làm mất lòng tin; sơ tán đụng tới sinh kế và cần nơi tiếp nhận; một người cứu mạng người khác không được mặc định có quyền quyết định thay họ.
+Tính liên tục với truyện hiện có: phần Mở đầu vẫn giữ cách kể khái quát và không giới thiệu nhân vật. Chương 1 sẽ được viết lại sau khi mạch được dựng, dựa trên hồ sơ đã thống nhất. Các chương 2–4 thuộc bản cũ tiếp tục được xem là tư liệu tham khảo, chưa tự động nối vào dàn nhân vật mới.
+Đồng bộ sang game về sau: dùng mã nhân vật và hồ sơ này làm gốc cho tên, ngoại hình, quan hệ, giới hạn năng lực và các sự kiện đã xảy ra. Những thứ phục vụ chơi như chỉ số, thời gian hồi kỹ năng, rơi vật phẩm và nhiệm vụ sẽ có lớp thiết kế riêng; không sửa tính cách hoặc quá khứ chỉ để khớp một chỉ số.
