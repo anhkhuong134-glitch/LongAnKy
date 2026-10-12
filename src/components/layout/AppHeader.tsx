@@ -98,23 +98,34 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
               <h1 className="font-serif font-bold text-base tracking-tight leading-tight">
                 {project.title}
               </h1>
-              <span className="text-[11px] px-2 py-0.5 rounded-full font-medium bg-amber-500/15 text-amber-400 border border-amber-500/30">
-                Đọc Truyện Chữ &amp; Tranh
-              </span>
-              <button
-                onClick={onTriggerLiveCheck}
-                title={`Hệ thống tự động phát hiện thay đổi từ Google Docs: ${isAutoSyncLive ? 'ĐANG BẬT' : 'TẮT'} (Bấm để quét ngay bây giờ)`}
-                className="text-[11px] px-2.5 py-0.5 rounded-full font-medium bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-300 border border-emerald-500/30 flex items-center gap-1.5 transition-all cursor-pointer shadow-sm active:scale-95"
-              >
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+              {isAuthorMode ? (
+                <>
+                  <span className="text-[11px] px-2 py-0.5 rounded-full font-medium bg-amber-500/15 text-amber-400 border border-amber-500/30">
+                    Bản Thảo &amp; Soạn Thảo
+                  </span>
+                  <button
+                    onClick={onTriggerLiveCheck}
+                    title={`Hệ thống tự động phát hiện thay đổi từ Google Docs: ${isAutoSyncLive ? 'ĐANG BẬT' : 'TẮT'} (Bấm để quét ngay bây giờ)`}
+                    className="text-[11px] px-2.5 py-0.5 rounded-full font-medium bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-300 border border-emerald-500/30 flex items-center gap-1.5 transition-all cursor-pointer shadow-sm active:scale-95"
+                  >
+                    <span className="relative flex h-2 w-2">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                    </span>
+                    <span className="font-semibold">Tự Động Đọc GG Doc</span>
+                  </button>
+                </>
+              ) : (
+                <span className="text-[11px] px-2.5 py-0.5 rounded-full font-bold bg-rose-500/20 text-rose-300 border border-rose-500/40 shadow-sm flex items-center gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-rose-400 animate-pulse"></span>
+                  Truyện Tranh Webtoon
                 </span>
-                <span className="font-semibold">Tự Động Đọc GG Doc</span>
-              </button>
+              )}
             </div>
             <p className="text-xs opacity-60 truncate max-w-md hidden sm:block">
-              {isAuthorMode ? 'Chế độ Tác Giả • Soạn Thảo, Up Truyện Tranh & Đồng Bộ Google Docs/Sheets' : 'Cổng Đọc Tiểu Thuyết & Truyện Tranh • Tự Động Cập Nhật Mới Nhất'}
+              {isAuthorMode 
+                ? 'Chế độ Tác Giả • Soạn Thảo, Up Truyện Tranh & Đồng Bộ Google Docs/Sheets' 
+                : 'Cổng Đọc Truyện Tranh Webtoon • Bản Sắc Nét Cập Nhật Liên Tục'}
             </p>
           </div>
         </div>

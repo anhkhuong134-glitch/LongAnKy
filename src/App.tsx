@@ -34,23 +34,20 @@ import './styles/index.css';
 type ActiveTab = 'editor' | 'bible' | 'characters' | 'timeline' | 'foreshadowing' | 'reader' | 'google_sync';
 
 export default function App() {
-  // Author mode authorization: Khách vào link Vercel mặc định 100% chỉ thấy Đọc Sách, KHÔNG THẤY Soạn Thảo
+  // Author mode authorization: Khách vào link Vercel hoặc link thường mặc định 100% chỉ thấy Đọc Sách
   const [isAuthorMode, setIsAuthorMode] = useState<boolean>(() => {
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search);
-      // Chỉ khi tác giả chủ động thêm ?author=1 hoặc ?admin=true hoặc ?pin=332004
+      // CHỈ kích hoạt chế độ tác giả khi trên URL có tham số bí mật (?author=1 hoặc ?pin=332004 hoặc ?admin=true)
       if (params.get('author') === '1' || params.get('author') === 'true' || params.get('pin') === '332004' || params.get('admin') === 'true') {
         sessionStorage.setItem('mach_author_session', 'true');
         StorageService.setAuthorAuthenticated(true);
         return true;
       }
-      // Khách ghé thăm link bình thường: mặc định KHÔNG mở quyền tác giả
-      const isSessionAuth = sessionStorage.getItem('mach_author_session') === 'true';
-      if (!isSessionAuth) {
-        StorageService.setAuthorAuthenticated(false);
-        return false;
-      }
-      return true;
+      // Tất cả các truy cập link bình thường KHÔNG có tham số: LUÔN LUÔN là false (Chế độ Độc Giả)
+      sessionStorage.removeItem('mach_author_session');
+      StorageService.setAuthorAuthenticated(false);
+      return false;
     }
     return false;
   });
@@ -68,6 +65,14 @@ export default function App() {
 
   // UI state
   const [activeTab, setActiveTab] = useState<ActiveTab>('reader');
+
+  // Đảm bảo tuyệt đối: Chế độ độc giả LUÔN LUÔN hiển thị Reader (Truyện tranh)
+  useEffect(() => {
+    if (!isAuthorMode && activeTab !== 'reader') {
+      setActiveTab('reader');
+    }
+  }, [isAuthorMode, activeTab]);
+
   const [isWarmTheme, setIsWarmTheme] = useState(false);
   const [isFocusMode, setIsFocusMode] = useState(false);
   const [docsSyncState, setDocsSyncState] = useState(() => GoogleSyncService.getDocsSyncState());
@@ -493,7 +498,7 @@ export default function App() {
             url.searchParams.delete('author');
             url.searchParams.delete('pin');
             url.searchParams.delete('admin');
-            window.history.replaceState({}, '', url.pathname + (url.searchParams.toString() ? '?' + url.searchParams.toString() : ''));
+            window.location.href = url.pathname;
           }
         }}
         isAutoSyncLive={isAutoSyncLive}
