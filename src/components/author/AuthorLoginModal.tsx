@@ -62,10 +62,10 @@ export const AuthorLoginModal: React.FC<AuthorLoginModalProps> = ({
           </div>
           <div>
             <h3 className="font-serif font-bold text-lg text-amber-300">
-              Xác Thực Quyền Tác Giả
+              Xác Thực Mã PIN
             </h3>
             <p className="text-xs text-slate-400">
-              Dành riêng cho Tác giả để mở khóa bộ Soạn Thảo &amp; Up Truyện Tranh
+              Nhập mã PIN để mở khóa trang viết truyện chữ &amp; up truyện tranh lên
             </p>
           </div>
         </div>
@@ -75,8 +75,7 @@ export const AuthorLoginModal: React.FC<AuthorLoginModalProps> = ({
           <p className="flex items-start gap-2">
             <Sparkles className="w-4 h-4 text-amber-400 flex-shrink-0 mt-0.5" />
             <span>
-              Người đọc thông thường chỉ có quyền xem mục <strong>Đọc Sách (Chữ &amp; Tranh)</strong>. 
-              Nhập mã PIN bí mật của bạn để mở khóa bảng <strong>Soạn Thảo</strong> và các công cụ quản trị.
+              Khu vực bảo mật riêng: Nhập đúng mã PIN của bạn để chuyển tới trang <strong>Viết truyện chữ, Up truyện tranh</strong> và quản lý tác phẩm.
             </span>
           </p>
         </div>
@@ -85,7 +84,7 @@ export const AuthorLoginModal: React.FC<AuthorLoginModalProps> = ({
         <form onSubmit={handleVerify} className="space-y-4">
           <div>
             <label className="block text-xs font-medium text-slate-300 mb-1.5">
-              Mã PIN hoặc Mật khẩu Tác giả:
+              Mã PIN bảo mật:
             </label>
             <div className="relative">
               <input
@@ -96,7 +95,7 @@ export const AuthorLoginModal: React.FC<AuthorLoginModalProps> = ({
                   setPin(e.target.value);
                   setError(null);
                 }}
-                placeholder="Nhập mã PIN bảo mật..."
+                placeholder="••••••"
                 className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-700 focus:border-amber-500 focus:ring-1 focus:ring-amber-500 text-sm font-mono tracking-widest text-white placeholder:text-slate-600 placeholder:tracking-normal focus:outline-none"
               />
               <button
@@ -116,14 +115,14 @@ export const AuthorLoginModal: React.FC<AuthorLoginModalProps> = ({
             {isSuccess && (
               <p className="mt-2 text-xs text-emerald-400 flex items-center gap-1.5 font-medium animate-pulse">
                 <CheckCircle2 className="w-4 h-4 flex-shrink-0" />
-                <span>Mở khóa quyền Tác Giả thành công! Đang chuyển hướng...</span>
+                <span>Mã PIN chính xác! Đang chuyển đến trang viết truyện chữ &amp; up truyện tranh...</span>
               </p>
             )}
           </div>
 
           <div className="pt-2 flex items-center justify-between">
             <span className="text-[11px] text-slate-500">
-              Khu vực bảo mật tác quyền
+              Bảo mật tuyệt đối
             </span>
 
             <div className="flex items-center space-x-2">
@@ -137,10 +136,10 @@ export const AuthorLoginModal: React.FC<AuthorLoginModalProps> = ({
               <button
                 type="submit"
                 disabled={!pin.trim() || isSuccess}
-                className="px-5 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-rose-600 hover:from-amber-400 hover:to-rose-500 disabled:opacity-50 text-white font-medium text-xs shadow-lg shadow-amber-500/20 transition-all flex items-center gap-1.5"
+                className="px-5 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-rose-600 hover:from-amber-400 hover:to-rose-500 disabled:opacity-50 text-white font-medium text-xs shadow-lg shadow-amber-500/20 transition-all flex items-center gap-1.5 cursor-pointer"
               >
                 <KeyRound className="w-3.5 h-3.5" />
-                <span>Mở Khóa Soạn Thảo</span>
+                <span>Vào Trang Soạn Thảo</span>
               </button>
             </div>
           </div>

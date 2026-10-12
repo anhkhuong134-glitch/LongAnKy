@@ -225,12 +225,21 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
         {/* Right Toolbar Actions */}
         <div className="flex items-center space-x-2">
           {!isAuthorMode ? (
-            /* Chế độ Độc Giả (Khách ghé thăm link Vercel) - HOÀN TOÀN KHÔNG HIỆN NÚT SOẠN THẢO HAY NÚT TÁC GIẢ */
             <>
+              {/* Nút Độc Giả (Bấm vào để mở bảng nhập mã PIN 332004 chuyển sang trang soạn thảo & up truyện tranh) */}
+              <button
+                onClick={onOpenAuthorLogin}
+                title="Nhập mã PIN để mở trang soạn thảo truyện chữ và up truyện tranh lên"
+                className="px-3 py-1.5 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/35 text-amber-300 font-semibold text-xs flex items-center gap-1.5 transition-all shadow-sm hover:scale-105 active:scale-95 cursor-pointer"
+              >
+                <KeyRound className="w-3.5 h-3.5 text-amber-400" />
+                <span>Độc giả</span>
+              </button>
+
               <button
                 onClick={() => setIsWarmTheme(!isWarmTheme)}
                 title="Chuyển đổi giao diện Đêm / Giấy Parchment thư giãn"
-                className="p-2 rounded-xl bg-slate-800/60 hover:bg-slate-700/80 border border-white/5 transition-all text-xs"
+                className="p-2 rounded-xl bg-slate-800/60 hover:bg-slate-700/80 border border-white/5 transition-all text-xs cursor-pointer"
               >
                 {isWarmTheme ? <Moon className="w-3.5 h-3.5 text-amber-300" /> : <Sun className="w-3.5 h-3.5 text-amber-400" />}
               </button>
