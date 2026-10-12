@@ -116,6 +116,67 @@ export default function App() {
     }
   }, [activeChapterId]);
 
+  // Real-time Auto-Sync Watcher: Tự động phát hiện thay đổi trên Google Docs và nạp ngay vào truyện
+  const [isAutoSyncLive, setIsAutoSyncLive] = useState<boolean>(true);
+  const [lastLiveCheckTime, setLastLiveCheckTime] = useState<string>(() => new Date().toLocaleTimeString('vi-VN'));
+
+  const checkAndApplyDocChanges = useCallback(async (silent = true) => {
+    try {
+      const res = await GoogleSyncService.checkAndAutoSyncOnDocChange();
+      setLastLiveCheckTime(new Date().toLocaleTimeString('vi-VN'));
+      if (res.hasChanged && res.parts && res.parts.length > 0) {
+        setParts(res.parts);
+        StorageService.saveParts(res.parts);
+        const total = res.parts.reduce((sum, p) => sum + p.wordCount, 0);
+        setProject(prev => ({
+          ...prev,
+          currentWordCount: total,
+          updatedAt: new Date().toLocaleDateString('vi-VN')
+        }));
+        setDocsSyncState(GoogleSyncService.getDocsSyncState());
+
+        // Đảm bảo active chapter hợp lệ
+        const chapterExists = res.parts.some(p => p.chapters.some(c => c.id === activeChapterId));
+        if (!chapterExists && res.parts[0]?.chapters[0]) {
+          setActivePartId(res.parts[0].id);
+          setActiveChapterId(res.parts[0].chapters[0].id);
+        }
+
+        // Hiện thông báo nổi bật màu xanh ngọc
+        setSyncToast({ message: res.message, type: 'success' });
+        setTimeout(() => setSyncToast(null), 5000);
+      } else if (!silent) {
+        setSyncToast({ message: res.message, type: 'success' });
+        setTimeout(() => setSyncToast(null), 3000);
+      }
+    } catch (e: any) {
+      if (!silent) {
+        setSyncToast({ message: `Lỗi quét Google Doc: ${e.message}`, type: 'error' });
+        setTimeout(() => setSyncToast(null), 4000);
+      }
+    }
+  }, [activeChapterId]);
+
+  // 1. Quét định kỳ nền mỗi 12 giây nếu isAutoSyncLive = true
+  useEffect(() => {
+    if (!isAutoSyncLive) return;
+    const interval = setInterval(() => {
+      checkAndApplyDocChanges(true);
+    }, 12000);
+    return () => clearInterval(interval);
+  }, [isAutoSyncLive, checkAndApplyDocChanges]);
+
+  // 2. Quét TỨC THÌ khi người dùng chuyển tab quay lại (window focus)
+  useEffect(() => {
+    const handleFocus = () => {
+      if (isAutoSyncLive) {
+        checkAndApplyDocChanges(true);
+      }
+    };
+    window.addEventListener('focus', handleFocus);
+    return () => window.removeEventListener('focus', handleFocus);
+  }, [isAutoSyncLive, checkAndApplyDocChanges]);
+
   // Tự động kiểm tra và cập nhật từ Google Doc khi ứng dụng mở
   useEffect(() => {
     handleSyncGoogleDocs(false);
@@ -408,6 +469,10 @@ export default function App() {
           StorageService.setAuthorAuthenticated(false);
           setActiveTab('reader');
         }}
+        isAutoSyncLive={isAutoSyncLive}
+        onToggleAutoSync={() => setIsAutoSyncLive(prev => !prev)}
+        onTriggerLiveCheck={() => checkAndApplyDocChanges(false)}
+        lastLiveCheckTime={lastLiveCheckTime}
       />
 
       {/* Main Studio Viewport */}

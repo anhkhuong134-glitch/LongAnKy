@@ -34,6 +34,10 @@ interface AppHeaderProps {
   isAuthorMode: boolean;
   onOpenAuthorLogin: () => void;
   onExitAuthorMode: () => void;
+  isAutoSyncLive?: boolean;
+  onToggleAutoSync?: () => void;
+  onTriggerLiveCheck?: () => void;
+  lastLiveCheckTime?: string;
 }
 
 export const AppHeader: React.FC<AppHeaderProps> = ({
@@ -49,7 +53,11 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
   stagedSyncCount = 0,
   isAuthorMode,
   onOpenAuthorLogin,
-  onExitAuthorMode
+  onExitAuthorMode,
+  isAutoSyncLive = true,
+  onToggleAutoSync,
+  onTriggerLiveCheck,
+  lastLiveCheckTime
 }) => {
   const wordsProgressPercent = Math.min(100, Math.round((project.stats.wordsToday / project.stats.dailyGoal) * 100));
 
@@ -79,9 +87,17 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
               <span className="text-[11px] px-2 py-0.5 rounded-full font-medium bg-amber-500/15 text-amber-400 border border-amber-500/30">
                 AI Studio Ready
               </span>
-              <span className="text-[11px] px-2 py-0.5 rounded-full font-medium bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 flex items-center gap-1">
-                <CheckCircle2 className="w-3 h-3" /> GG Sync Live
-              </span>
+              <button
+                onClick={onTriggerLiveCheck}
+                title={`Hệ thống tự động phát hiện thay đổi từ Google Docs: ${isAutoSyncLive ? 'ĐANG BẬT' : 'TẮT'} (Bấm để quét ngay bây giờ)`}
+                className="text-[11px] px-2.5 py-0.5 rounded-full font-medium bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-300 border border-emerald-500/30 flex items-center gap-1.5 transition-all cursor-pointer shadow-sm active:scale-95"
+              >
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                </span>
+                <span className="font-semibold">Tự Động Đọc GG Doc</span>
+              </button>
             </div>
             <p className="text-xs opacity-60 truncate max-w-md hidden sm:block">
               Đọc Truyện Chữ &amp; Tranh • Đồng Bộ Google Docs &amp; Sheets • Google AI Studio

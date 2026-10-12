@@ -241,6 +241,103 @@ export class GoogleSyncService {
     }
   }
 
+  static getLastDocRawCache(): string {
+    return localStorage.getItem('mach_google_doc_raw_cache') || '';
+  }
+
+  static setLastDocRawCache(text: string) {
+    localStorage.setItem('mach_google_doc_raw_cache', text);
+  }
+
+  /**
+   * Tự động phát hiện thay đổi trên link Google Docs trong thời gian thực.
+   * Nếu phát hiện nội dung tài liệu Google Docs có sửa đổi hoặc thêm bớt,
+   * hàm sẽ lập tức phân tích và cập nhật ngay vào các chương của truyện.
+   */
+  static async checkAndAutoSyncOnDocChange(webhookUrl?: string): Promise<{
+    hasChanged: boolean;
+    success: boolean;
+    message: string;
+    parts?: Part[];
+    totalWords?: number;
+    diffChars?: number;
+  }> {
+    try {
+      const rawText = await this.fetchRawGoogleDocText(webhookUrl);
+      if (!rawText || rawText.length < 200) {
+        return { hasChanged: false, success: false, message: 'Chưa lấy được nội dung từ Google Docs' };
+      }
+
+      const previousCache = this.getLastDocRawCache();
+
+      // Nếu lần đầu chưa có cache, lưu cache và đồng bộ
+      if (!previousCache) {
+        this.setLastDocRawCache(rawText);
+        const res = await this.syncLiveGoogleDocs(webhookUrl);
+        return {
+          hasChanged: true,
+          success: res.success,
+          message: 'Khởi tạo và đồng bộ bản Google Docs mới nhất thành công!',
+          parts: res.parts,
+          totalWords: res.totalWords
+        };
+      }
+
+      // Phát hiện thay đổi: so sánh văn bản mới với cache cũ
+      if (rawText.trim() !== previousCache.trim()) {
+        const diffChars = Math.abs(rawText.length - previousCache.length);
+        this.setLastDocRawCache(rawText);
+
+        const { parseGoogleDocTextToParts } = await import('./googleDocParser');
+        const parsedParts = parseGoogleDocTextToParts(rawText);
+
+        if (parsedParts && parsedParts.length > 0) {
+          localStorage.setItem('mach_parts', JSON.stringify(parsedParts));
+          const totalWords = parsedParts.reduce((sum, p) => sum + p.wordCount, 0);
+          const totalChaps = parsedParts.reduce((sum, p) => sum + p.chapters.length, 0);
+
+          const currentState = this.getDocsSyncState();
+          const log: SyncLogItem = {
+            id: `log_auto_${Date.now()}`,
+            timestamp: new Date().toLocaleTimeString('vi-VN'),
+            target: 'docs',
+            action: 'pull',
+            summary: `⚡ Tự động phát hiện thay đổi trên Google Docs và nạp lại ${parsedParts.length} phần, ${totalChaps} chương!`,
+            status: 'success'
+          };
+
+          this.saveDocsSyncState({
+            ...currentState,
+            lastSyncedAt: new Date().toLocaleTimeString('vi-VN'),
+            status: 'synced',
+            syncLogs: [log, ...currentState.syncLogs.slice(0, 20)]
+          });
+
+          return {
+            hasChanged: true,
+            success: true,
+            message: `⚡ Phát hiện thay đổi trên Google Docs! Đã tự động cập nhật ngay ${totalChaps} chương (${totalWords.toLocaleString()} từ).`,
+            parts: parsedParts,
+            totalWords,
+            diffChars
+          };
+        }
+      }
+
+      return {
+        hasChanged: false,
+        success: true,
+        message: 'Google Docs chưa có thay đổi mới.'
+      };
+    } catch (err: any) {
+      return {
+        hasChanged: false,
+        success: false,
+        message: `Lỗi kiểm tra Google Docs: ${err.message}`
+      };
+    }
+  }
+
   /**
    * Kéo nội dung mới nhất từ Google Docs (legacy alias)
    */
