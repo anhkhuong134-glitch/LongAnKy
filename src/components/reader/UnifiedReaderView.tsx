@@ -1,27 +1,19 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { 
   BookOpen, 
-  Palette, 
   ChevronLeft, 
   ChevronRight, 
-  Volume2, 
-  VolumeX, 
   Play, 
   Pause, 
   Sparkles, 
-  Eye, 
   Image as ImageIcon, 
-  Maximize2, 
-  Download, 
-  Share2, 
-  Settings2, 
-  Layers, 
-  MessageSquare, 
-  RefreshCw,
-  Sliders,
-  Type,
-  ZoomIn,
-  BookMarked
+  ZoomIn, 
+  BookMarked,
+  Home,
+  List,
+  ArrowUp,
+  Info,
+  RefreshCw
 } from 'lucide-react';
 import { Project, Part, Chapter, ComicChapter, ComicPanel, ComicReadingMode, AISettings } from '../../types';
 import { sampleComicChapters } from '../../data/googleData';
@@ -103,6 +95,52 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
 
   const totalWords = currentChapter?.wordCount || 0;
   const estimatedReadTime = Math.max(1, Math.ceil(totalWords / 220));
+
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  const scrollToTop = () => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  // Keyboard navigation: Mũi tên trái (←) hoặc phải (→) chuyển chapter chuẩn NetTruyen
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (['INPUT', 'TEXTAREA', 'SELECT'].includes((e.target as HTMLElement)?.tagName)) {
+        return;
+      }
+      if (e.key === 'ArrowLeft') {
+        if (activeComicIndex > 0) {
+          setActiveComicIndex(prev => prev - 1);
+          scrollToTop();
+        }
+      } else if (e.key === 'ArrowRight') {
+        if (activeComicIndex < comicChapters.length - 1) {
+          setActiveComicIndex(prev => prev + 1);
+          scrollToTop();
+        }
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [activeComicIndex, comicChapters.length]);
+
+  // Tổng hợp toàn bộ các ô tranh (panels) của Chapter hiện tại thành dòng cuộn dọc NetTruyen
+  const allPanels = React.useMemo(() => {
+    const panels: (ComicPanel & { pageTitle?: string; pageIndex: number })[] = [];
+    activeComic.pages.forEach((page, pageIdx) => {
+      page.panels.forEach(panel => {
+        panels.push({
+          ...panel,
+          pageTitle: page.title,
+          pageIndex: pageIdx
+        });
+      });
+    });
+    return panels;
+  }, [activeComic]);
 
   // Speech synthesis init
   useEffect(() => {
@@ -408,7 +446,7 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
       </div>
 
       {/* ================= MAIN CONTENT VIEWPORT ================= */}
-      <div className="flex-1 overflow-y-auto custom-scrollbar relative">
+      <div ref={scrollContainerRef} className="flex-1 overflow-y-auto custom-scrollbar relative">
         {isAuthorMode && readerType === 'novel' ? (
           /* ================= NOVEL READER MODE (CHỈ DÀNH CHO TÁC GIẢ XEM BẢN THẢO) ================= */
           <div className="max-w-4xl mx-auto px-4 sm:px-8 py-10 transition-all duration-300">
@@ -491,144 +529,261 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
             </div>
           </div>
         ) : (
-          /* ================= COMIC & WEBTOON READER MODE ================= */
-          <div className="max-w-4xl mx-auto px-4 py-8">
-            {/* Comic Header Info */}
-            <div className="mb-8 p-6 rounded-2xl bg-gradient-to-br from-slate-900/90 to-rose-950/40 border border-rose-500/20 flex flex-col md:flex-row items-center gap-6">
-              {activeComic.coverUrl && (
-                <img
-                  src={activeComic.coverUrl}
-                  alt={activeComic.title}
-                  className="w-32 h-44 object-cover rounded-xl shadow-2xl border border-white/10"
-                />
-              )}
-              <div className="flex-1 text-center md:text-left">
-                <span className="text-xs px-2.5 py-1 rounded-full bg-rose-500/20 text-rose-300 font-mono font-medium border border-rose-500/30">
-                  {comicMode === 'webtoon' ? 'Webtoon Scroll Format' : 'Manga Panels Format'}
+          /* ================= NETTRUYEN STYLE COMIC READER ================= */
+          <div className="w-full max-w-4xl mx-auto px-2 sm:px-4 py-6">
+            {/* 1. TOP INFO & BREADCRUMBS (NETTRUYEN) */}
+            <div className="mb-4 pb-3 border-b border-white/10">
+              {/* Breadcrumbs */}
+              <nav className="flex items-center space-x-1.5 text-xs text-slate-400 mb-2 overflow-x-auto whitespace-nowrap">
+                <span onClick={() => { setActiveComicIndex(0); scrollToTop(); }} className="hover:text-amber-400 cursor-pointer">
+                  Trang chủ
                 </span>
-                <h2 className="text-2xl font-bold font-serif text-white mt-2 mb-1">
-                  {activeComic.title}
-                </h2>
-                <p className="text-xs text-rose-200/70 mb-4">
-                  {activeComic.subtitle}
-                </p>
+                <span>/</span>
+                <span className="hover:text-amber-400 cursor-pointer">{project.title}</span>
+                <span>/</span>
+                <span className="text-rose-400 font-semibold">{activeComic.title.split(':')[0]}</span>
+              </nav>
 
-                {/* Chapter pills */}
-                <div className="flex flex-wrap gap-2">
+              {/* Chapter Main Title */}
+              <h1 className="text-xl sm:text-2xl font-bold font-serif text-white tracking-tight">
+                {project.title} - <span className="text-amber-300">{activeComic.title}</span>
+              </h1>
+
+              {/* Updated timestamp */}
+              <p className="text-xs text-slate-400 italic mt-1">
+                [Ngày cập nhật: {project.updatedAt || 'Mới nhất'}]
+              </p>
+            </div>
+
+            {/* 2. READING CONTROL BOX (NETTRUYEN) */}
+            <div className="bg-slate-900/90 border border-white/10 rounded-2xl p-4 mb-6 shadow-xl backdrop-blur-md">
+              {/* Keyboard shortcut hint alert */}
+              <div className="bg-sky-500/10 border border-sky-500/25 text-sky-200 text-xs px-3.5 py-2 rounded-xl flex items-center gap-2 mb-3">
+                <Info className="w-4 h-4 text-sky-400 shrink-0" />
+                <span>Sử dụng mũi tên trái (←) hoặc phải (→) trên bàn phím để chuyển chapter</span>
+              </div>
+
+              {/* Chapter Navigation Buttons & Select */}
+              <div className="flex flex-wrap items-center justify-center gap-2 pt-1">
+                <button
+                  onClick={() => {
+                    setActiveComicIndex(0);
+                    scrollToTop();
+                  }}
+                  title="Trang chủ / Chapter đầu"
+                  className="p-2.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-white/10 transition-all cursor-pointer"
+                >
+                  <Home className="w-4 h-4" />
+                </button>
+
+                <button
+                  disabled={activeComicIndex <= 0}
+                  onClick={() => {
+                    setActiveComicIndex(prev => Math.max(0, prev - 1));
+                    scrollToTop();
+                  }}
+                  className="px-4 py-2 rounded-lg bg-rose-600 hover:bg-rose-500 disabled:opacity-30 disabled:pointer-events-none text-white font-bold text-xs flex items-center gap-1.5 shadow-md shadow-rose-600/30 transition-all cursor-pointer"
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                  <span>Chap trước</span>
+                </button>
+
+                {/* Select Chapter Dropdown */}
+                <select
+                  value={activeComicIndex}
+                  onChange={e => {
+                    setActiveComicIndex(Number(e.target.value));
+                    scrollToTop();
+                  }}
+                  className="px-3.5 py-2 rounded-lg bg-slate-800 hover:bg-slate-750 border border-white/20 text-white font-medium text-xs focus:ring-2 focus:ring-rose-500 outline-none max-w-[260px] sm:max-w-xs truncate cursor-pointer shadow-sm"
+                >
                   {comicChapters.map((c, idx) => (
-                    <button
-                      key={c.id}
-                      onClick={() => setActiveComicIndex(idx)}
-                      className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
-                        activeComicIndex === idx
-                          ? 'bg-rose-500 text-white font-bold shadow-md shadow-rose-500/30'
-                          : 'bg-white/5 hover:bg-white/10 text-slate-300'
-                      }`}
-                    >
-                      {c.title.split(':')[0]}
-                    </button>
+                    <option key={c.id} value={idx}>
+                      {c.title}
+                    </option>
                   ))}
-                </div>
+                </select>
+
+                <button
+                  disabled={activeComicIndex >= comicChapters.length - 1}
+                  onClick={() => {
+                    setActiveComicIndex(prev => Math.min(comicChapters.length - 1, prev + 1));
+                    scrollToTop();
+                  }}
+                  className="px-4 py-2 rounded-lg bg-rose-600 hover:bg-rose-500 disabled:opacity-30 disabled:pointer-events-none text-white font-bold text-xs flex items-center gap-1.5 shadow-md shadow-rose-600/30 transition-all cursor-pointer"
+                >
+                  <span>Chap sau</span>
+                  <ChevronRight className="w-4 h-4" />
+                </button>
               </div>
             </div>
 
-            {/* Comic Panels Flow */}
-            <div className="space-y-8">
-              {activeComic.pages.map(page => (
-                <div key={page.id} className="space-y-6">
-                  {page.title && (
-                    <div className="flex items-center space-x-3 my-4">
-                      <div className="h-px bg-rose-500/30 flex-1"></div>
-                      <span className="text-xs font-mono uppercase tracking-wider text-rose-400 font-bold px-3 py-1 bg-rose-950/40 rounded-full border border-rose-500/30">
-                        {page.title}
-                      </span>
-                      <div className="h-px bg-rose-500/30 flex-1"></div>
-                    </div>
-                  )}
-
-                  <div className={`grid gap-6 ${comicMode === 'webtoon' ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-2'}`}>
-                    {page.panels.map(panel => (
-                      <div
-                        key={panel.id}
-                        onClick={() => setSelectedPanel(panel)}
-                        className={`group relative rounded-2xl overflow-hidden border border-white/10 bg-slate-950/90 shadow-2xl transition-all hover:border-rose-500/50 cursor-pointer ${
-                          panel.widthSpan === 'full' ? 'md:col-span-2' : ''
-                        }`}
-                      >
-                        {/* Panel Image Container */}
-                        <div className="relative aspect-[16/9] w-full overflow-hidden bg-slate-900 flex items-center justify-center">
-                          {(() => {
-                            const imgUrl = panel.imageUrl || (panel.prompt ? AIStudioService.generatePanelImageUrl(panel.prompt, activeArtStyle, panel.panelNumber * 7) : null);
-                            return imgUrl ? (
-                              <img
-                                src={imgUrl}
-                                alt={panel.caption || `Panel ${panel.panelNumber}`}
-                                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                                loading="lazy"
-                                onError={(e) => {
-                                  (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1200&q=80';
-                                }}
-                              />
-                            ) : (
-                              <div className="text-center p-6 text-slate-500">
-                                <ImageIcon className="w-10 h-10 mx-auto mb-2 opacity-40" />
-                                <p className="text-xs">Chưa tạo hình ảnh panel này</p>
-                              </div>
-                            );
-                          })()}
-
-                          {/* SFX Graphic Badge (Sound Effect) */}
-                          {panel.sfx && (
-                            <div className="absolute top-4 right-4 bg-rose-600/90 text-white font-black italic tracking-widest text-xs px-3 py-1 rounded shadow-lg transform rotate-2 border border-rose-400 animate-pulse pointer-events-none">
-                              {panel.sfx}
-                            </div>
-                          )}
-
-                          {/* Camera Angle Tag */}
-                          {panel.cameraAngle && (
-                            <div className="absolute bottom-3 left-3 bg-black/70 backdrop-blur-md text-[10px] text-amber-300 font-mono px-2 py-0.5 rounded border border-white/10 pointer-events-none">
-                              🎥 {panel.cameraAngle}
-                            </div>
-                          )}
-
-                          {/* Quick Zoom Trigger */}
-                          <div className="absolute top-3 left-3 opacity-0 group-hover:opacity-100 transition-opacity p-1.5 rounded-lg bg-black/60 text-white backdrop-blur-md">
-                            <ZoomIn className="w-4 h-4" />
-                          </div>
+            {/* 3. READING DETAIL: SEAMLESS VERTICAL COMIC STREAM (NETTRUYEN) */}
+            <div className="reading-detail w-full flex flex-col items-center select-none space-y-1">
+              {allPanels.map((panel, idx) => {
+                const imgUrl = panel.imageUrl || (panel.prompt ? AIStudioService.generatePanelImageUrl(panel.prompt, activeArtStyle, panel.panelNumber * 7) : null);
+                return (
+                  <div key={panel.id || idx} className="page-chapter w-full max-w-3xl relative flex flex-col items-center">
+                    {/* Comic Image */}
+                    <div className="relative w-full bg-slate-950 overflow-hidden shadow-2xl rounded-sm">
+                      {imgUrl ? (
+                        <img
+                          src={imgUrl}
+                          alt={panel.caption || `Trang ${idx + 1}`}
+                          className="w-full h-auto block select-none pointer-events-auto object-cover"
+                          loading="lazy"
+                          onError={(e) => {
+                            (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1200&q=80';
+                          }}
+                        />
+                      ) : (
+                        <div className="p-12 text-center text-slate-500 text-xs">
+                          Đang tải trang tranh...
                         </div>
+                      )}
 
-                        {/* Speech Bubbles & Dialogues */}
-                        {panel.dialogues && panel.dialogues.length > 0 && (
-                          <div className="p-4 space-y-2 bg-gradient-to-b from-slate-950/90 to-slate-900/95 border-t border-white/5">
-                            {panel.dialogues.map(d => (
-                              <div
-                                key={d.id}
-                                className={`flex items-start gap-2.5 ${
-                                  d.bubbleType === 'shout' ? 'text-rose-300 font-bold' : d.bubbleType === 'thought' ? 'italic text-sky-300' : 'text-slate-200'
-                                }`}
-                              >
-                                <span className="text-[11px] font-bold px-2 py-0.5 rounded bg-white/10 text-amber-300 shrink-0 font-serif">
-                                  {d.character}
-                                </span>
-                                <div className="text-xs bg-slate-800/80 p-2.5 rounded-xl border border-white/10 flex-1 relative">
-                                  {d.text}
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                        )}
+                      {/* SFX Graphic Badge (Sound Effect) */}
+                      {panel.sfx && (
+                        <div className="absolute top-4 right-4 bg-rose-600/90 text-white font-black italic tracking-widest text-xs px-3 py-1 rounded shadow-lg transform rotate-2 border border-rose-400 pointer-events-none">
+                          {panel.sfx}
+                        </div>
+                      )}
 
-                        {/* Caption bottom bar */}
-                        {panel.caption && (
-                          <div className="px-4 py-2.5 bg-black/40 text-[11px] text-slate-400 font-serif border-t border-white/5 italic">
-                            {panel.caption}
-                          </div>
-                        )}
+                      {/* Page Number Indicator */}
+                      <div className="absolute bottom-2 right-2 bg-black/75 backdrop-blur-sm text-[10px] text-white/80 font-mono px-2 py-0.5 rounded pointer-events-none">
+                        Trang {idx + 1} / {allPanels.length}
                       </div>
-                    ))}
+                    </div>
+
+                    {/* Dialogues directly under panel */}
+                    {panel.dialogues && panel.dialogues.length > 0 && (
+                      <div className="w-full px-4 py-2.5 space-y-1.5 bg-slate-950/95 border-b border-white/5">
+                        {panel.dialogues.map(d => (
+                          <div
+                            key={d.id}
+                            className={`flex items-start gap-2.5 text-xs ${
+                              d.bubbleType === 'shout' ? 'text-rose-300 font-bold' : d.bubbleType === 'thought' ? 'italic text-sky-300' : 'text-slate-200'
+                            }`}
+                          >
+                            <span className="text-[11px] font-bold px-2 py-0.5 rounded bg-white/10 text-amber-300 shrink-0 font-serif">
+                              {d.character}
+                            </span>
+                            <div className="text-xs bg-slate-800/80 p-2 rounded-xl border border-white/10 flex-1 leading-relaxed">
+                              {d.text}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
+                    {/* Caption */}
+                    {panel.caption && (
+                      <div className="w-full text-center text-xs text-slate-400 font-serif italic py-1.5 bg-black/40 border-b border-white/5">
+                        {panel.caption}
+                      </div>
+                    )}
                   </div>
-                </div>
-              ))}
+                );
+              })}
+            </div>
+
+            {/* 4. CHAPTER NAV BOTTOM (NETTRUYEN) */}
+            <div className="chapter-nav-bottom flex flex-wrap items-center justify-center gap-2 py-8 border-t border-white/10 mt-8">
+              <button
+                disabled={activeComicIndex <= 0}
+                onClick={() => {
+                  setActiveComicIndex(prev => Math.max(0, prev - 1));
+                  scrollToTop();
+                }}
+                className="px-4 py-2 rounded-lg bg-rose-600 hover:bg-rose-500 disabled:opacity-30 disabled:pointer-events-none text-white font-bold text-xs flex items-center gap-1.5 shadow-md shadow-rose-600/30 transition-all cursor-pointer"
+              >
+                <ChevronLeft className="w-4 h-4" />
+                <span>Chap trước</span>
+              </button>
+
+              <select
+                value={activeComicIndex}
+                onChange={e => {
+                  setActiveComicIndex(Number(e.target.value));
+                  scrollToTop();
+                }}
+                className="px-3.5 py-2 rounded-lg bg-slate-800 hover:bg-slate-750 border border-white/20 text-white font-medium text-xs focus:ring-2 focus:ring-rose-500 outline-none max-w-[260px] sm:max-w-xs truncate cursor-pointer shadow-sm"
+              >
+                {comicChapters.map((c, idx) => (
+                  <option key={c.id} value={idx}>
+                    {c.title}
+                  </option>
+                ))}
+              </select>
+
+              <button
+                disabled={activeComicIndex >= comicChapters.length - 1}
+                onClick={() => {
+                  setActiveComicIndex(prev => Math.min(comicChapters.length - 1, prev + 1));
+                  scrollToTop();
+                }}
+                className="px-4 py-2 rounded-lg bg-rose-600 hover:bg-rose-500 disabled:opacity-30 disabled:pointer-events-none text-white font-bold text-xs flex items-center gap-1.5 shadow-md shadow-rose-600/30 transition-all cursor-pointer"
+              >
+                <span>Chap sau</span>
+                <ChevronRight className="w-4 h-4" />
+              </button>
+
+              <button
+                onClick={scrollToTop}
+                className="px-3.5 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-white/10 text-xs font-medium flex items-center gap-1 cursor-pointer transition-all"
+                title="Cuộn lên đầu trang"
+              >
+                <ArrowUp className="w-4 h-4" />
+                <span>Đầu trang</span>
+              </button>
+            </div>
+
+            {/* 5. FLOATING QUICK SWITCH BAR */}
+            <div className="sticky bottom-4 z-40 mx-auto px-4 py-2 rounded-2xl bg-slate-900/90 backdrop-blur-xl border border-white/15 shadow-2xl flex items-center gap-2 text-xs w-fit">
+              <button
+                disabled={activeComicIndex <= 0}
+                onClick={() => {
+                  setActiveComicIndex(prev => Math.max(0, prev - 1));
+                  scrollToTop();
+                }}
+                className="px-2.5 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-500 disabled:opacity-30 text-white font-medium flex items-center gap-1"
+              >
+                <ChevronLeft className="w-3.5 h-3.5" /> Trước
+              </button>
+
+              <select
+                value={activeComicIndex}
+                onChange={e => {
+                  setActiveComicIndex(Number(e.target.value));
+                  scrollToTop();
+                }}
+                className="px-2.5 py-1.5 rounded-lg bg-slate-800 border border-slate-700 text-white font-medium text-xs max-w-[140px] sm:max-w-[200px] truncate"
+              >
+                {comicChapters.map((c, idx) => (
+                  <option key={c.id} value={idx}>
+                    {c.title}
+                  </option>
+                ))}
+              </select>
+
+              <button
+                disabled={activeComicIndex >= comicChapters.length - 1}
+                onClick={() => {
+                  setActiveComicIndex(prev => Math.min(comicChapters.length - 1, prev + 1));
+                  scrollToTop();
+                }}
+                className="px-2.5 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-500 disabled:opacity-30 text-white font-medium flex items-center gap-1"
+              >
+                Sau <ChevronRight className="w-3.5 h-3.5" />
+              </button>
+
+              <button
+                onClick={scrollToTop}
+                className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300"
+                title="Lên đầu trang"
+              >
+                <ArrowUp className="w-3.5 h-3.5" />
+              </button>
             </div>
           </div>
         )}
