@@ -17,15 +17,22 @@ import {
   Feather,
   Eye,
   Sliders,
-  CloudUpload
+  CloudUpload,
+  BookOpenCheck,
+  Palette
 } from 'lucide-react';
-import { Chapter, Character } from '../../types';
+import { Chapter, Character, ComicChapter } from '../../types';
 import { GoogleDocPushModal } from './GoogleDocPushModal';
+import { ComicUploader } from './ComicUploader';
 
 interface ManuscriptEditorProps {
   chapter: Chapter;
   partTitle: string;
   characters: Character[];
+  chapters?: Chapter[];
+  comicChapters?: ComicChapter[];
+  onSaveComicChapters?: (updated: ComicChapter[]) => void;
+  onPreviewInReader?: () => void;
   onUpdateContent: (newContent: string) => void;
   onUpdateMetadata: (updatedChapter: Partial<Chapter>) => void;
   onRequestAI: (role: any, prompt: string, options?: any) => void;
@@ -40,6 +47,10 @@ export const ManuscriptEditor: React.FC<ManuscriptEditorProps> = ({
   chapter,
   partTitle,
   characters,
+  chapters = [],
+  comicChapters = [],
+  onSaveComicChapters,
+  onPreviewInReader,
   onUpdateContent,
   onUpdateMetadata,
   onRequestAI,
@@ -49,6 +60,7 @@ export const ManuscriptEditor: React.FC<ManuscriptEditorProps> = ({
   isFocusMode,
   setIsFocusMode
 }) => {
+  const [editorMode, setEditorMode] = useState<'prose' | 'comic'>('prose');
   const [showNotes, setShowNotes] = useState(false);
   const [showMetadataDrawer, setShowMetadataDrawer] = useState(false);
   const [showVersions, setShowVersions] = useState(false);
@@ -113,6 +125,32 @@ export const ManuscriptEditor: React.FC<ManuscriptEditorProps> = ({
                 <ChevronDown className="w-2.5 h-2.5" />
               </button>
             </div>
+          </div>
+
+          {/* Mode Switcher: Soạn Truyện Chữ vs Up Truyện Tranh */}
+          <div className="hidden lg:flex items-center p-1 rounded-xl bg-slate-900 border border-white/10 text-xs font-medium space-x-1 ml-4 flex-shrink-0">
+            <button
+              onClick={() => setEditorMode('prose')}
+              className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg transition-all ${
+                editorMode === 'prose'
+                  ? 'bg-amber-500/25 text-amber-300 border border-amber-500/40 shadow-sm font-bold'
+                  : 'text-slate-400 hover:text-white hover:bg-white/5'
+              }`}
+            >
+              <Feather className="w-3.5 h-3.5 text-amber-400" />
+              <span>Soạn Truyện Chữ</span>
+            </button>
+            <button
+              onClick={() => setEditorMode('comic')}
+              className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg transition-all ${
+                editorMode === 'comic'
+                  ? 'bg-rose-500/25 text-rose-300 border border-rose-500/40 shadow-sm font-bold'
+                  : 'text-slate-400 hover:text-white hover:bg-white/5'
+              }`}
+            >
+              <Palette className="w-3.5 h-3.5 text-rose-400" />
+              <span>Up Truyện Tranh</span>
+            </button>
           </div>
         </div>
 
@@ -226,9 +264,9 @@ export const ManuscriptEditor: React.FC<ManuscriptEditorProps> = ({
               className="w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-slate-200 focus:outline-none focus:border-amber-500"
             >
               <option value="">-- Chọn góc nhìn POV --</option>
-              <option value="Sena">Sena</option>
-              <option value="Koto">Koto</option>
-              <option value="Ryou">Ryou</option>
+              {characters.map(c => (
+                <option key={c.id} value={c.name}>{c.name} ({c.role})</option>
+              ))}
               <option value="Người dẫn truyện">Người dẫn truyện (Ngôi thứ ba)</option>
             </select>
           </div>
@@ -274,109 +312,123 @@ export const ManuscriptEditor: React.FC<ManuscriptEditorProps> = ({
         </div>
       )}
 
-      {/* Floating Glass AI Action Ribbon */}
-      <div className={`px-6 py-2.5 border-b flex items-center justify-between flex-shrink-0 select-none overflow-x-auto ${
-        isWarmTheme 
-          ? 'bg-parchment-200/40 border-amber-900/10' 
-          : 'bg-slate-900/50 border-slate-800/60 backdrop-blur-lg'
-      }`}>
-        <div className="flex items-center space-x-2 text-xs">
-          <span className="text-[11px] font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1 mr-1">
-            <Sparkles className="w-3.5 h-3.5" /> Trợ Lý AI:
-          </span>
+      {/* Main Content Area based on Editor Mode: Soạn Truyện Chữ vs Up Truyện Tranh */}
+      {editorMode === 'comic' ? (
+        <ComicUploader
+          activeChapter={chapter}
+          chapters={chapters}
+          comicChapters={comicChapters}
+          onSaveComicChapters={onSaveComicChapters || (() => {})}
+          onPreviewInReader={onPreviewInReader || (() => {})}
+          isWarmTheme={isWarmTheme}
+        />
+      ) : (
+        <>
+          {/* Floating Glass AI Action Ribbon */}
+          <div className={`px-6 py-2.5 border-b flex items-center justify-between flex-shrink-0 select-none overflow-x-auto ${
+            isWarmTheme 
+              ? 'bg-parchment-200/40 border-amber-900/10' 
+              : 'bg-slate-900/50 border-slate-800/60 backdrop-blur-lg'
+          }`}>
+            <div className="flex items-center space-x-2 text-xs">
+              <span className="text-[11px] font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1 mr-1">
+                <Sparkles className="w-3.5 h-3.5" /> Trợ Lý AI:
+              </span>
 
-          <button
-            onClick={() => onRequestAI('scene_writer', 'Đề xuất 3 hướng phát triển tiếp theo cho chương này')}
-            className="px-3 py-1.5 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-500/30 font-medium transition-all flex items-center gap-1.5 shadow-sm hover:scale-105 active:scale-95"
-          >
-            <Zap className="w-3.5 h-3.5 text-amber-400" />
-            <span>3 Hướng Phát Triển</span>
-          </button>
+              <button
+                onClick={() => onRequestAI('scene_writer', 'Đề xuất 3 hướng phát triển tiếp theo cho chương này')}
+                className="px-3 py-1.5 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-500/30 font-medium transition-all flex items-center gap-1.5 shadow-sm hover:scale-105 active:scale-95"
+              >
+                <Zap className="w-3.5 h-3.5 text-amber-400" />
+                <span>3 Hướng Phát Triển</span>
+              </button>
 
-          <button
-            onClick={() => onRequestAI('scene_writer', 'Viết tiếp đoạn văn từ vị trí hiện tại tuân thủ nghiêm ngặt nguyên tắc viết')}
-            className="px-3 py-1.5 rounded-xl bg-sky-500/15 hover:bg-sky-500/25 text-sky-300 border border-sky-500/30 font-medium transition-all flex items-center gap-1.5 shadow-sm hover:scale-105 active:scale-95"
-          >
-            <Wand2 className="w-3.5 h-3.5 text-sky-400" />
-            <span>Viết Tiếp</span>
-          </button>
+              <button
+                onClick={() => onRequestAI('scene_writer', 'Viết tiếp đoạn văn từ vị trí hiện tại tuân thủ nghiêm ngặt nguyên tắc viết')}
+                className="px-3 py-1.5 rounded-xl bg-sky-500/15 hover:bg-sky-500/25 text-sky-300 border border-sky-500/30 font-medium transition-all flex items-center gap-1.5 shadow-sm hover:scale-105 active:scale-95"
+              >
+                <Wand2 className="w-3.5 h-3.5 text-sky-400" />
+                <span>Viết Tiếp</span>
+              </button>
 
-          <button
-            onClick={onAuditLogic}
-            className="px-3 py-1.5 rounded-xl bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-300 border border-emerald-500/30 font-medium transition-all flex items-center gap-1.5 shadow-sm hover:scale-105 active:scale-95"
-          >
-            <ShieldAlert className="w-3.5 h-3.5 text-emerald-400" />
-            <span>Soát Logic & Rào Chắn</span>
-          </button>
+              <button
+                onClick={onAuditLogic}
+                className="px-3 py-1.5 rounded-xl bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-300 border border-emerald-500/30 font-medium transition-all flex items-center gap-1.5 shadow-sm hover:scale-105 active:scale-95"
+              >
+                <ShieldAlert className="w-3.5 h-3.5 text-emerald-400" />
+                <span>Soát Logic & Rào Chắn</span>
+              </button>
 
-          <button
-            onClick={() => onRequestAI('style_editor', 'Soát văn phong và nhịp điệu theo đúng phong cách tác giả')}
-            className="px-3 py-1.5 rounded-xl bg-purple-500/15 hover:bg-purple-500/25 text-purple-300 border border-purple-500/30 font-medium transition-all flex items-center gap-1.5 shadow-sm hover:scale-105 active:scale-95"
-          >
-            <FileCheck2 className="w-3.5 h-3.5 text-purple-400" />
-            <span>Soát Văn Phong</span>
-          </button>
+              <button
+                onClick={() => onRequestAI('style_editor', 'Soát văn phong và nhịp điệu theo đúng phong cách tác giả')}
+                className="px-3 py-1.5 rounded-xl bg-purple-500/15 hover:bg-purple-500/25 text-purple-300 border border-purple-500/30 font-medium transition-all flex items-center gap-1.5 shadow-sm hover:scale-105 active:scale-95"
+              >
+                <FileCheck2 className="w-3.5 h-3.5 text-purple-400" />
+                <span>Soát Văn Phong</span>
+              </button>
 
-          <button
-            onClick={onRequestFactExtraction}
-            className="px-3 py-1.5 rounded-xl bg-rose-500/15 hover:bg-rose-500/25 text-rose-300 border border-rose-500/30 font-medium transition-all flex items-center gap-1.5 shadow-sm hover:scale-105 active:scale-95"
-          >
-            <Flame className="w-3.5 h-3.5 text-rose-400" />
-            <span>Trích Xuất Dữ Kiện</span>
-          </button>
-        </div>
+              <button
+                onClick={onRequestFactExtraction}
+                className="px-3 py-1.5 rounded-xl bg-rose-500/15 hover:bg-rose-500/25 text-rose-300 border border-rose-500/30 font-medium transition-all flex items-center gap-1.5 shadow-sm hover:scale-105 active:scale-95"
+              >
+                <Flame className="w-3.5 h-3.5 text-rose-400" />
+                <span>Trích Xuất Dữ Kiện</span>
+              </button>
+            </div>
 
-        {/* Font Zoom Controls */}
-        <div className="flex items-center space-x-1.5 text-xs opacity-75">
-          <button 
-            onClick={() => setFontSize(prev => Math.max(15, prev - 1))}
-            className="w-6 h-6 rounded-lg bg-slate-800 hover:bg-slate-700 flex items-center justify-center font-bold"
-          >
-            -
-          </button>
-          <span className="font-mono text-[11px] px-1">{fontSize}px</span>
-          <button 
-            onClick={() => setFontSize(prev => Math.min(26, prev + 1))}
-            className="w-6 h-6 rounded-lg bg-slate-800 hover:bg-slate-700 flex items-center justify-center font-bold"
-          >
-            +
-          </button>
-        </div>
-      </div>
-
-      {/* Main Drafting Canvas */}
-      <div className="flex-1 overflow-y-auto px-6 md:px-12 py-10 flex justify-center selection:bg-amber-500/30 selection:text-amber-200">
-        <div className="w-full max-w-3xl flex flex-col min-h-full">
-          {/* Chapter Opening Header in Canvas */}
-          <div className="text-center pb-8 mb-6 border-b border-white/5 space-y-2 select-none">
-            <span className="text-[11px] font-mono tracking-widest text-amber-400 uppercase font-semibold block">
-              {partTitle}
-            </span>
-            <h1 className="font-serif font-black text-2xl md:text-3xl text-slate-100 tracking-tight">
-              {chapter.title}
-            </h1>
-            <div className="flex items-center justify-center space-x-3 text-xs text-slate-400 font-mono pt-1">
-              <span>{words.toLocaleString()} từ</span>
-              <span>•</span>
-              <span>Thời gian đọc: ~{readMinutes} phút</span>
+            {/* Font Zoom Controls */}
+            <div className="flex items-center space-x-1.5 text-xs opacity-75">
+              <button 
+                onClick={() => setFontSize(prev => Math.min(15, prev - 1))}
+                className="w-6 h-6 rounded-lg bg-slate-800 hover:bg-slate-700 flex items-center justify-center font-bold"
+              >
+                -
+              </button>
+              <span className="font-mono text-[11px] px-1">{fontSize}px</span>
+              <button 
+                onClick={() => setFontSize(prev => Math.min(26, prev + 1))}
+                className="w-6 h-6 rounded-lg bg-slate-800 hover:bg-slate-700 flex items-center justify-center font-bold"
+              >
+                +
+              </button>
             </div>
           </div>
 
-          {/* True Full Chapter Textarea */}
-          <textarea
-            ref={textareaRef}
-            value={chapter.content || ''}
-            onChange={handleTextChange}
-            placeholder="Bắt đầu viết chương tại đây..."
-            style={{ fontSize: `${fontSize}px` }}
-            className={`w-full flex-1 bg-transparent resize-none focus:outline-none manuscript-content leading-[2.0] tracking-wide transition-colors border-none p-0 ${
-              isWarmTheme 
-                ? 'text-stone-900 placeholder:text-stone-400' 
-                : 'text-slate-100 placeholder:text-slate-600'
-            }`}
-          />
-        </div>
-      </div>
+          {/* Main Drafting Canvas */}
+          <div className="flex-1 overflow-y-auto px-6 md:px-12 py-10 flex justify-center selection:bg-amber-500/30 selection:text-amber-200">
+            <div className="w-full max-w-3xl flex flex-col min-h-full">
+              {/* Chapter Opening Header in Canvas */}
+              <div className="text-center pb-8 mb-6 border-b border-white/5 space-y-2 select-none">
+                <span className="text-[11px] font-mono tracking-widest text-amber-400 uppercase font-semibold block">
+                  {partTitle}
+                </span>
+                <h1 className="font-serif font-black text-2xl md:text-3xl text-slate-100 tracking-tight">
+                  {chapter.title}
+                </h1>
+                <div className="flex items-center justify-center space-x-3 text-xs text-slate-400 font-mono pt-1">
+                  <span>{words.toLocaleString()} từ</span>
+                  <span>•</span>
+                  <span>Thời gian đọc: ~{readMinutes} phút</span>
+                </div>
+              </div>
+
+              {/* True Full Chapter Textarea */}
+              <textarea
+                ref={textareaRef}
+                value={chapter.content || ''}
+                onChange={handleTextChange}
+                placeholder="Bắt đầu viết chương tại đây..."
+                style={{ fontSize: `${fontSize}px` }}
+                className={`w-full flex-1 bg-transparent resize-none focus:outline-none manuscript-content leading-[2.0] tracking-wide transition-colors border-none p-0 ${
+                  isWarmTheme 
+                    ? 'text-stone-900 placeholder:text-stone-400' 
+                    : 'text-slate-100 placeholder:text-slate-600'
+                }`}
+              />
+            </div>
+          </div>
+        </>
+      )}
 
       {/* Google Doc Push & Writeback Modal */}
       <GoogleDocPushModal

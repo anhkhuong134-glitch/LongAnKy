@@ -14,7 +14,9 @@ import {
   Moon, 
   Sun,
   Flame,
-  CheckCircle2
+  CheckCircle2,
+  KeyRound,
+  Lock
 } from 'lucide-react';
 import { Project } from '../../types';
 
@@ -29,6 +31,9 @@ interface AppHeaderProps {
   onOpenSettings: () => void;
   onResetSample: () => void;
   stagedSyncCount?: number;
+  isAuthorMode: boolean;
+  onOpenAuthorLogin: () => void;
+  onExitAuthorMode: () => void;
 }
 
 export const AppHeader: React.FC<AppHeaderProps> = ({
@@ -41,7 +46,10 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
   onOpenExport,
   onOpenSettings,
   onResetSample,
-  stagedSyncCount = 0
+  stagedSyncCount = 0,
+  isAuthorMode,
+  onOpenAuthorLogin,
+  onExitAuthorMode
 }) => {
   const wordsProgressPercent = Math.min(100, Math.round((project.stats.wordsToday / project.stats.dailyGoal) * 100));
 
@@ -83,6 +91,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
 
         {/* Global Navigation Tabs */}
         <nav className="hidden lg:flex items-center p-1 rounded-xl bg-slate-950/40 border border-white/5 text-xs font-medium space-x-1">
+          {/* Đọc Sách: Luôn luôn hiển thị cho cả độc giả và tác giả */}
           <button
             onClick={() => setActiveTab('reader')}
             className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg transition-all ${
@@ -95,168 +104,216 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
             <span>Đọc Sách (Chữ &amp; Tranh)</span>
           </button>
 
-          <button
-            onClick={() => setActiveTab('editor')}
-            className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg transition-all ${
-              activeTab === 'editor'
-                ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40 shadow-sm font-bold'
-                : 'hover:bg-white/5 opacity-75 hover:opacity-100'
-            }`}
-          >
-            <BookOpen className="w-3.5 h-3.5" />
-            <span>Soạn Thảo (3 Cột)</span>
-          </button>
+          {/* CÁC TAB DÀNH RIÊNG CHO TÁC GIẢ: Chỉ hiển thị khi isAuthorMode = true */}
+          {isAuthorMode && (
+            <>
+              <button
+                onClick={() => setActiveTab('editor')}
+                className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg transition-all ${
+                  activeTab === 'editor'
+                    ? 'bg-amber-500/25 text-amber-300 border border-amber-500/40 shadow-sm font-bold'
+                    : 'hover:bg-white/5 opacity-75 hover:opacity-100 text-amber-200/90'
+                }`}
+              >
+                <BookOpen className="w-3.5 h-3.5 text-amber-400" />
+                <span>Soạn Thảo (3 Cột)</span>
+              </button>
 
-          <button
-            onClick={() => setActiveTab('google_sync')}
-            className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg transition-all relative ${
-              activeTab === 'google_sync'
-                ? 'bg-emerald-500/25 text-emerald-300 border border-emerald-500/40 shadow-sm font-bold'
-                : 'hover:bg-white/5 opacity-75 hover:opacity-100'
-            }`}
-          >
-            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-            <span>Google Docs &amp; Sheets</span>
-            {stagedSyncCount > 0 && (
-              <span className="w-2 h-2 rounded-full bg-rose-500 animate-ping"></span>
-            )}
-          </button>
+              <button
+                onClick={() => setActiveTab('google_sync')}
+                className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg transition-all relative ${
+                  activeTab === 'google_sync'
+                    ? 'bg-emerald-500/25 text-emerald-300 border border-emerald-500/40 shadow-sm font-bold'
+                    : 'hover:bg-white/5 opacity-75 hover:opacity-100'
+                }`}
+              >
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                <span>Google Docs &amp; Sheets</span>
+                {stagedSyncCount > 0 && (
+                  <span className="w-2 h-2 rounded-full bg-rose-500 animate-ping"></span>
+                )}
+              </button>
 
-          <button
-            onClick={() => setActiveTab('ai_hub')}
-            className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg transition-all ${
-              activeTab === 'ai_hub'
-                ? 'bg-purple-500/25 text-purple-300 border border-purple-500/40 shadow-sm font-bold'
-                : 'hover:bg-white/5 opacity-75 hover:opacity-100'
-            }`}
-          >
-            <Sparkles className="w-3.5 h-3.5 text-purple-400" />
-            <span>Google AI Studio Hub</span>
-          </button>
+              <button
+                onClick={() => setActiveTab('ai_hub')}
+                className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg transition-all ${
+                  activeTab === 'ai_hub'
+                    ? 'bg-purple-500/25 text-purple-300 border border-purple-500/40 shadow-sm font-bold'
+                    : 'hover:bg-white/5 opacity-75 hover:opacity-100'
+                }`}
+              >
+                <Sparkles className="w-3.5 h-3.5 text-purple-400" />
+                <span>Google AI Studio Hub</span>
+              </button>
 
-          <button
-            onClick={() => setActiveTab('bible')}
-            className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg transition-all ${
-              activeTab === 'bible'
-                ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40 shadow-sm'
-                : 'hover:bg-white/5 opacity-75 hover:opacity-100'
-            }`}
-          >
-            <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
-            <span>Story Bible</span>
-          </button>
+              <button
+                onClick={() => setActiveTab('bible')}
+                className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg transition-all ${
+                  activeTab === 'bible'
+                    ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40 shadow-sm'
+                    : 'hover:bg-white/5 opacity-75 hover:opacity-100'
+                }`}
+              >
+                <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+                <span>Story Bible</span>
+              </button>
 
-          <button
-            onClick={() => setActiveTab('characters')}
-            className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg transition-all ${
-              activeTab === 'characters'
-                ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40 shadow-sm'
-                : 'hover:bg-white/5 opacity-75 hover:opacity-100'
-            }`}
-          >
-            <Users className="w-3.5 h-3.5 text-cyan-400" />
-            <span>Nhân Vật</span>
-          </button>
+              <button
+                onClick={() => setActiveTab('characters')}
+                className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg transition-all ${
+                  activeTab === 'characters'
+                    ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40 shadow-sm'
+                    : 'hover:bg-white/5 opacity-75 hover:opacity-100'
+                }`}
+              >
+                <Users className="w-3.5 h-3.5 text-cyan-400" />
+                <span>Nhân Vật</span>
+              </button>
 
-          <button
-            onClick={() => setActiveTab('timeline')}
-            className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg transition-all ${
-              activeTab === 'timeline'
-                ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40 shadow-sm'
-                : 'hover:bg-white/5 opacity-75 hover:opacity-100'
-            }`}
-          >
-            <Clock className="w-3.5 h-3.5 text-blue-400" />
-            <span>Timeline</span>
-          </button>
+              <button
+                onClick={() => setActiveTab('timeline')}
+                className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg transition-all ${
+                  activeTab === 'timeline'
+                    ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40 shadow-sm'
+                    : 'hover:bg-white/5 opacity-75 hover:opacity-100'
+                }`}
+              >
+                <Clock className="w-3.5 h-3.5 text-blue-400" />
+                <span>Timeline</span>
+              </button>
 
-          <button
-            onClick={() => setActiveTab('foreshadowing')}
-            className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg transition-all ${
-              activeTab === 'foreshadowing'
-                ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40 shadow-sm'
-                : 'hover:bg-white/5 opacity-75 hover:opacity-100'
-            }`}
-          >
-            <GitBranch className="w-3.5 h-3.5 text-rose-400" />
-            <span>Phục Bút</span>
-          </button>
+              <button
+                onClick={() => setActiveTab('foreshadowing')}
+                className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg transition-all ${
+                  activeTab === 'foreshadowing'
+                    ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40 shadow-sm'
+                    : 'hover:bg-white/5 opacity-75 hover:opacity-100'
+                }`}
+              >
+                <GitBranch className="w-3.5 h-3.5 text-rose-400" />
+                <span>Phục Bút</span>
+              </button>
+            </>
+          )}
         </nav>
 
         {/* Right Toolbar Actions */}
         <div className="flex items-center space-x-2">
-          {/* Daily Word Target Badge */}
-          <div className="hidden sm:flex items-center space-x-2 px-3 py-1.5 rounded-lg bg-slate-900/60 border border-white/10 text-xs">
-            <Flame className="w-3.5 h-3.5 text-amber-400 fill-amber-400/30" />
-            <div>
-              <span className="font-semibold text-amber-300">{project.stats.wordsToday.toLocaleString()}</span>
-              <span className="opacity-50">/{project.stats.dailyGoal.toLocaleString()} từ hôm nay</span>
-            </div>
-            <div className="w-12 h-1.5 bg-slate-800 rounded-full overflow-hidden ml-1">
-              <div 
-                className="h-full bg-gradient-to-r from-amber-500 to-rose-500 rounded-full"
-                style={{ width: `${wordsProgressPercent}%` }}
-              />
-            </div>
-          </div>
+          {/* Reader vs Author Controls */}
+          {!isAuthorMode ? (
+            /* Chế độ Độc Giả (Khách ghé thăm link Vercel) */
+            <>
+              {/* Nút đăng nhập Tác Giả kín đáo */}
+              <button
+                onClick={onOpenAuthorLogin}
+                title="Dành riêng cho tác giả: Nhập PIN để mở khóa Soạn Thảo (3 Cột)"
+                className="px-2.5 py-1.5 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-300 transition-all text-xs flex items-center gap-1.5 font-medium shadow-sm hover:scale-105 active:scale-95"
+              >
+                <KeyRound className="w-3.5 h-3.5 text-amber-400" />
+                <span>Tác Giả</span>
+              </button>
 
-          {/* Import / Export / Settings / Theme */}
-          <button
-            onClick={onOpenImport}
-            title="Nhập văn bản từ Google Docs, Word, TXT"
-            className="p-2 rounded-lg bg-slate-800/60 hover:bg-slate-700/80 border border-white/5 transition-all text-xs flex items-center gap-1"
-          >
-            <Upload className="w-3.5 h-3.5 text-sky-400" />
-            <span className="hidden md:inline">Nhập</span>
-          </button>
+              {/* Theme toggle cho người đọc */}
+              <button
+                onClick={() => setIsWarmTheme(!isWarmTheme)}
+                title="Chuyển đổi giao diện Đêm / Giấy Parchment thư giãn"
+                className="p-2 rounded-xl bg-slate-800/60 hover:bg-slate-700/80 border border-white/5 transition-all text-xs"
+              >
+                {isWarmTheme ? <Moon className="w-3.5 h-3.5 text-amber-300" /> : <Sun className="w-3.5 h-3.5 text-amber-400" />}
+              </button>
+            </>
+          ) : (
+            /* Chế độ Tác Giả (Sau khi đã xác thực PIN) */
+            <>
+              {/* Huy hiệu Tác Giả với nút Khóa / Xem thử như Độc giả */}
+              <div className="flex items-center space-x-1.5 px-2.5 py-1 rounded-xl bg-gradient-to-r from-amber-500/20 via-rose-500/15 to-purple-500/20 border border-amber-500/40 text-amber-300 text-xs shadow-sm">
+                <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+                <span className="font-bold">👑 Tác Giả</span>
+                <button
+                  onClick={onExitAuthorMode}
+                  title="Khóa lại để xem chính xác giao diện mà Độc Giả nhìn thấy"
+                  className="ml-1 text-[10px] text-slate-400 hover:text-white underline"
+                >
+                  (Khóa)
+                </button>
+              </div>
 
-          <button
-            onClick={onOpenExport}
-            title="Xuất bản thảo sạch (Word, Markdown, Beta Draft)"
-            className="p-2 rounded-lg bg-slate-800/60 hover:bg-slate-700/80 border border-white/5 transition-all text-xs flex items-center gap-1"
-          >
-            <Download className="w-3.5 h-3.5 text-emerald-400" />
-            <span className="hidden md:inline">Xuất</span>
-          </button>
+              {/* Daily Word Target Badge */}
+              <div className="hidden xl:flex items-center space-x-2 px-3 py-1.5 rounded-lg bg-slate-900/60 border border-white/10 text-xs">
+                <Flame className="w-3.5 h-3.5 text-amber-400 fill-amber-400/30" />
+                <div>
+                  <span className="font-semibold text-amber-300">{project.stats.wordsToday.toLocaleString()}</span>
+                  <span className="opacity-50">/{project.stats.dailyGoal.toLocaleString()} từ hôm nay</span>
+                </div>
+                <div className="w-12 h-1.5 bg-slate-800 rounded-full overflow-hidden ml-1">
+                  <div 
+                    className="h-full bg-gradient-to-r from-amber-500 to-rose-500 rounded-full"
+                    style={{ width: `${wordsProgressPercent}%` }}
+                  />
+                </div>
+              </div>
 
-          <button
-            onClick={() => setIsWarmTheme(!isWarmTheme)}
-            title="Chuyển đổi giao diện Đêm / Giấy Parchment thư giãn"
-            className="p-2 rounded-lg bg-slate-800/60 hover:bg-slate-700/80 border border-white/5 transition-all text-xs"
-          >
-            {isWarmTheme ? <Moon className="w-3.5 h-3.5 text-amber-300" /> : <Sun className="w-3.5 h-3.5 text-amber-400" />}
-          </button>
+              {/* Import / Export / Settings / Theme */}
+              <button
+                onClick={onOpenImport}
+                title="Nhập văn bản từ Google Docs, Word, TXT"
+                className="p-2 rounded-lg bg-slate-800/60 hover:bg-slate-700/80 border border-white/5 transition-all text-xs flex items-center gap-1"
+              >
+                <Upload className="w-3.5 h-3.5 text-sky-400" />
+                <span className="hidden md:inline">Nhập</span>
+              </button>
 
-          <button
-            onClick={onOpenSettings}
-            title="Cấu hình AI (Ollama Local, Gemini, OpenAI)"
-            className="p-2 rounded-lg bg-slate-800/60 hover:bg-slate-700/80 border border-white/5 transition-all text-xs"
-          >
-            <Settings className="w-3.5 h-3.5 text-slate-300" />
-          </button>
+              <button
+                onClick={onOpenExport}
+                title="Xuất bản thảo sạch (Word, Markdown, Beta Draft)"
+                className="p-2 rounded-lg bg-slate-800/60 hover:bg-slate-700/80 border border-white/5 transition-all text-xs flex items-center gap-1"
+              >
+                <Download className="w-3.5 h-3.5 text-emerald-400" />
+                <span className="hidden md:inline">Xuất</span>
+              </button>
 
-          <button
-            onClick={onResetSample}
-            title="Nạp lại dự án mẫu Long Ấn Ký"
-            className="p-2 rounded-lg bg-slate-800/60 hover:bg-rose-900/40 border border-rose-500/20 transition-all text-xs text-rose-300"
-          >
-            <RotateCcw className="w-3.5 h-3.5" />
-          </button>
+              <button
+                onClick={() => setIsWarmTheme(!isWarmTheme)}
+                title="Chuyển đổi giao diện Đêm / Giấy Parchment thư giãn"
+                className="p-2 rounded-lg bg-slate-800/60 hover:bg-slate-700/80 border border-white/5 transition-all text-xs"
+              >
+                {isWarmTheme ? <Moon className="w-3.5 h-3.5 text-amber-300" /> : <Sun className="w-3.5 h-3.5 text-amber-400" />}
+              </button>
+
+              <button
+                onClick={onOpenSettings}
+                title="Cấu hình AI (Ollama Local, Gemini, OpenAI)"
+                className="p-2 rounded-lg bg-slate-800/60 hover:bg-slate-700/80 border border-white/5 transition-all text-xs"
+              >
+                <Settings className="w-3.5 h-3.5 text-slate-300" />
+              </button>
+
+              <button
+                onClick={onResetSample}
+                title="Nạp lại dự án mẫu Long Ấn Ký"
+                className="p-2 rounded-lg bg-slate-800/60 hover:bg-rose-900/40 border border-rose-500/20 transition-all text-xs text-rose-300"
+              >
+                <RotateCcw className="w-3.5 h-3.5" />
+              </button>
+            </>
+          )}
         </div>
       </div>
 
       {/* Mobile Sub-Navigation Bar */}
       <div className="flex lg:hidden overflow-x-auto px-2 py-1.5 space-x-1 border-t border-white/5 text-xs font-medium">
-        {[
+        {(isAuthorMode ? [
           { id: 'reader', label: 'Đọc Sách (Chữ & Tranh)', icon: BookOpen },
-          { id: 'editor', label: 'Soạn Thảo', icon: BookOpen },
+          { id: 'editor', label: 'Soạn Thảo (3 Cột)', icon: BookOpen },
           { id: 'google_sync', label: 'Google Docs & Sheets', icon: CheckCircle2 },
           { id: 'ai_hub', label: 'AI Studio Hub', icon: Sparkles },
           { id: 'bible', label: 'Story Bible', icon: ShieldCheck },
           { id: 'characters', label: 'Nhân Vật', icon: Users },
           { id: 'timeline', label: 'Timeline', icon: Clock },
           { id: 'foreshadowing', label: 'Phục Bút', icon: GitBranch }
-        ].map(item => {
+        ] : [
+          { id: 'reader', label: 'Đọc Sách (Chữ & Tranh)', icon: BookOpen }
+        ]).map(item => {
           const Icon = item.icon;
           return (
             <button

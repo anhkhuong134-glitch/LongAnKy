@@ -15,6 +15,7 @@ import { GoogleSyncView } from './components/googleSync/GoogleSyncView';
 import { AIStudioHubView } from './components/ai/AIStudioHubView';
 import { ImportExportModal } from './components/importExport/ImportExportModal';
 import { SettingsModal } from './components/settings/SettingsModal';
+import { AuthorLoginModal } from './components/author/AuthorLoginModal';
 
 import { StorageService } from './services/storageService';
 import { AIService, AISuggestionResult } from './services/aiService';
@@ -25,7 +26,8 @@ import { googleDocsParts } from './data/googleData';
 
 import {
   Project, Part, Chapter, BibleFact, Character,
-  TimelineEvent, ForeshadowingHook, AISettings, AIRole, LogicAuditIssue
+  TimelineEvent, ForeshadowingHook, AISettings, AIRole, LogicAuditIssue,
+  ComicChapter
 } from './types';
 
 import './styles/index.css';
@@ -33,6 +35,20 @@ import './styles/index.css';
 type ActiveTab = 'editor' | 'bible' | 'characters' | 'timeline' | 'foreshadowing' | 'ai_hub' | 'reader' | 'google_sync';
 
 export default function App() {
+  // Author mode authorization (Khách vào link Vercel mặc định chỉ thấy Đọc Sách, Tác giả mở khóa thấy Soạn Thảo)
+  const [isAuthorMode, setIsAuthorMode] = useState<boolean>(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('author') === '1' || params.get('author') === 'true' || params.get('pin') === '134' || params.get('admin') === 'true') {
+        StorageService.setAuthorAuthenticated(true);
+        return true;
+      }
+      return StorageService.isAuthorAuthenticated();
+    }
+    return false;
+  });
+  const [showAuthorLogin, setShowAuthorLogin] = useState<boolean>(false);
+
   // Core state
   const [project, setProject] = useState<Project>(() => StorageService.loadProject());
   const [parts, setParts] = useState<Part[]>(() => StorageService.loadParts());
@@ -41,6 +57,7 @@ export default function App() {
   const [timeline, setTimeline] = useState<TimelineEvent[]>(() => StorageService.loadTimeline());
   const [foreshadowing, setForeshadowing] = useState<ForeshadowingHook[]>(() => StorageService.loadForeshadowing());
   const [aiSettings, setAISettings] = useState<AISettings>(() => StorageService.loadAISettings());
+  const [comicChapters, setComicChapters] = useState<ComicChapter[]>(() => StorageService.loadComicChapters());
 
   // UI state
   const [activeTab, setActiveTab] = useState<ActiveTab>('reader');
@@ -144,6 +161,19 @@ export default function App() {
   useEffect(() => { StorageService.saveTimeline(timeline); }, [timeline]);
   useEffect(() => { StorageService.saveForeshadowing(foreshadowing); }, [foreshadowing]);
   useEffect(() => { StorageService.saveAISettings(aiSettings); }, [aiSettings]);
+
+  // Save comic chapters
+  const handleSaveComicChapters = useCallback((updated: ComicChapter[]) => {
+    setComicChapters(updated);
+    StorageService.saveComicChapters(updated);
+  }, []);
+
+  // Đảm bảo độc giả chỉ được xem tab 'reader'
+  useEffect(() => {
+    if (!isAuthorMode && activeTab !== 'reader') {
+      setActiveTab('reader');
+    }
+  }, [isAuthorMode, activeTab]);
 
   // Update Chapter content directly
   const handleUpdateChapterContent = useCallback((newContent: string) => {
@@ -371,11 +401,18 @@ export default function App() {
         onOpenSettings={() => setShowSettings(true)}
         onResetSample={handleResetSample}
         stagedSyncCount={docsSyncState.stagedChangesCount}
+        isAuthorMode={isAuthorMode}
+        onOpenAuthorLogin={() => setShowAuthorLogin(true)}
+        onExitAuthorMode={() => {
+          setIsAuthorMode(false);
+          StorageService.setAuthorAuthenticated(false);
+          setActiveTab('reader');
+        }}
       />
 
       {/* Main Studio Viewport */}
       <div className="flex-1 overflow-hidden flex flex-col relative">
-        {/* TAB: Manuscript Studio (Phần -> Chương -> Soạn thảo) */}
+        {/* TAB: Manuscript Studio (Phần -> Chương -> Soạn thảo & Up Truyện Tranh) */}
         {activeTab === 'editor' && (
           <div className="flex-1 flex overflow-hidden">
             <OutlineNav
@@ -397,6 +434,10 @@ export default function App() {
                   chapter={activeChapter}
                   partTitle={activePartTitle}
                   characters={characters}
+                  chapters={activePart?.chapters || []}
+                  comicChapters={comicChapters}
+                  onSaveComicChapters={handleSaveComicChapters}
+                  onPreviewInReader={() => setActiveTab('reader')}
                   onUpdateContent={handleUpdateChapterContent}
                   onUpdateMetadata={handleUpdateChapterMetadata}
                   onRequestAI={handleRequestAI}
@@ -521,12 +562,25 @@ export default function App() {
               isWarmTheme={isWarmTheme}
               aiSettings={aiSettings}
               onOpenAIHub={() => setActiveTab('ai_hub')}
+              comicChapters={comicChapters}
+              isAuthorMode={isAuthorMode}
+              onOpenComicUploader={() => setActiveTab('editor')}
             />
           </div>
         )}
       </div>
 
       {/* ====== GLOBAL MODALS ====== */}
+
+      {/* Author PIN Verification Modal */}
+      <AuthorLoginModal
+        isOpen={showAuthorLogin}
+        onClose={() => setShowAuthorLogin(false)}
+        onSuccess={() => {
+          setIsAuthorMode(true);
+          setActiveTab('editor');
+        }}
+      />
 
       {/* AI Diff/Proposal Comparator Modal */}
       {aiProposal && activeChapter && (

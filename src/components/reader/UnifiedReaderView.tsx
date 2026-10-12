@@ -33,6 +33,9 @@ interface UnifiedReaderViewProps {
   isWarmTheme: boolean;
   aiSettings: AISettings;
   onOpenAIHub?: () => void;
+  comicChapters?: ComicChapter[];
+  isAuthorMode?: boolean;
+  onOpenComicUploader?: () => void;
 }
 
 type ReaderType = 'novel' | 'comic';
@@ -44,7 +47,10 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
   parts,
   isWarmTheme,
   aiSettings,
-  onOpenAIHub
+  onOpenAIHub,
+  comicChapters: propsComicChapters,
+  isAuthorMode = false,
+  onOpenComicUploader
 }) => {
   // Mode selection: Novel (Truyện chữ) vs Comic (Truyện tranh)
   const [readerType, setReaderType] = useState<ReaderType>('novel');
@@ -66,7 +72,16 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
   const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
 
   // Comic reader states
-  const [comicChapters, setComicChapters] = useState<ComicChapter[]>(sampleComicChapters);
+  const [comicChapters, setComicChapters] = useState<ComicChapter[]>(() => {
+    return propsComicChapters && propsComicChapters.length > 0 ? propsComicChapters : sampleComicChapters;
+  });
+
+  useEffect(() => {
+    if (propsComicChapters && propsComicChapters.length > 0) {
+      setComicChapters(propsComicChapters);
+    }
+  }, [propsComicChapters]);
+
   const [activeComicIndex, setActiveComicIndex] = useState<number>(0);
   const [comicMode, setComicMode] = useState<ComicReadingMode>('webtoon');
   const [selectedPanel, setSelectedPanel] = useState<ComicPanel | null>(null);

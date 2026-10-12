@@ -1,6 +1,6 @@
-import { Project, Part, BibleFact, Character, TimelineEvent, ForeshadowingHook, AISettings } from '../types';
+import { Project, Part, BibleFact, Character, TimelineEvent, ForeshadowingHook, AISettings, ComicChapter } from '../types';
 import { sampleProject, sampleBibleFacts, sampleCharacters, sampleTimeline, sampleForeshadowingHooks } from '../data/sampleLongAnKy';
-import { googleDocsParts } from '../data/googleData';
+import { googleDocsParts, sampleComicChapters } from '../data/googleData';
 import { googleCharacters } from '../data/googleCharacters';
 
 const STORAGE_KEYS = {
@@ -11,7 +11,10 @@ const STORAGE_KEYS = {
   TIMELINE: 'mach_timeline',
   FORESHADOWING: 'mach_foreshadowing',
   AI_SETTINGS: 'mach_ai_settings',
-  THEME: 'mach_theme'
+  THEME: 'mach_theme',
+  COMIC_CHAPTERS: 'mach_comic_chapters',
+  IS_AUTHOR: 'mach_is_author',
+  AUTHOR_PIN: 'mach_author_pin'
 };
 
 export const defaultAISettings: AISettings = {
@@ -144,6 +147,37 @@ export class StorageService {
     localStorage.setItem(STORAGE_KEYS.AI_SETTINGS, JSON.stringify(settings));
   }
 
+  static loadComicChapters(): ComicChapter[] {
+    const data = localStorage.getItem(STORAGE_KEYS.COMIC_CHAPTERS);
+    if (!data) return sampleComicChapters;
+    try {
+      const parsed = JSON.parse(data);
+      return Array.isArray(parsed) && parsed.length > 0 ? parsed : sampleComicChapters;
+    } catch {
+      return sampleComicChapters;
+    }
+  }
+
+  static saveComicChapters(comics: ComicChapter[]): void {
+    localStorage.setItem(STORAGE_KEYS.COMIC_CHAPTERS, JSON.stringify(comics));
+  }
+
+  static isAuthorAuthenticated(): boolean {
+    return localStorage.getItem(STORAGE_KEYS.IS_AUTHOR) === 'true';
+  }
+
+  static setAuthorAuthenticated(isAuth: boolean): void {
+    localStorage.setItem(STORAGE_KEYS.IS_AUTHOR, isAuth ? 'true' : 'false');
+  }
+
+  static getAuthorPin(): string {
+    return localStorage.getItem(STORAGE_KEYS.AUTHOR_PIN) || '134';
+  }
+
+  static setAuthorPin(pin: string): void {
+    localStorage.setItem(STORAGE_KEYS.AUTHOR_PIN, pin);
+  }
+
   static resetToSampleProject(): void {
     localStorage.setItem(STORAGE_KEYS.PROJECT, JSON.stringify(sampleProject));
     localStorage.setItem(STORAGE_KEYS.PARTS, JSON.stringify(googleDocsParts));
@@ -151,6 +185,7 @@ export class StorageService {
     localStorage.setItem(STORAGE_KEYS.CHARACTERS, JSON.stringify(googleCharacters));
     localStorage.setItem(STORAGE_KEYS.TIMELINE, JSON.stringify(sampleTimeline));
     localStorage.setItem(STORAGE_KEYS.FORESHADOWING, JSON.stringify(sampleForeshadowingHooks));
+    localStorage.setItem(STORAGE_KEYS.COMIC_CHAPTERS, JSON.stringify(sampleComicChapters));
   }
 
   static exportFullProjectJSON(): string {
@@ -162,7 +197,8 @@ export class StorageService {
       bible: this.loadBible(),
       characters: this.loadCharacters(),
       timeline: this.loadTimeline(),
-      foreshadowing: this.loadForeshadowing()
+      foreshadowing: this.loadForeshadowing(),
+      comicChapters: this.loadComicChapters()
     };
     return JSON.stringify(bundle, null, 2);
   }
@@ -177,6 +213,7 @@ export class StorageService {
         if (bundle.characters) this.saveCharacters(bundle.characters);
         if (bundle.timeline) this.saveTimeline(bundle.timeline);
         if (bundle.foreshadowing) this.saveForeshadowing(bundle.foreshadowing);
+        if (bundle.comicChapters) this.saveComicChapters(bundle.comicChapters);
         return true;
       }
       return false;
