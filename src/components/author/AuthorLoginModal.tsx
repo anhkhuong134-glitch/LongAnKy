@@ -27,7 +27,7 @@ export const AuthorLoginModal: React.FC<AuthorLoginModalProps> = ({
     setError(null);
 
     const trimmed = pin.trim();
-    if (trimmed === validPin || trimmed === 'longanky' || trimmed === '134') {
+    if (trimmed === validPin || trimmed === '332004') {
       setIsSuccess(true);
       StorageService.setAuthorAuthenticated(true);
       setTimeout(() => {
@@ -76,7 +76,7 @@ export const AuthorLoginModal: React.FC<AuthorLoginModalProps> = ({
             <Sparkles className="w-4 h-4 text-amber-400 flex-shrink-0 mt-0.5" />
             <span>
               Người đọc thông thường chỉ có quyền xem mục <strong>Đọc Sách (Chữ &amp; Tranh)</strong>. 
-              Nhập mã PIN của bạn để mở khóa bảng <strong>Soạn Thảo</strong> và các công cụ quản trị.
+              Nhập mã PIN bí mật của bạn để mở khóa bảng <strong>Soạn Thảo</strong> và các công cụ quản trị.
             </span>
           </p>
         </div>
@@ -96,7 +96,7 @@ export const AuthorLoginModal: React.FC<AuthorLoginModalProps> = ({
                   setPin(e.target.value);
                   setError(null);
                 }}
-                placeholder="Nhập mã PIN tác giả (Mặc định: 134)..."
+                placeholder="Nhập mã PIN bảo mật..."
                 className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-700 focus:border-amber-500 focus:ring-1 focus:ring-amber-500 text-sm font-mono tracking-widest text-white placeholder:text-slate-600 placeholder:tracking-normal focus:outline-none"
               />
               <button
@@ -123,7 +123,7 @@ export const AuthorLoginModal: React.FC<AuthorLoginModalProps> = ({
 
           <div className="pt-2 flex items-center justify-between">
             <span className="text-[11px] text-slate-500">
-              Gợi ý: Mã PIN mặc định là <code className="text-amber-400 bg-black/40 px-1 py-0.5 rounded">134</code>
+              Khu vực bảo mật tác quyền
             </span>
 
             <div className="flex items-center space-x-2">
@@ -146,8 +146,8 @@ export const AuthorLoginModal: React.FC<AuthorLoginModalProps> = ({
           </div>
         </form>
 
-        <div className="mt-4 pt-3 border-t border-white/5 text-[10px] text-slate-500 text-center">
-          Mẹo: Bạn có thể lưu link bookmark bí mật dạng <code className="text-amber-400/80">?author=1</code> trên trình duyệt để luôn vào thẳng chế độ Tác Giả.
+        <div className="mt-4 pt-3 border-t border-white/5 text-[10px] text-slate-600 text-center">
+          Hệ thống bảo vệ nội dung và bản quyền tác phẩm Long Ấn Ký.
         </div>
       </div>
     </div>

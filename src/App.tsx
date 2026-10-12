@@ -38,8 +38,8 @@ export default function App() {
   const [isAuthorMode, setIsAuthorMode] = useState<boolean>(() => {
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search);
-      // Chỉ khi tác giả chủ động thêm ?author=1 hoặc ?admin=true hoặc ?pin=134
-      if (params.get('author') === '1' || params.get('author') === 'true' || params.get('pin') === '134' || params.get('admin') === 'true') {
+      // Chỉ khi tác giả chủ động thêm ?author=1 hoặc ?admin=true hoặc ?pin=332004
+      if (params.get('author') === '1' || params.get('author') === 'true' || params.get('pin') === '332004' || params.get('admin') === 'true') {
         sessionStorage.setItem('mach_author_session', 'true');
         StorageService.setAuthorAuthenticated(true);
         return true;

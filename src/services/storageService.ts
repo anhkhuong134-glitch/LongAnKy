@@ -171,7 +171,7 @@ export class StorageService {
   }
 
   static getAuthorPin(): string {
-    return localStorage.getItem(STORAGE_KEYS.AUTHOR_PIN) || '134';
+    return localStorage.getItem(STORAGE_KEYS.AUTHOR_PIN) || '332004';
   }
 
   static setAuthorPin(pin: string): void {
