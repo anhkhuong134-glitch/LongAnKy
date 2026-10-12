@@ -6,7 +6,7 @@ import {
   Part
 } from '../types';
 
-export const GOOGLE_DOCS_URL = 'https://docs.google.com/document/d/1KAF0QBoZNjey7jQGP4ogHx4qu0M8HPfymSiSnITr61Y/edit?hl=vi&tab=t.0#heading=h.1tqrvyl4g8yj';
+export const GOOGLE_DOCS_URL = 'https://docs.google.com/document/d/1KAF0QBoZNjey7jQGP4ogHx4qu0M8HPfymSiSnITr61Y/edit?hl=vi&tab=t.0#heading=h.nlly6mas27dt';
 export const GOOGLE_SHEETS_URL = 'https://docs.google.com/spreadsheets/d/1-kehBNZBbnc53v8Dpl3jll2HQKt6tr3tldm6tZWFlHg/edit?gid=1481982608#gid=1481982608';
 export const GOOGLE_DOCS_EXPORT_URL = 'https://docs.google.com/document/d/1KAF0QBoZNjey7jQGP4ogHx4qu0M8HPfymSiSnITr61Y/export?format=txt';
 export const GOOGLE_SHEETS_CSV_URL = 'https://docs.google.com/spreadsheets/d/1-kehBNZBbnc53v8Dpl3jll2HQKt6tr3tldm6tZWFlHg/export?format=csv&gid=1481982608';

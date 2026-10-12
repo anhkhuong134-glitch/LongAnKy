@@ -646,6 +646,8 @@ export default function App() {
               onOpenComicUploader={() => {
                 if (isAuthorMode) setActiveTab('editor');
               }}
+              onSyncGoogleDocs={() => handleSyncGoogleDocs(true)}
+              isSyncingDoc={isSyncingDoc}
             />
           </div>
         )}

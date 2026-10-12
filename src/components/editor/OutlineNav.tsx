@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { Part, Chapter } from '../../types';
 import { WritingPrinciplesModal } from './WritingPrinciplesModal';
+import { GOOGLE_DOCS_URL } from '../../data/googleData';
 
 interface OutlineNavProps {
   parts: Part[];
@@ -135,7 +136,7 @@ export const OutlineNav: React.FC<OutlineNavProps> = ({
               </span>
             </div>
             <a
-              href="https://docs.google.com/document/d/1KAF0QBoZNjey7jQGP4ogHx4qu0M8HPfymSiSnITr61Y/edit?hl=vi&tab=t.0#heading=h.1tqrvyl4g8yj"
+              href={GOOGLE_DOCS_URL}
               target="_blank"
               rel="noreferrer"
               className="text-[10px] text-sky-400 hover:text-sky-300 flex items-center space-x-1 hover:underline"
