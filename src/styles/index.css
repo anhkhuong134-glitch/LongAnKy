@@ -1,39 +1,39 @@
+@import './public-tokens.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --font-serif: 'Lora', 'Merriweather', 'Cinzel', Georgia, serif;
-  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-serif: 'Lora', Georgia, serif;
+  --font-sans: 'Nunito', system-ui, -apple-system, sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
 }
 
-/* Ambient Dark Studio Background */
+/* Base Document Style — Natural Scrolling */
 body {
-  background-color: #060911;
-  background-image: 
-    radial-gradient(at 0% 0%, rgba(245, 158, 11, 0.04) 0px, transparent 50%),
-    radial-gradient(at 100% 0%, rgba(99, 102, 241, 0.05) 0px, transparent 50%),
-    radial-gradient(at 50% 100%, rgba(244, 63, 94, 0.03) 0px, transparent 50%);
-  color: #f1f5f9;
+  background-color: var(--page, #FFFDF8);
+  color: var(--ink, #293B36);
   font-family: var(--font-sans);
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
+  min-height: 100vh;
 }
 
-/* Custom Ultra-thin Glowing Scrollbar */
+/* Custom Paper Scrollbar */
 ::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
+  width: 6px;
+  height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: rgba(6, 9, 17, 0.8);
+  background: var(--page, #FFFDF8);
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(245, 158, 11, 0.25);
+  background: #C8D6CF;
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(245, 158, 11, 0.55);
+  background: var(--primary, #376F64);
 }
 
 /* Writing Area Typography (Novelist Experience) */

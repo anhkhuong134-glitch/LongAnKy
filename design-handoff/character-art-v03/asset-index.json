@@ -1,0 +1,238 @@
+{
+  "schemaVersion": 1,
+  "purpose": "Thư viện bàn giao nội bộ; không công bố trực tiếp manifest này",
+  "assetCount": 21,
+  "assets": [
+    {
+      "assetId": "art-rento-v03",
+      "characterName": "Rento",
+      "existingCharacterId": "char_rento",
+      "file": "01-rento-v03.png",
+      "version": "0.3",
+      "imageReady": true,
+      "profileStatus": "Đối chiếu hồ sơ nguồn trước khi nhập",
+      "publicationStatus": "Không suy ra từ việc có ảnh",
+      "sha256": "37DFF9CD53891A41285A8AB25590A7BC3913FE2EC668C6E72D1276444C6541CD"
+    },
+    {
+      "assetId": "art-nari-v03",
+      "characterName": "Nari",
+      "existingCharacterId": "char_nari",
+      "file": "02-nari-v03.png",
+      "version": "0.3",
+      "imageReady": true,
+      "profileStatus": "Đối chiếu hồ sơ nguồn trước khi nhập",
+      "publicationStatus": "Không suy ra từ việc có ảnh",
+      "sha256": "57E60F0F14FD889C564CB7FEFF909BFDD2432F97C6DA4FCBC969D67AA4C042BC"
+    },
+    {
+      "assetId": "art-dagan-v03",
+      "characterName": "Dagan",
+      "existingCharacterId": "char_dagan",
+      "file": "03-dagan-v03.png",
+      "version": "0.3",
+      "imageReady": true,
+      "profileStatus": "Đối chiếu hồ sơ nguồn trước khi nhập",
+      "publicationStatus": "Không suy ra từ việc có ảnh",
+      "sha256": "BF6C610B559E269183040E56D4095D385D0F375E3AA1FB9E5311C3A8DB2C0F96"
+    },
+    {
+      "assetId": "art-seika-v03",
+      "characterName": "Seika",
+      "existingCharacterId": "char_seika",
+      "file": "04-seika-v03.png",
+      "version": "0.3",
+      "imageReady": true,
+      "profileStatus": "Đối chiếu hồ sơ nguồn trước khi nhập",
+      "publicationStatus": "Không suy ra từ việc có ảnh",
+      "sha256": "09CEECDF1A2AE9435E1659EB74DEC1BB66A31D5A856C5DB4E7B767D7F60364A5"
+    },
+    {
+      "assetId": "art-mira-v03",
+      "characterName": "Mira",
+      "existingCharacterId": "char_mira",
+      "file": "05-mira-v03.png",
+      "version": "0.3",
+      "imageReady": true,
+      "profileStatus": "Đối chiếu hồ sơ nguồn trước khi nhập",
+      "publicationStatus": "Không suy ra từ việc có ảnh",
+      "sha256": "08C40629026CCAA8D23FDD3B1AD9457F067F4F5D240B51B67DE2DFA5C343B7F3"
+    },
+    {
+      "assetId": "art-omi-v03",
+      "characterName": "Omi",
+      "existingCharacterId": "char_omi",
+      "file": "06-omi-v03.png",
+      "version": "0.3",
+      "imageReady": true,
+      "profileStatus": "Đối chiếu hồ sơ nguồn trước khi nhập",
+      "publicationStatus": "Không suy ra từ việc có ảnh",
+      "sha256": "6F9FA05C4EC965DF95FC57A56AFA3AB9B6B16F85DCCC133E7BEA1645BB02CD50"
+    },
+    {
+      "assetId": "art-oren-v03",
+      "characterName": "Oren",
+      "existingCharacterId": "char_oren",
+      "file": "07-oren-v03.png",
+      "version": "0.3",
+      "imageReady": true,
+      "profileStatus": "Đối chiếu hồ sơ nguồn trước khi nhập",
+      "publicationStatus": "Không suy ra từ việc có ảnh",
+      "sha256": "5953AEA4DEF1B20781BD398036C099C716DC687186FD77DC738D9329395FA0F2"
+    },
+    {
+      "assetId": "art-garan-v03",
+      "characterName": "Garan",
+      "existingCharacterId": "char_garan",
+      "file": "08-garan-v03.png",
+      "version": "0.3",
+      "imageReady": true,
+      "profileStatus": "Đối chiếu hồ sơ nguồn trước khi nhập",
+      "publicationStatus": "Không suy ra từ việc có ảnh",
+      "sha256": "1A043278AA82E20F0CA8244AC07F5FC6AB30C5632B94F02B25CB7BBB167479FA"
+    },
+    {
+      "assetId": "art-tovan-v03",
+      "characterName": "Tovan",
+      "existingCharacterId": null,
+      "file": "09-tovan-v03.png",
+      "version": "0.3",
+      "imageReady": true,
+      "profileStatus": "Đối chiếu hồ sơ nguồn trước khi nhập",
+      "publicationStatus": "Không suy ra từ việc có ảnh",
+      "sha256": "4A4D46B95BBDF14BE9D8D758A4046C3A7F70B0F1E30072970FE83D4BF84132CE"
+    },
+    {
+      "assetId": "art-eli-v03",
+      "characterName": "Eli",
+      "existingCharacterId": null,
+      "file": "10-eli-v03.png",
+      "version": "0.3",
+      "imageReady": true,
+      "profileStatus": "Đối chiếu hồ sơ nguồn trước khi nhập",
+      "publicationStatus": "Không suy ra từ việc có ảnh",
+      "sha256": "A749D5A3CD678DECA93E61673CC459D0ED0EFB87D734FD4326106E491B2A8C85"
+    },
+    {
+      "assetId": "art-banu-v03",
+      "characterName": "Banu",
+      "existingCharacterId": null,
+      "file": "11-banu-v03.png",
+      "version": "0.3",
+      "imageReady": true,
+      "profileStatus": "Đối chiếu hồ sơ nguồn trước khi nhập",
+      "publicationStatus": "Không suy ra từ việc có ảnh",
+      "sha256": "B6847576C6F3E7CFD27DD6ED64FDB6E310C6F78395DC1F45E61EED625EF168FB"
+    },
+    {
+      "assetId": "art-seli-v03",
+      "characterName": "Seli",
+      "existingCharacterId": null,
+      "file": "12-seli-v03.png",
+      "version": "0.3",
+      "imageReady": true,
+      "profileStatus": "Đối chiếu hồ sơ nguồn trước khi nhập",
+      "publicationStatus": "Không suy ra từ việc có ảnh",
+      "sha256": "034348130C5AF2C78215683FA00495FC32B9A747E3BEC16757DFB7D06857AA06"
+    },
+    {
+      "assetId": "art-luma-v03",
+      "characterName": "Luma",
+      "existingCharacterId": null,
+      "file": "13-luma-v03.png",
+      "version": "0.3",
+      "imageReady": true,
+      "profileStatus": "Đối chiếu hồ sơ nguồn trước khi nhập",
+      "publicationStatus": "Không suy ra từ việc có ảnh",
+      "sha256": "4AE12800A6BFDE18D949920FA3FC739ADAB4738A369C813204F167D2D61621F0"
+    },
+    {
+      "assetId": "art-fara-v03",
+      "characterName": "Fara",
+      "existingCharacterId": null,
+      "file": "14-fara-v03.png",
+      "version": "0.3",
+      "imageReady": true,
+      "profileStatus": "Đối chiếu hồ sơ nguồn trước khi nhập",
+      "publicationStatus": "Không suy ra từ việc có ảnh",
+      "sha256": "AC351812FAD5E3790B920C7CCC749F00D108F97660463A2DC24E35738572DA0E"
+    },
+    {
+      "assetId": "art-kiro-v03",
+      "characterName": "Kiro",
+      "existingCharacterId": null,
+      "file": "15-kiro-v03.png",
+      "version": "0.3",
+      "imageReady": true,
+      "profileStatus": "Đối chiếu hồ sơ nguồn trước khi nhập",
+      "publicationStatus": "Không suy ra từ việc có ảnh",
+      "sha256": "7CFD8661D4BF54490DDAFA70DB584F7F9AFEA0418F6BCF364AF0CDE9618130CA"
+    },
+    {
+      "assetId": "art-bero-v03",
+      "characterName": "Bero",
+      "existingCharacterId": null,
+      "file": "16-bero-v03.png",
+      "version": "0.3",
+      "imageReady": true,
+      "profileStatus": "Đối chiếu hồ sơ nguồn trước khi nhập",
+      "publicationStatus": "Không suy ra từ việc có ảnh",
+      "sha256": "5181A1DDF50A43DC069892E1A3F6EFC098BEF3D864160CAF1CC973DC2833C3C3"
+    },
+    {
+      "assetId": "art-veni-v03",
+      "characterName": "Veni",
+      "existingCharacterId": null,
+      "file": "17-veni-v03.png",
+      "version": "0.3",
+      "imageReady": true,
+      "profileStatus": "Đối chiếu hồ sơ nguồn trước khi nhập",
+      "publicationStatus": "Không suy ra từ việc có ảnh",
+      "sha256": "AE345CDFBFEEEA162B056C7AE237FBD84BB0EC66A4AAEDB14DF8BA8213720510"
+    },
+    {
+      "assetId": "art-doro-v03",
+      "characterName": "Doro",
+      "existingCharacterId": null,
+      "file": "18-doro-v03.png",
+      "version": "0.3",
+      "imageReady": true,
+      "profileStatus": "Đối chiếu hồ sơ nguồn trước khi nhập",
+      "publicationStatus": "Không suy ra từ việc có ảnh",
+      "sha256": "ECF734EB0A5D3297556A617B92EA18FCD3173DF91BE83CCC697F2A911B5535D4"
+    },
+    {
+      "assetId": "art-paku-v03",
+      "characterName": "Paku",
+      "existingCharacterId": null,
+      "file": "19-paku-v03.png",
+      "version": "0.3",
+      "imageReady": true,
+      "profileStatus": "Đối chiếu hồ sơ nguồn trước khi nhập",
+      "publicationStatus": "Không suy ra từ việc có ảnh",
+      "sha256": "1DA5E741AC59DFD7EF95B712EB03A982F2BDC48D91C7B5BDF8A534FE28944D7A"
+    },
+    {
+      "assetId": "art-yori-v03",
+      "characterName": "Yori",
+      "existingCharacterId": null,
+      "file": "20-yori-v03.png",
+      "version": "0.3",
+      "imageReady": true,
+      "profileStatus": "Đối chiếu hồ sơ nguồn trước khi nhập",
+      "publicationStatus": "Không suy ra từ việc có ảnh",
+      "sha256": "65B715A710FE14ABE0254D0C1A27AA6D075C27195CCC6BAA91AB38DE7BEC194A"
+    },
+    {
+      "assetId": "art-tavi-v03",
+      "characterName": "Tavi",
+      "existingCharacterId": null,
+      "file": "21-tavi-v03.png",
+      "version": "0.3",
+      "imageReady": true,
+      "profileStatus": "Đối chiếu hồ sơ nguồn trước khi nhập",
+      "publicationStatus": "Không suy ra từ việc có ảnh",
+      "sha256": "2ACCCBE4235CE78CA54994180A49E62B6F4E1ADBCC593AA3A228AB54D4951B1E"
+    }
+  ]
+}

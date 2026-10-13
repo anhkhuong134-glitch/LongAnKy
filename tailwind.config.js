@@ -4,42 +4,33 @@ export default {
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
-  darkMode: 'class',
   theme: {
     extend: {
       colors: {
-        parchment: {
-          50: '#fbf9f4',
-          100: '#f5f0e6',
-          200: '#ece1cf',
-          300: '#dec9ab',
-          400: '#cbab84',
-          500: '#bc9064',
-          600: '#ae7b54',
-          700: '#916346',
-          800: '#76513c',
-          900: '#604333',
+        page: '#FFFDF8',
+        surface: '#FFFFFF',
+        ink: '#293B36',
+        muted: '#5F706A',
+        primary: {
+          DEFAULT: '#376F64',
+          hover: '#2B5A51',
+          50: '#F2F8F5',
+          100: '#E4F1E9',
+          500: '#376F64',
+          600: '#2B5A51',
+          700: '#20453E',
         },
-        slate: {
-          850: '#172033',
-          925: '#0b1120',
-          950: '#060a12',
-        },
-        crimson: {
-          400: '#f87171',
-          500: '#ef4444',
-          600: '#dc2626',
-          900: '#450a0a',
-        },
-        gold: {
-          400: '#fbbf24',
-          500: '#f59e0b',
-          600: '#d97706',
-        }
+        mint: '#E4F1E9',
+        sky: '#E5F1F7',
+        blush: '#F8E3E4',
+        sun: '#F8EDCB',
+        line: '#DCE6DF',
+        novelerror: '#A33D49',
       },
       fontFamily: {
-        serif: ['"Merriweather"', '"Lora"', '"Cinzel"', 'Georgia', 'serif'],
-        sans: ['"Plus Jakarta Sans"', '"Inter"', 'system-ui', 'sans-serif'],
+        sans: ['"Nunito"', 'system-ui', '-apple-system', 'sans-serif'],
+        serif: ['"Lora"', 'Georgia', 'serif'],
+        novel: ['"Lora"', 'Georgia', 'serif'],
         mono: ['"JetBrains Mono"', '"Fira Code"', 'monospace'],
       }
     },

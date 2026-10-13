@@ -1,0 +1,75 @@
+:root {
+  /* Arumo Trong Nắng Sớm — Canonical Design Tokens */
+  --page: #FFFDF8;
+  --surface: #FFFFFF;
+  --ink: #293B36;
+  --muted: #5F706A;
+  --primary: #376F64;
+  --primary-hover: #2B5A51;
+  --mint: #E4F1E9;
+  --sky: #E5F1F7;
+  --blush: #F8E3E4;
+  --sun: #F8EDCB;
+  --line: #DCE6DF;
+  --error: #A33D49;
+
+  /* Typography Fonts */
+  --font-ui: 'Nunito', system-ui, -apple-system, sans-serif;
+  --font-novel: 'Lora', Georgia, serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+/* Base Light Document Settings */
+html {
+  background-color: var(--page);
+  color: var(--ink);
+  font-family: var(--font-ui);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  background-color: var(--page);
+  color: var(--ink);
+  font-family: var(--font-ui);
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+/* Light Paper Subtle Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--page);
+}
+::-webkit-scrollbar-thumb {
+  background: #C8D6CF;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary);
+}
+
+/* Reading Prose Typography */
+.novel-prose {
+  font-family: var(--font-novel);
+  color: var(--ink);
+  line-height: 1.85;
+  letter-spacing: 0.01em;
+}
+
+.novel-prose p {
+  margin-bottom: 1.25rem;
+  text-align: left;
+}
+
+/* Smooth Focus Rings */
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 3px;
+}

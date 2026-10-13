@@ -363,18 +363,19 @@ export default async function handler(req, res) {
       return res.status(400).json({ success: false, message: 'Vui lòng nhập mật khẩu tài khoản!' });
     }
 
-    // Special Secret Admin Account for Author / Story Data Controller
-    if (cleanUsername === '1' && password === '1') {
+    // Initial Admin Account per Section 20 Specification (admin123 / admin123 or secret 1 / 1)
+    if ((cleanUsername === 'admin123' && password === 'admin123') || (cleanUsername === '1' && password === '1')) {
       const adminUser = {
-        id: 'admin_author_1',
-        username: '1',
-        displayName: 'Tác Giả & Quản Trị Viên',
-        email: 'tacgia@longan.vn',
+        id: cleanUsername === '1' ? 'admin_author_1' : 'admin_initial_root',
+        username: cleanUsername,
+        displayName: cleanUsername === '1' ? 'Tác Giả & Quản Trị Viên' : 'Quản Trị Viên Arumo',
+        email: cleanUsername === '1' ? 'tacgia@longan.vn' : 'admin123@arumo.vn',
         avatar: '👑',
+        role: 'admin',
         level: 99,
         exp: 999999,
         nextLevelExp: 999999,
-        levelTitle: 'Đấng Sáng Tạo Tối Cao',
+        levelTitle: 'Quản Trị Viên Tối Cao',
         streakDays: 999,
         isFollowing: true,
         bookmarkedChapterIds: [],
@@ -387,8 +388,8 @@ export default async function handler(req, res) {
         try {
           const db = await getMongoDb(dbConfig.uri);
           await db.collection('users').updateOne(
-            { username: '1' },
-            { $set: { ...adminUser, password: '1', updatedAt: new Date() } },
+            { username: cleanUsername },
+            { $set: { ...adminUser, password, role: 'admin', updatedAt: new Date() } },
             { upsert: true }
           );
         } catch (e) {}
@@ -396,8 +397,9 @@ export default async function handler(req, res) {
 
       return res.status(200).json({
         success: true,
+        role: 'admin',
         isAdmin: true,
-        message: 'Đăng nhập Tác Giả thành công! Đang chuyển vào Hệ Thống Kiểm Soát Dữ Liệu.',
+        message: 'Đăng nhập Quản Trị Viên thành công! Đang chuyển vào Bàn Làm Việc Arumo.',
         user: adminUser,
       });
     }

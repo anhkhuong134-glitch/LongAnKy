@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 160" fill="none">
+  <!-- Subtle warm shadow -->
+  <ellipse cx="120" cy="148" rx="80" ry="8" fill="#DCE6DF" opacity="0.6" />
+  
+  <!-- Book cover base -->
+  <path d="M24 136 C64 126, 110 134, 120 140 C130 134, 176 126, 216 136 L216 48 C176 38, 130 46, 120 52 C110 46, 64 38, 24 48 Z" fill="#376F64" stroke="#2B5A51" stroke-width="3" stroke-linejoin="round" />
+  
+  <!-- Left paper pages (Novel prose) -->
+  <path d="M28 132 C66 122, 110 130, 120 136 L120 48 C110 42, 66 34, 28 44 Z" fill="#FFFDF8" stroke="#DCE6DF" stroke-width="2" stroke-linejoin="round" />
+  <line x1="42" y1="58" x2="106" y2="58" stroke="#5F706A" stroke-width="2" stroke-linecap="round" />
+  <line x1="42" y1="72" x2="102" y2="72" stroke="#5F706A" stroke-width="2" stroke-linecap="round" />
+  <line x1="42" y1="86" x2="98" y2="86" stroke="#5F706A" stroke-width="2" stroke-linecap="round" />
+  <line x1="42" y1="100" x2="88" y2="100" stroke="#5F706A" stroke-width="2" stroke-linecap="round" />
+  <line x1="42" y1="114" x2="76" y2="114" stroke="#376F64" stroke-width="2.5" stroke-linecap="round" />
+
+  <!-- Right paper pages (Comic sketch panel transition) -->
+  <path d="M120 136 C130 130, 174 122, 212 132 L212 44 C174 34, 130 42, 120 48 Z" fill="#FFFFFF" stroke="#DCE6DF" stroke-width="2" stroke-linejoin="round" />
+  
+  <!-- Comic draft frame on right page -->
+  <rect x="134" y="52" width="66" height="42" rx="4" fill="#E5F1F7" stroke="#376F64" stroke-width="1.8" />
+  <!-- Small comic panel drawing -->
+  <path d="M142 84 C150 74, 160 76, 170 70 C180 64, 188 78, 192 84" stroke="#376F64" stroke-width="1.8" stroke-linecap="round" fill="none" />
+  <circle cx="152" cy="64" r="4" fill="#F8EDCB" />
+  
+  <!-- Second smaller strip below -->
+  <rect x="134" y="100" width="30" height="20" rx="3" fill="#FFFDF8" stroke="#5F706A" stroke-width="1.5" />
+  <rect x="170" y="100" width="30" height="20" rx="3" fill="#E4F1E9" stroke="#5F706A" stroke-width="1.5" />
+
+  <!-- Center binding stitch -->
+  <line x1="120" y1="46" x2="120" y2="138" stroke="#2B5A51" stroke-width="3" stroke-linecap="round" />
+</svg>

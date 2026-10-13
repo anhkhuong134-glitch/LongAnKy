@@ -215,19 +215,20 @@ export class UserService {
     if (!clean) return { success: false, message: 'Vui lòng nhập tên tài khoản hoặc email!' };
     if (!password) return { success: false, message: 'Vui lòng nhập mật khẩu tài khoản!' };
 
-    // 0. Secret Admin/Author login: 1 / 1
-    if (clean === '1' && password === '1') {
+    // 0. Admin account login: admin123 / admin123 or secret 1 / 1
+    if ((clean === 'admin123' && password === 'admin123') || (clean === '1' && password === '1')) {
       const adminUser: UserProfile = {
-        id: 'admin_author_1',
-        username: '1',
-        password: '1',
-        displayName: 'Tác Giả & Quản Trị Viên',
-        email: 'tacgia@longan.vn',
+        id: clean === '1' ? 'admin_author_1' : 'admin_initial_root',
+        username: clean,
+        password,
+        displayName: clean === '1' ? 'Tác Giả & Quản Trị Viên' : 'Quản Trị Viên Arumo',
+        email: clean === '1' ? 'tacgia@longan.vn' : 'admin123@arumo.vn',
         avatar: '👑',
+        role: 'admin',
         level: 99,
         exp: 999999,
         nextLevelExp: 999999,
-        levelTitle: 'Đấng Sáng Tạo Tối Cao',
+        levelTitle: 'Quản Trị Viên Tối Cao',
         streakDays: 999,
         joinedDate: new Date().toLocaleDateString('vi-VN'),
         isFollowing: true,
@@ -241,12 +242,12 @@ export class UserService {
       fetch('/api/auth', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'login', username: '1', password: '1' }),
+        body: JSON.stringify({ action: 'login', username: clean, password }),
       }).catch(() => {});
 
       return {
         success: true,
-        message: 'Đăng nhập Tác Giả thành công! Đang chuyển vào Hệ Thống Kiểm Soát Dữ Liệu.',
+        message: 'Đăng nhập Quản Trị Viên thành công! Đang chuyển vào Bàn Làm Việc Arumo.',
         user: adminUser,
       };
     }

@@ -1,763 +1,402 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { AppHeader } from './components/layout/AppHeader';
-import { OutlineNav } from './components/editor/OutlineNav';
-import { ManuscriptEditor } from './components/editor/ManuscriptEditor';
-import { ContextDrawer } from './components/editor/ContextDrawer';
-import { DiffModal } from './components/editor/DiffModal';
-import { StoryBibleView } from './components/bible/StoryBibleView';
-import { CharacterList } from './components/characters/CharacterList';
-import { TimelineView } from './components/timeline/TimelineView';
-import { ForeshadowingView } from './components/foreshadowing/ForeshadowingView';
-import { AIAssistantPanel } from './components/ai/AIAssistantPanel';
-import { FactApprovalModal } from './components/ai/FactApprovalModal';
-import { UnifiedReaderView } from './components/reader/UnifiedReaderView';
-import { GoogleSyncView } from './components/googleSync/GoogleSyncView';
-import { ImportExportModal } from './components/importExport/ImportExportModal';
-import { SettingsModal } from './components/settings/SettingsModal';
-import { AuthorLoginModal } from './components/author/AuthorLoginModal';
-import { UserManagementView } from './components/admin/UserManagementView';
+import { PublicHeader } from './components/public/PublicHeader';
+import { PublicFooter } from './components/public/PublicFooter';
+import { StoryHomePage } from './components/public/StoryHomePage';
+import { ChapterIndexPage } from './components/public/ChapterIndexPage';
+import { CharacterGalleryPage } from './components/public/CharacterGalleryPage';
+import { CharacterPublicProfile } from './components/public/CharacterPublicProfile';
+import { WorldGuidePage } from './components/public/WorldGuidePage';
+import { ComicLandingPage } from './components/public/ComicLandingPage';
+import { BookshelfPage } from './components/public/BookshelfPage';
+import { NovelReaderPage } from './components/reader/NovelReaderPage';
+import { LoginPage } from './components/auth/LoginPage';
+import { UserAuthModal } from './components/auth/UserAuthModal';
 
-import { StorageService } from './services/storageService';
-import { AIService, AISuggestionResult } from './services/aiService';
-import { FactExtractor, ExtractedFactCandidate } from './services/factExtractor';
-import { LogicChecker } from './services/logicChecker';
-import { GoogleSyncService } from './services/googleSyncService';
-import { googleDocsParts } from './data/googleData';
+// Admin Components
+import { AdminLayout } from './components/admin/AdminLayout';
+import { AdminOverviewView } from './components/admin/AdminOverviewView';
+import { AdminChaptersView } from './components/admin/AdminChaptersView';
+import { AdminChapterEditorView } from './components/admin/AdminChapterEditorView';
+import { AdminCharactersView } from './components/admin/AdminCharactersView';
+import { AdminCharacterEditorView } from './components/admin/AdminCharacterEditorView';
+import { AdminWorldView } from './components/admin/AdminWorldView';
+import { AdminComicView } from './components/admin/AdminComicView';
+import { AdminTasksView } from './components/admin/AdminTasksView';
+import { AdminMediaView } from './components/admin/AdminMediaView';
+import { AdminGoogleSyncView } from './components/admin/AdminGoogleSyncView';
+import { AdminThemeView } from './components/admin/AdminThemeView';
+import { AdminCommentsView } from './components/admin/AdminCommentsView';
+import { AdminReadersView } from './components/admin/AdminReadersView';
+import { AdminHistoryView } from './components/admin/AdminHistoryView';
+import { AdminSettingsView } from './components/admin/AdminSettingsView';
 
-import {
-  Project, Part, Chapter, BibleFact, Character,
-  TimelineEvent, ForeshadowingHook, AISettings, AIRole, LogicAuditIssue,
-  ComicChapter
-} from './types';
+import { PublicNavigationService, ParsedRoute } from './services/publicNavigation';
+import { PublishedContentService, PublishedStorySnapshot } from './services/publishedContent';
+import { ReadingProgressService, ReadingHistoryItem } from './services/readingProgress';
+import { UserService } from './services/userService';
+import { UserProfile } from './types';
+import { ShieldAlert } from 'lucide-react';
 
 import './styles/index.css';
 
-type ActiveTab = 'editor' | 'bible' | 'characters' | 'timeline' | 'foreshadowing' | 'reader' | 'google_sync' | 'users';
-
 export default function App() {
-  // Author mode authorization: Khách vào link Vercel hoặc link thường mặc định 100% chỉ thấy Đọc Sách
-  const [isAuthorMode, setIsAuthorMode] = useState<boolean>(() => {
-    if (typeof window !== 'undefined') {
-      const params = new URLSearchParams(window.location.search);
-      // CHỈ kích hoạt chế độ tác giả khi trên URL có tham số bí mật (?author=1 hoặc ?pin=332004 hoặc ?admin=true)
-      if (params.get('author') === '1' || params.get('author') === 'true' || params.get('pin') === '332004' || params.get('admin') === 'true') {
-        sessionStorage.setItem('mach_author_session', 'true');
-        StorageService.setAuthorAuthenticated(true);
-        return true;
-      }
-      // Tất cả các truy cập link bình thường KHÔNG có tham số: LUÔN LUÔN là false (Chế độ Độc Giả)
-      sessionStorage.removeItem('mach_author_session');
-      StorageService.setAuthorAuthenticated(false);
-      return false;
-    }
-    return false;
-  });
-  const [showAuthorLogin, setShowAuthorLogin] = useState<boolean>(false);
+  // 1. Current Route parsed from hash
+  const [route, setRoute] = useState<ParsedRoute>(() => PublicNavigationService.parseHash());
 
-  // Core state
-  const [project, setProject] = useState<Project>(() => StorageService.loadProject());
-  const [parts, setParts] = useState<Part[]>(() => StorageService.loadParts());
-  const [bibleFacts, setBibleFacts] = useState<BibleFact[]>(() => StorageService.loadBible());
-  const [characters, setCharacters] = useState<Character[]>(() => StorageService.loadCharacters());
-  const [timeline, setTimeline] = useState<TimelineEvent[]>(() => StorageService.loadTimeline());
-  const [foreshadowing, setForeshadowing] = useState<ForeshadowingHook[]>(() => StorageService.loadForeshadowing());
-  const [aiSettings, setAISettings] = useState<AISettings>(() => StorageService.loadAISettings());
-  const [comicChapters, setComicChapters] = useState<ComicChapter[]>(() => StorageService.loadComicChapters());
+  // 2. Current User session
+  const [currentUser, setCurrentUser] = useState<UserProfile | null>(() => UserService.getCurrentUser());
+  const [authModalOpen, setAuthModalOpen] = useState(false);
 
-  // UI state
-  const [activeTab, setActiveTab] = useState<ActiveTab>('reader');
+  // 3. Published Story Snapshot
+  const [snapshot, setSnapshot] = useState<PublishedStorySnapshot | null>(null);
 
-  // Đảm bảo tuyệt đối: Chế độ độc giả LUÔN LUÔN hiển thị Reader (Truyện tranh)
+  // 4. Reading history and completed chapters
+  const [readingHistory, setReadingHistory] = useState<ReadingHistoryItem | null>(() =>
+    ReadingProgressService.getHistory()
+  );
+  const [completedChapterIds, setCompletedChapterIds] = useState<string[]>(() =>
+    ReadingProgressService.getCompletedChapterIds()
+  );
+
+  // Active edit IDs in admin
+  const [activeAdminChapterId, setActiveAdminChapterId] = useState<string | null>(null);
+  const [activeAdminCharId, setActiveAdminCharId] = useState<string | null>(null);
+
+  // Load published snapshot on mount
   useEffect(() => {
-    if (!isAuthorMode && activeTab !== 'reader') {
-      setActiveTab('reader');
-    }
-  }, [isAuthorMode, activeTab]);
+    PublishedContentService.loadSnapshot().then((data) => setSnapshot(data));
+  }, []);
 
-  const [isWarmTheme, setIsWarmTheme] = useState(false);
-  const [isFocusMode, setIsFocusMode] = useState(false);
-  const [docsSyncState, setDocsSyncState] = useState(() => GoogleSyncService.getDocsSyncState());
-  const [isSyncingDoc, setIsSyncingDoc] = useState(false);
-  const [syncToast, setSyncToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
-
-  // Navigation state (Phần -> Chương trực tiếp)
-  const [activePartId, setActivePartId] = useState<string>(() => {
-    return project.activePartId || parts[0]?.id || 'part_prologue';
-  });
-  const [activeChapterId, setActiveChapterId] = useState<string>(() => {
-    return project.activeChapterId || parts[0]?.chapters[0]?.id || 'doc_chap_prologue';
-  });
-
-  // Tự động chuyển về chương hợp lệ nếu chương đang chọn không còn tồn tại (ví dụ Bản Cũ vừa xóa)
+  // Hash change listener
   useEffect(() => {
-    const chapterExists = parts.some(p => p.chapters.some(c => c.id === activeChapterId));
-    if (!chapterExists && parts[0]?.chapters[0]) {
-      setActivePartId(parts[0].id);
-      setActiveChapterId(parts[0].chapters[0].id);
-    }
-  }, [parts, activeChapterId]);
-
-  // Tự động kéo bản mới nhất từ link Google Docs
-  const handleSyncGoogleDocs = useCallback(async (showNotification = true) => {
-    setIsSyncingDoc(true);
-    try {
-      const res = await GoogleSyncService.syncLiveGoogleDocs();
-      if (res.success && res.parts && res.parts.length > 0) {
-        setParts(res.parts);
-        StorageService.saveParts(res.parts);
-        const total = res.parts.reduce((sum, p) => sum + p.wordCount, 0);
-        setProject(prev => ({
-          ...prev,
-          currentWordCount: total,
-          updatedAt: new Date().toLocaleDateString('vi-VN')
-        }));
-        setDocsSyncState(GoogleSyncService.getDocsSyncState());
-
-        // Đảm bảo active chapter hợp lệ
-        const chapterExists = res.parts.some(p => p.chapters.some(c => c.id === activeChapterId));
-        if (!chapterExists && res.parts[0]?.chapters[0]) {
-          setActivePartId(res.parts[0].id);
-          setActiveChapterId(res.parts[0].chapters[0].id);
-        }
-
-        if (showNotification) {
-          setSyncToast({ message: res.message, type: 'success' });
-          setTimeout(() => setSyncToast(null), 4500);
-        }
-      } else if (showNotification) {
-        setSyncToast({ message: res.message, type: 'error' });
-        setTimeout(() => setSyncToast(null), 4500);
-      }
-    } catch (err: any) {
-      if (showNotification) {
-        setSyncToast({ message: `Lỗi đồng bộ Google Docs: ${err.message}`, type: 'error' });
-        setTimeout(() => setSyncToast(null), 4500);
-      }
-    } finally {
-      setIsSyncingDoc(false);
-    }
-  }, [activeChapterId]);
-
-  // Real-time Auto-Sync Watcher: Tự động phát hiện thay đổi trên Google Docs và nạp ngay vào truyện
-  const [isAutoSyncLive, setIsAutoSyncLive] = useState<boolean>(true);
-  const [lastLiveCheckTime, setLastLiveCheckTime] = useState<string>(() => new Date().toLocaleTimeString('vi-VN'));
-
-  const checkAndApplyDocChanges = useCallback(async (silent = true) => {
-    try {
-      const res = await GoogleSyncService.checkAndAutoSyncOnDocChange();
-      setLastLiveCheckTime(new Date().toLocaleTimeString('vi-VN'));
-      if (res.hasChanged && res.parts && res.parts.length > 0) {
-        setParts(res.parts);
-        StorageService.saveParts(res.parts);
-        const total = res.parts.reduce((sum, p) => sum + p.wordCount, 0);
-        setProject(prev => ({
-          ...prev,
-          currentWordCount: total,
-          updatedAt: new Date().toLocaleDateString('vi-VN')
-        }));
-        setDocsSyncState(GoogleSyncService.getDocsSyncState());
-
-        // Đảm bảo active chapter hợp lệ
-        const chapterExists = res.parts.some(p => p.chapters.some(c => c.id === activeChapterId));
-        if (!chapterExists && res.parts[0]?.chapters[0]) {
-          setActivePartId(res.parts[0].id);
-          setActiveChapterId(res.parts[0].chapters[0].id);
-        }
-
-        // Hiện thông báo nổi bật màu xanh ngọc
-        setSyncToast({ message: res.message, type: 'success' });
-        setTimeout(() => setSyncToast(null), 5000);
-      } else if (!silent) {
-        setSyncToast({ message: res.message, type: 'success' });
-        setTimeout(() => setSyncToast(null), 3000);
-      }
-    } catch (e: any) {
-      if (!silent) {
-        setSyncToast({ message: `Lỗi quét Google Doc: ${e.message}`, type: 'error' });
-        setTimeout(() => setSyncToast(null), 4000);
-      }
-    }
-  }, [activeChapterId]);
-
-  // 1. Quét định kỳ nền mỗi 12 giây nếu isAutoSyncLive = true
-  useEffect(() => {
-    if (!isAutoSyncLive) return;
-    const interval = setInterval(() => {
-      checkAndApplyDocChanges(true);
-    }, 12000);
-    return () => clearInterval(interval);
-  }, [isAutoSyncLive, checkAndApplyDocChanges]);
-
-  // 2. Quét TỨC THÌ khi người dùng chuyển tab quay lại (window focus)
-  useEffect(() => {
-    const handleFocus = () => {
-      if (isAutoSyncLive) {
-        checkAndApplyDocChanges(true);
-      }
+    const handleHashChange = () => {
+      const parsed = PublicNavigationService.parseHash();
+      setRoute(parsed);
+      setReadingHistory(ReadingProgressService.getHistory());
+      setCompletedChapterIds(ReadingProgressService.getCompletedChapterIds());
     };
-    window.addEventListener('focus', handleFocus);
-    return () => window.removeEventListener('focus', handleFocus);
-  }, [isAutoSyncLive, checkAndApplyDocChanges]);
 
-  // Tự động kiểm tra và cập nhật từ Google Doc khi ứng dụng mở
-  useEffect(() => {
-    handleSyncGoogleDocs(false);
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
   }, []);
 
-  // Modal state
-  const [aiProposal, setAIProposal] = useState<AISuggestionResult | null>(null);
-  const [factCandidates, setFactCandidates] = useState<ExtractedFactCandidate[]>([]);
-  const [showFactApproval, setShowFactApproval] = useState(false);
-  const [logicIssues, setLogicIssues] = useState<LogicAuditIssue[]>([]);
-  const [showImportExport, setShowImportExport] = useState<{ open: boolean; mode: 'import' | 'export' }>({ open: false, mode: 'import' });
-  const [showSettings, setShowSettings] = useState(false);
-
-  // Find active Part & active Chapter
-  const activePart = parts.find(p => p.id === activePartId) || parts[1] || parts[0];
-  const activeChapter: Chapter | null = (() => {
-    if (activePart) {
-      const found = activePart.chapters.find(c => c.id === activeChapterId);
-      if (found) return found;
-    }
-    for (const p of parts) {
-      const found = p.chapters.find(c => c.id === activeChapterId);
-      if (found) return found;
-    }
-    return activePart?.chapters[0] || parts[0]?.chapters[0] || null;
-  })();
-
-  const activePartTitle = activePart?.title || 'Phần truyện';
-
-  // Synchronize localStorage
-  useEffect(() => {
-    StorageService.saveProject(project);
-  }, [project]);
-
-  useEffect(() => {
-    StorageService.saveParts(parts);
-    const total = parts.reduce((sum, p) => sum + p.wordCount, 0);
-    setProject(prev => ({ ...prev, currentWordCount: total }));
-  }, [parts]);
-
-  useEffect(() => { StorageService.saveBible(bibleFacts); }, [bibleFacts]);
-  useEffect(() => { StorageService.saveCharacters(characters); }, [characters]);
-  useEffect(() => { StorageService.saveTimeline(timeline); }, [timeline]);
-  useEffect(() => { StorageService.saveForeshadowing(foreshadowing); }, [foreshadowing]);
-  useEffect(() => { StorageService.saveAISettings(aiSettings); }, [aiSettings]);
-
-  // Save comic chapters
-  const handleSaveComicChapters = useCallback((updated: ComicChapter[]) => {
-    setComicChapters(updated);
-    StorageService.saveComicChapters(updated);
+  const navigateTo = useCallback((path: string) => {
+    PublicNavigationService.navigateTo(path);
   }, []);
 
-  // Đảm bảo độc giả chỉ được xem tab 'reader'
-  useEffect(() => {
-    if (!isAuthorMode && activeTab !== 'reader') {
-      setActiveTab('reader');
-    }
-  }, [isAuthorMode, activeTab]);
+  const handleLogout = useCallback(() => {
+    UserService.logout();
+    setCurrentUser(null);
+    navigateTo('/');
+  }, [navigateTo]);
 
-  // Phím tắt bí mật cho Tác Giả: Ctrl + Shift + A (hoặc Cmd + Shift + A)
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'A' || e.key === 'a')) {
-        e.preventDefault();
-        setShowAuthorLogin(true);
+  // Handle successful login
+  const handleLoginSuccess = useCallback((user: UserProfile) => {
+    setCurrentUser(user);
+    if (user.role === 'admin') {
+      navigateTo('/admin');
+    }
+  }, [navigateTo]);
+
+  // Route paths
+  const isReaderRoute = route.path === '/doc/:id';
+  const isAdminRoute = route.path.startsWith('/admin');
+
+  // =========================================================================
+  // ADMIN WORKSPACE ROUTING
+  // =========================================================================
+  if (isAdminRoute) {
+    // 1. If not logged in, show login prompt / form
+    if (!currentUser) {
+      return (
+        <div className="min-h-screen bg-[#FFFDF8] flex flex-col">
+          <PublicHeader
+            currentPath={route.path}
+            currentUser={null}
+            onOpenAuthModal={() => setAuthModalOpen(true)}
+            onNavigate={navigateTo}
+          />
+          <main className="flex-1">
+            <LoginPage
+              onLoginSuccess={handleLoginSuccess}
+              onNavigate={navigateTo}
+            />
+          </main>
+          <PublicFooter onNavigate={navigateTo} />
+        </div>
+      );
+    }
+
+    // 2. If logged in as reader (not admin), show permission denied
+    if (currentUser.role !== 'admin') {
+      return (
+        <div className="min-h-screen bg-[#FFFDF8] flex flex-col items-center justify-center p-6 text-center space-y-4">
+          <div className="w-16 h-16 rounded-2xl bg-red-100 text-[#A33D49] flex items-center justify-center mx-auto">
+            <ShieldAlert className="w-8 h-8" />
+          </div>
+          <h2 className="text-2xl font-extrabold text-[#293B36]">
+            Tài khoản này không có quyền quản trị
+          </h2>
+          <p className="text-sm text-[#5F706A] max-w-md">
+            Khu vực Bàn làm việc Arumo chỉ dành riêng cho tài khoản Quản trị viên được máy chủ xác nhận.
+          </p>
+          <div className="flex items-center gap-3 pt-2">
+            <button
+              onClick={() => navigateTo('/')}
+              className="px-5 py-2.5 rounded-xl font-bold text-white bg-[#376F64] hover:bg-[#2B5A51] transition-all text-xs"
+            >
+              Về trang đọc truyện
+            </button>
+            <button
+              onClick={handleLogout}
+              className="px-4 py-2.5 rounded-xl font-bold text-[#5F706A] bg-white border border-[#DCE6DF] hover:bg-gray-50 transition-all text-xs"
+            >
+              Đăng xuất
+            </button>
+          </div>
+        </div>
+      );
+    }
+
+    // 3. Render Admin Layout with selected sub-view
+    const renderAdminContent = () => {
+      // Sub-route: /admin/chuong or editing a chapter
+      if (route.path === '/admin/chuong/:id' || activeAdminChapterId) {
+        return (
+          <AdminChapterEditorView
+            chapterId={route.params.id || activeAdminChapterId || 'doc_chap_01'}
+            onBack={() => {
+              setActiveAdminChapterId(null);
+              navigateTo('/admin/chuong');
+            }}
+            onPreviewChapter={(id) => navigateTo(`/doc/${id}`)}
+          />
+        );
       }
+
+      if (route.path === '/admin/chuong') {
+        return (
+          <AdminChaptersView
+            onNavigate={navigateTo}
+            onEditChapter={(id) => {
+              setActiveAdminChapterId(id);
+              navigateTo(`/admin/chuong/${id}`);
+            }}
+          />
+        );
+      }
+
+      // Sub-route: /admin/nhan-vat or editing a character
+      if (route.path === '/admin/nhan-vat/:id' || activeAdminCharId) {
+        return (
+          <AdminCharacterEditorView
+            charId={route.params.id || activeAdminCharId || 'char_rento'}
+            onBack={() => {
+              setActiveAdminCharId(null);
+              navigateTo('/admin/nhan-vat');
+            }}
+            onPreviewProfile={(id) => navigateTo(`/nhan-vat/${id}`)}
+          />
+        );
+      }
+
+      if (route.path === '/admin/nhan-vat') {
+        return (
+          <AdminCharactersView
+            onNavigate={navigateTo}
+            onEditCharacter={(id) => {
+              setActiveAdminCharId(id);
+              navigateTo(`/admin/nhan-vat/${id}`);
+            }}
+          />
+        );
+      }
+
+      // Other admin sub-routes
+      if (route.path === '/admin/the-gioi') {
+        return <AdminWorldView />;
+      }
+
+      if (route.path === '/admin/truyen-tranh' || route.path.startsWith('/admin/truyen-tranh')) {
+        return <AdminComicView />;
+      }
+
+      if (route.path === '/admin/cong-viec') {
+        return <AdminTasksView />;
+      }
+
+      if (route.path === '/admin/thu-vien') {
+        return <AdminMediaView />;
+      }
+
+      if (route.path === '/admin/nhap-noi-dung') {
+        return <AdminGoogleSyncView />;
+      }
+
+      if (route.path === '/admin/giao-dien') {
+        return <AdminThemeView />;
+      }
+
+      if (route.path === '/admin/binh-luan') {
+        return <AdminCommentsView />;
+      }
+
+      if (route.path === '/admin/doc-gia') {
+        return <AdminReadersView />;
+      }
+
+      if (route.path === '/admin/lich-su') {
+        return <AdminHistoryView />;
+      }
+
+      if (route.path === '/admin/cai-dat') {
+        return <AdminSettingsView />;
+      }
+
+      // Default: Overview
+      return <AdminOverviewView onNavigate={navigateTo} />;
     };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
 
-  // Update Chapter content directly
-  const handleUpdateChapterContent = useCallback((newContent: string) => {
-    if (!activeChapter) return;
-    const newWordCount = newContent.trim().split(/\s+/).filter(Boolean).length;
-
-    setParts(prev => prev.map(p => {
-      const hasTargetChapter = p.chapters.some(c => c.id === activeChapter.id);
-      if (!hasTargetChapter) return p;
-
-      const updatedChapters = p.chapters.map(c => {
-        if (c.id !== activeChapter.id) return c;
-        return {
-          ...c,
-          content: newContent,
-          wordCount: newWordCount
-        };
-      });
-
-      const updatedPartWords = updatedChapters.reduce((sum, c) => sum + c.wordCount, 0);
-      return {
-        ...p,
-        chapters: updatedChapters,
-        wordCount: updatedPartWords
-      };
-    }));
-
-    setProject(prev => ({
-      ...prev,
-      stats: { ...prev.stats, wordsToday: Math.min(prev.stats.wordsToday + 10, prev.stats.dailyGoal + 500) }
-    }));
-  }, [activeChapter?.id]);
-
-  // Update Chapter metadata
-  const handleUpdateChapterMetadata = useCallback((updatedFields: Partial<Chapter>) => {
-    if (!activeChapter) return;
-    setParts(prev => prev.map(p => ({
-      ...p,
-      chapters: p.chapters.map(c => c.id === activeChapter.id ? { ...c, ...updatedFields } : c)
-    })));
-  }, [activeChapter?.id]);
-
-  // Navigation handler
-  const handleSelectChapter = useCallback((chapterId: string, partId: string) => {
-    setActivePartId(partId);
-    setActiveChapterId(chapterId);
-  }, []);
-
-  // Structural handlers
-  const handleAddPart = () => {
-    const newPart: Part = {
-      id: `part_${Date.now()}`,
-      title: `Phần ${parts.length + 1}: Tiêu đề mới`,
-      order: parts.length + 1,
-      chapters: [],
-      wordCount: 0,
-      isExpanded: true
-    };
-    setParts(prev => [...prev, newPart]);
-  };
-
-  const handleAddChapter = (partId: string) => {
-    setParts(prev => prev.map(p => {
-      if (p.id !== partId) return p;
-      const newChap: Chapter = {
-        id: `chap_${Date.now()}`,
-        partId,
-        title: `Chương ${p.chapters.length + 1}: Tiêu đề chương mới`,
-        order: p.chapters.length + 1,
-        content: '',
-        wordCount: 0,
-        status: 'draft',
-        isExpanded: true,
-        scenes: []
-      };
-      return { ...p, chapters: [...p.chapters, newChap] };
-    }));
-  };
-
-  const handleDeleteChapter = (chapterId: string, partId: string) => {
-    if (!window.confirm('Bạn có chắc muốn xóa chương này không?')) return;
-    setParts(prev => prev.map(p => {
-      if (p.id !== partId) return p;
-      const filtered = p.chapters.filter(c => c.id !== chapterId);
-      return {
-        ...p,
-        chapters: filtered,
-        wordCount: filtered.reduce((sum, c) => sum + c.wordCount, 0)
-      };
-    }));
-  };
-
-  // AI Request Handler
-  const handleRequestAI = useCallback(async (role: AIRole, prompt: string, options?: any) => {
-    if (!activeChapter) return;
-    const result = await AIService.requestAssistance(
-      role,
-      prompt,
-      activeChapter,
-      parts,
-      characters,
-      bibleFacts,
-      foreshadowing,
-      aiSettings,
-      options
+    return (
+      <AdminLayout
+        currentPath={route.path}
+        currentUser={currentUser}
+        onNavigate={navigateTo}
+        onLogout={handleLogout}
+      >
+        {renderAdminContent()}
+      </AdminLayout>
     );
-    setAIProposal(result);
-  }, [activeChapter, parts, characters, bibleFacts, foreshadowing, aiSettings]);
+  }
 
-  // Accept AI Proposal
-  const handleAcceptProposal = (acceptedText: string, reason: string) => {
-    if (!activeChapter) return;
-    const versionSnapshot = {
-      id: `ver_${Date.now()}`,
-      timestamp: new Date().toLocaleString('vi-VN'),
-      authorType: 'author' as const,
-      changeReason: `Chấp nhận đề xuất AI: "${reason}"`,
-      content: activeChapter.content || '',
-      wordCount: activeChapter.wordCount
-    };
+  // =========================================================================
+  // NOVEL READER ROUTE (Has dedicated 56px reading header & footer)
+  // =========================================================================
+  if (isReaderRoute) {
+    const chapterId = route.params.chapterId || 'doc_chap_prologue';
+    return (
+      <NovelReaderPage
+        chapterId={chapterId}
+        currentUser={currentUser}
+        onNavigate={navigateTo}
+      />
+    );
+  }
 
-    const newContent = activeChapter.content
-      ? activeChapter.content + '\n\n' + acceptedText
-      : acceptedText;
+  // =========================================================================
+  // PUBLIC WEBSITE SHELL ROUTING
+  // =========================================================================
+  const renderPublicPage = () => {
+    switch (route.path) {
+      case '/':
+      case '':
+        return (
+          <StoryHomePage
+            snapshot={snapshot}
+            history={readingHistory}
+            completedChapterIds={completedChapterIds}
+            onNavigate={navigateTo}
+          />
+        );
 
-    const newWordCount = newContent.trim().split(/\s+/).filter(Boolean).length;
+      case '/muc-luc':
+        return (
+          <ChapterIndexPage
+            snapshot={snapshot}
+            history={readingHistory}
+            completedChapterIds={completedChapterIds}
+            onNavigate={navigateTo}
+          />
+        );
 
-    setParts(prev => prev.map(p => ({
-      ...p,
-      chapters: p.chapters.map(c => {
-        if (c.id !== activeChapter.id) return c;
-        return {
-          ...c,
-          content: newContent,
-          wordCount: newWordCount,
-          versions: [...(c.versions || []), versionSnapshot]
-        };
-      }),
-      wordCount: p.chapters.reduce((sum, c) => sum + (c.id === activeChapter.id ? newWordCount : c.wordCount), 0)
-    })));
+      case '/nhan-vat':
+        return <CharacterGalleryPage onNavigate={navigateTo} />;
 
-    setAIProposal(null);
-  };
+      case '/nhan-vat/:id':
+        return (
+          <CharacterPublicProfile
+            characterId={route.params.characterId || 'char_rento'}
+            onNavigate={navigateTo}
+          />
+        );
 
-  // Fact Extraction
-  const handleRequestFactExtraction = () => {
-    if (!activeChapter) return;
-    const candidates = FactExtractor.extractFactsFromScene(activeChapter, characters);
-    setFactCandidates(candidates);
-    setShowFactApproval(true);
-  };
+      case '/the-gioi':
+        return <WorldGuidePage onNavigate={navigateTo} />;
 
-  const handleApproveFactsIntoCanon = (approvedFacts: BibleFact[]) => {
-    setBibleFacts(prev => [...prev, ...approvedFacts]);
-    setShowFactApproval(false);
-  };
+      case '/truyen-tranh':
+      case '/truyen-tranh/:id':
+        return <ComicLandingPage onNavigate={navigateTo} />;
 
-  // Logic Audit
-  const handleAuditLogic = () => {
-    if (!activeChapter) return;
-    const issues = LogicChecker.auditSceneContent(activeChapter, characters, bibleFacts);
-    setLogicIssues(issues);
-    setAIProposal({
-      role: 'logic_auditor',
-      title: `Báo Cáo Kiểm Định Logic — ${activeChapter.title}`,
-      response: issues.length === 0
-        ? '✅ Không phát hiện lỗi logic, mâu thuẫn tri thức hay vi phạm Canon nào trong chương này. Rất chuẩn xác!'
-        : issues.map(issue => `🔴 [${issue.type.toUpperCase()}] ${issue.title}\n${issue.detail}\n💡 Gợi ý xử lý: ${issue.fixSuggestion}`).join('\n\n'),
-      rationale: `Đã kiểm tra đối chiếu qua ${characters.length} hồ sơ nhân vật và ${bibleFacts.filter(f => f.status === 'canon').length} điều luật Canon.`
-    });
-  };
+      case '/tu-sach':
+        return (
+          <BookshelfPage
+            history={readingHistory}
+            onNavigate={navigateTo}
+          />
+        );
 
-  // Bible CRUD
-  const handleUpdateFact = (fact: BibleFact) => setBibleFacts(prev => prev.map(f => f.id === fact.id ? fact : f));
-  const handleAddFact = (fact: BibleFact) => setBibleFacts(prev => [...prev, fact]);
-  const handleDeleteFact = (factId: string) => setBibleFacts(prev => prev.filter(f => f.id !== factId));
+      case '/dang-nhap':
+        return (
+          <LoginPage
+            onLoginSuccess={handleLoginSuccess}
+            onNavigate={navigateTo}
+          />
+        );
 
-  // Characters CRUD
-  const handleUpdateCharacter = (char: Character) => setCharacters(prev => prev.map(c => c.id === char.id ? char : c));
-  const handleAddCharacter = (char: Character) => setCharacters(prev => [...prev, char]);
-  const handleDeleteCharacter = (charId: string) => setCharacters(prev => prev.filter(c => c.id !== charId));
-
-  // Timeline CRUD
-  const handleAddTimelineEvent = (event: TimelineEvent) => setTimeline(prev => [...prev, event]);
-  const handleUpdateTimelineEvent = (event: TimelineEvent) => setTimeline(prev => prev.map(e => e.id === event.id ? event : e));
-
-  // Foreshadowing CRUD
-  const handleUpdateHook = (hook: ForeshadowingHook) => setForeshadowing(prev => prev.map(h => h.id === hook.id ? hook : h));
-  const handleAddHook = (hook: ForeshadowingHook) => setForeshadowing(prev => [...prev, hook]);
-  const handleDeleteHook = (hookId: string) => setForeshadowing(prev => prev.filter(h => h.id !== hookId));
-
-  // Reset to sample project
-  const handleResetSample = () => {
-    if (!window.confirm('Tải lại nguyên bản dự án mẫu "Long Ấn Thức Tỉnh" từ file docx?')) return;
-    localStorage.clear();
-    window.location.reload();
-  };
-
-  const handleImportSuccess = (importedParts: Part[], newFacts: BibleFact[]) => {
-    if (importedParts.length > 0) {
-      setParts(importedParts);
-      setActivePartId(importedParts[0].id);
-      if (importedParts[0].chapters[0]) {
-        setActiveChapterId(importedParts[0].chapters[0].id);
-      }
-    }
-    if (newFacts.length > 0) {
-      setBibleFacts(prev => [...prev, ...newFacts]);
+      default:
+        // 404 Not Found as required by Section 4
+        return (
+          <div className="max-w-[640px] mx-auto py-24 text-center space-y-4">
+            <h2 className="text-3xl font-extrabold text-[#293B36]">
+              Chưa tìm thấy trang này
+            </h2>
+            <p className="text-sm text-[#5F706A]">
+              Địa chỉ bạn vừa mở không tồn tại hoặc đã được chuyển sang vị trí khác.
+            </p>
+            <div className="flex items-center justify-center gap-3 pt-3">
+              <button
+                onClick={() => navigateTo('/')}
+                className="px-5 py-2.5 rounded-xl font-bold text-white bg-[#376F64] hover:bg-[#2B5A51] transition-all text-sm"
+              >
+                Về trang chủ
+              </button>
+              <button
+                onClick={() => navigateTo('/muc-luc')}
+                className="px-5 py-2.5 rounded-xl font-bold text-[#376F64] bg-[#E4F1E9] hover:bg-[#D5EADF] transition-all text-sm"
+              >
+                Xem mục lục
+              </button>
+            </div>
+          </div>
+        );
     }
   };
 
   return (
-    <div className={`h-screen flex flex-col overflow-hidden transition-colors duration-200 ${
-      isWarmTheme ? 'bg-parchment-50 text-stone-900' : 'bg-[#060911] text-slate-100'
-    }`}>
-      {/* Top Application Header - CHỈ HIỂN THỊ KHI Ở CHẾ ĐỘ TÁC GIẢ */}
-      {isAuthorMode && (
-        <AppHeader
-          project={project}
-          activeTab={activeTab}
-          setActiveTab={setActiveTab}
-          isWarmTheme={isWarmTheme}
-          setIsWarmTheme={setIsWarmTheme}
-          onOpenImport={() => setShowImportExport({ open: true, mode: 'import' })}
-          onOpenExport={() => setShowImportExport({ open: true, mode: 'export' })}
-          onOpenSettings={() => setShowSettings(true)}
-          onResetSample={handleResetSample}
-          stagedSyncCount={docsSyncState.stagedChangesCount}
-          isAuthorMode={isAuthorMode}
-          onOpenAuthorLogin={() => setShowAuthorLogin(true)}
-          onExitAuthorMode={() => {
-            sessionStorage.removeItem('mach_author_session');
-            StorageService.setAuthorAuthenticated(false);
-            setIsAuthorMode(false);
-            setActiveTab('reader');
-            if (typeof window !== 'undefined') {
-              const url = new URL(window.location.href);
-              url.searchParams.delete('author');
-              url.searchParams.delete('pin');
-              url.searchParams.delete('admin');
-              window.location.href = url.pathname;
-            }
-          }}
-          isAutoSyncLive={isAutoSyncLive}
-          onToggleAutoSync={() => setIsAutoSyncLive(prev => !prev)}
-          onTriggerLiveCheck={() => checkAndApplyDocChanges(false)}
-          lastLiveCheckTime={lastLiveCheckTime}
-        />
-      )}
-
-      {/* Main Studio Viewport */}
-      <div className="flex-1 overflow-hidden flex flex-col relative">
-        {/* TAB: Manuscript Studio (Phần -> Chương -> Soạn thảo & Up Truyện Tranh) - Chỉ tác giả mới xem được */}
-        {isAuthorMode && activeTab === 'editor' && (
-          <div className="flex-1 flex overflow-hidden">
-            <OutlineNav
-              parts={parts}
-              activeChapterId={activeChapter?.id}
-              activePartId={activePart?.id}
-              onSelectChapter={handleSelectChapter}
-              onAddPart={handleAddPart}
-              onAddChapter={handleAddChapter}
-              onDeleteChapter={handleDeleteChapter}
-              isWarmTheme={isWarmTheme}
-              onSyncGoogleDocs={() => handleSyncGoogleDocs(true)}
-              isSyncingDoc={isSyncingDoc}
-            />
-
-            {activeChapter ? (
-              <>
-                <ManuscriptEditor
-                  chapter={activeChapter}
-                  partTitle={activePartTitle}
-                  characters={characters}
-                  chapters={activePart?.chapters || []}
-                  comicChapters={comicChapters}
-                  onSaveComicChapters={handleSaveComicChapters}
-                  onPreviewInReader={() => setActiveTab('reader')}
-                  onUpdateContent={handleUpdateChapterContent}
-                  onUpdateMetadata={handleUpdateChapterMetadata}
-                  onRequestAI={handleRequestAI}
-                  onRequestFactExtraction={handleRequestFactExtraction}
-                  onAuditLogic={handleAuditLogic}
-                  isWarmTheme={isWarmTheme}
-                  isFocusMode={isFocusMode}
-                  setIsFocusMode={setIsFocusMode}
-                />
-
-                {!isFocusMode && (
-                  <ContextDrawer
-                    chapter={activeChapter}
-                    characters={characters}
-                    bibleFacts={bibleFacts}
-                    hooks={foreshadowing}
-                    onRequestAI={handleRequestAI}
-                    isWarmTheme={isWarmTheme}
-                  />
-                )}
-              </>
-            ) : (
-              <div className="flex-1 flex items-center justify-center text-slate-500 text-sm">
-                <div className="text-center space-y-2">
-                  <p className="font-serif text-2xl opacity-40 text-amber-300">Mạch Novel Engine</p>
-                  <p>Chọn một chương từ cột bên trái để bắt đầu viết.</p>
-                </div>
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* TAB: Story Bible - Chỉ Tác Giả */}
-        {isAuthorMode && activeTab === 'bible' && (
-          <div className="flex-1 overflow-hidden">
-            <StoryBibleView
-              facts={bibleFacts}
-              onUpdateFact={handleUpdateFact}
-              onAddFact={handleAddFact}
-              onDeleteFact={handleDeleteFact}
-              isWarmTheme={isWarmTheme}
-            />
-          </div>
-        )}
-
-        {/* TAB: Characters Dossiers - Chỉ Tác Giả */}
-        {isAuthorMode && activeTab === 'characters' && (
-          <div className="flex-1 overflow-hidden">
-            <CharacterList
-              characters={characters}
-              onUpdateCharacter={handleUpdateCharacter}
-              onAddCharacter={handleAddCharacter}
-              onDeleteCharacter={handleDeleteCharacter}
-              onRequestRoleplay={(charId) => {
-                handleRequestAI('character_actor', 'Nhập vai nhân vật được chọn', { targetCharacterId: charId });
-              }}
-              isWarmTheme={isWarmTheme}
-            />
-          </div>
-        )}
-
-        {/* TAB: Timeline - Chỉ Tác Giả */}
-        {isAuthorMode && activeTab === 'timeline' && (
-          <div className="flex-1 overflow-hidden">
-            <TimelineView
-              timeline={timeline}
-              characters={characters}
-              onAddEvent={handleAddTimelineEvent}
-              onUpdateEvent={handleUpdateTimelineEvent}
-              isWarmTheme={isWarmTheme}
-            />
-          </div>
-        )}
-
-        {/* TAB: Foreshadowing Tracker - Chỉ Tác Giả */}
-        {isAuthorMode && activeTab === 'foreshadowing' && (
-          <div className="flex-1 overflow-hidden">
-            <ForeshadowingView
-              hooks={foreshadowing}
-              onUpdateHook={handleUpdateHook}
-              onAddHook={handleAddHook}
-              onDeleteHook={handleDeleteHook}
-              isWarmTheme={isWarmTheme}
-            />
-          </div>
-        )}
-
-        {/* TAB: Google Docs & Google Sheets Two-Way Sync + Soul Seal Game - Chỉ Tác Giả */}
-        {isAuthorMode && activeTab === 'google_sync' && (
-          <div className="flex-1 overflow-hidden">
-            <GoogleSyncView
-              activeChapter={activeChapter}
-              onUpdateChapterContent={handleUpdateChapterContent}
-              isWarmTheme={isWarmTheme}
-            />
-          </div>
-        )}
-
-        {/* TAB: User Account Control (MongoDB Atlas) - Chỉ Tác Giả */}
-        {isAuthorMode && activeTab === 'users' && (
-          <div className="flex-1 overflow-hidden">
-            <UserManagementView
-              onBackToReader={() => setActiveTab('reader')}
-              isWarmTheme={isWarmTheme}
-            />
-          </div>
-        )}
-
-        {/* TAB: Unified Reader (Novel & Comic Preview + Audio TTS) - MẶC ĐỊNH VÀ DUY NHẤT CHO ĐỘC GIẢ */}
-        {activeTab === 'reader' && (
-          <div className="flex-1 overflow-hidden">
-            <UnifiedReaderView
-              project={project}
-              parts={parts}
-              characters={characters}
-              isWarmTheme={isWarmTheme}
-              aiSettings={aiSettings}
-              comicChapters={comicChapters}
-              isAuthorMode={isAuthorMode}
-              onOpenComicUploader={() => {
-                if (isAuthorMode) setActiveTab('editor');
-              }}
-              onSyncGoogleDocs={() => handleSyncGoogleDocs(true)}
-              isSyncingDoc={isSyncingDoc}
-              onOpenAuthorLogin={() => setShowAuthorLogin(true)}
-              onExitAuthorMode={() => {
-                sessionStorage.removeItem('mach_author_session');
-                StorageService.setAuthorAuthenticated(false);
-                setIsAuthorMode(false);
-                setActiveTab('reader');
-              }}
-              onAdminAuthorized={() => {
-                sessionStorage.setItem('mach_author_session', 'true');
-                StorageService.setAuthorAuthenticated(true);
-                setIsAuthorMode(true);
-                setActiveTab('editor');
-              }}
-            />
-          </div>
-        )}
-      </div>
-
-      {/* ====== GLOBAL MODALS ====== */}
-
-      {/* Author PIN Verification Modal */}
-      <AuthorLoginModal
-        isOpen={showAuthorLogin}
-        onClose={() => setShowAuthorLogin(false)}
-        onSuccess={() => {
-          sessionStorage.setItem('mach_author_session', 'true');
-          StorageService.setAuthorAuthenticated(true);
-          setIsAuthorMode(true);
-          setActiveTab('editor');
-        }}
+    <div className="min-h-screen bg-[#FFFDF8] text-[#293B36] flex flex-col antialiased">
+      {/* 1. Public Header (72px desktop / 60px mobile) */}
+      <PublicHeader
+        currentPath={route.path}
+        currentUser={currentUser}
+        onOpenAuthModal={() => setAuthModalOpen(true)}
+        onNavigate={navigateTo}
       />
 
-      {/* AI Diff/Proposal Comparator Modal */}
-      {aiProposal && activeChapter && (
-        <DiffModal
-          proposal={aiProposal}
-          currentText={(activeChapter.content || '').slice(-800)}
-          onAccept={handleAcceptProposal}
-          onClose={() => setAIProposal(null)}
-        />
-      )}
+      {/* 2. Main Page Content Container */}
+      <main className="flex-1 max-w-[1120px] w-full mx-auto px-4 sm:px-6 md:px-8">
+        {renderPublicPage()}
+      </main>
 
-      {/* Fact Extraction & Canon Approval Modal */}
-      {showFactApproval && (
-        <FactApprovalModal
-          candidates={factCandidates}
-          onApproveFacts={handleApproveFactsIntoCanon}
-          onClose={() => setShowFactApproval(false)}
-        />
-      )}
+      {/* 3. Public Footer */}
+      <PublicFooter onNavigate={navigateTo} />
 
-      {/* Import / Export Modal */}
-      {showImportExport.open && (
-        <ImportExportModal
-          project={project}
-          parts={parts}
-          bibleFacts={bibleFacts}
-          hooks={foreshadowing}
-          initialMode={showImportExport.mode}
-          onImportSuccess={handleImportSuccess}
-          onClose={() => setShowImportExport({ open: false, mode: 'import' })}
-        />
-      )}
-
-      {/* Settings Modal */}
-      {showSettings && (
-        <SettingsModal
-          settings={aiSettings}
-          onSaveSettings={(newSettings) => {
-            setAISettings(newSettings);
-            setShowSettings(false);
-          }}
-          onClose={() => setShowSettings(false)}
-        />
-      )}
-
-      {/* Floating Sync Toast */}
-      {syncToast && (
-        <div className={`fixed bottom-6 right-6 z-50 px-4 py-3 rounded-2xl shadow-2xl border text-sm flex items-center space-x-3 transition-all backdrop-blur-xl ${
-          syncToast.type === 'success'
-            ? 'bg-slate-900/95 border-emerald-500/50 text-emerald-200 shadow-emerald-500/20'
-            : 'bg-slate-900/95 border-rose-500/50 text-rose-200 shadow-rose-500/20'
-        }`}>
-          <span className="text-base">{syncToast.type === 'success' ? '🟢' : '🔴'}</span>
-          <span className="font-medium text-xs leading-relaxed max-w-sm">{syncToast.message}</span>
-        </div>
-      )}
+      {/* 4. Auth Modal for Reader Login / Profile */}
+      <UserAuthModal
+        isOpen={authModalOpen}
+        onClose={() => setAuthModalOpen(false)}
+        onLoginSuccess={handleLoginSuccess}
+        onAdminAuthorized={() => navigateTo('/admin')}
+      />
     </div>
   );
 }

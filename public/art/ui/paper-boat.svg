@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" fill="none">
+  <!-- Subtle warm water ripples -->
+  <path d="M16 104 C32 108, 48 100, 64 104 C80 108, 96 100, 112 104" stroke="#DCE6DF" stroke-width="3" stroke-linecap="round" />
+  <path d="M28 114 C44 117, 60 111, 76 114 C92 117, 100 113, 108 114" stroke="#E4F1E9" stroke-width="2.5" stroke-linecap="round" />
+  
+  <!-- Origami paper boat body -->
+  <polygon points="18,88 110,88 88,100 40,100" fill="#E4F1E9" stroke="#376F64" stroke-width="3" stroke-linejoin="round" />
+  
+  <!-- Boat center fold & sail -->
+  <polygon points="64,32 36,88 64,88" fill="#FFFDF8" stroke="#376F64" stroke-width="3" stroke-linejoin="round" />
+  <polygon points="64,32 64,88 92,88" fill="#F8EDCB" stroke="#376F64" stroke-width="3" stroke-linejoin="round" />
+  
+  <!-- Inner shadow fold line -->
+  <line x1="64" y1="32" x2="64" y2="94" stroke="#2B5A51" stroke-width="2" stroke-linecap="round" />
+  
+  <!-- Cute small river spark -->
+  <circle cx="102" cy="40" r="3" fill="#F8E3E4" />
+  <circle cx="26" cy="50" r="2.5" fill="#E5F1F7" />
+</svg>
