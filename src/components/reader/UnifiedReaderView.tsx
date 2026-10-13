@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { 
   BookOpen, 
   ChevronLeft, 
@@ -29,7 +29,8 @@ import {
   Minimize2,
   Lock,
   KeyRound,
-  Headphones
+  Headphones,
+  CheckCircle2
 } from 'lucide-react';
 import { Project, Part, Chapter, ComicChapter, ComicPanel, ComicReadingMode, AISettings, Character } from '../../types';
 import { sampleComicChapters, GOOGLE_DOCS_URL } from '../../data/googleData';
@@ -44,6 +45,14 @@ import { LoreCodexDrawer } from './LoreCodexDrawer';
 import { ChronicleTimelineModal } from './ChronicleTimelineModal';
 import { ReadingSettingsModal, ReadingPreferences, THEME_OPTIONS, ReadingThemeId } from './ReadingSettingsModal';
 import { ChapterCommentsSection } from './ChapterCommentsSection';
+import { UserService } from '../../services/userService';
+import { UserProfile } from '../../types/user';
+import { UserAuthModal } from '../auth/UserAuthModal';
+import { UserProfileDropdown } from '../auth/UserProfileDropdown';
+import { UserHistoryModal } from '../auth/UserHistoryModal';
+import { AudioDramaService, AudioDramaSentence, VoiceMode } from '../../services/audioDramaService';
+import { AudioDramaPlayerBar } from '../audio/AudioDramaPlayerBar';
+import { ComicComingSoonView } from '../comic/ComicComingSoonView';
 
 interface UnifiedReaderViewProps {
   project: Project;
@@ -233,6 +242,11 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
   const [isZenMode, setIsZenMode] = useState<boolean>(false);
   const [isChapterMenuOpen, setIsChapterMenuOpen] = useState<boolean>(false);
 
+  // User Authentication & Member Portal state (NetTruyen style)
+  const [currentUser, setCurrentUser] = useState<UserProfile | null>(() => UserService.getCurrentUser());
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState<boolean>(false);
+  const [isHistoryModalOpen, setIsHistoryModalOpen] = useState<boolean>(false);
+
   // Character Dossier Drawer state (Tra cứu hồ sơ nhân vật bên phải)
   const [isCharacterDrawerOpen, setIsCharacterDrawerOpen] = useState<boolean>(false);
   const [selectedCharacterId, setSelectedCharacterId] = useState<string | undefined>(undefined);
@@ -319,16 +333,42 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
   };
   const [isBookmarked, setIsBookmarked] = useState<boolean>(false);
 
-  // Audio / TTS states
+  // Audio Drama & Karaoke states
   const [isPlayingAudio, setIsPlayingAudio] = useState<boolean>(false);
   const [speechRate, setSpeechRate] = useState<number>(1.0);
+  const [currentSentenceIndex, setCurrentSentenceIndex] = useState<number>(0);
+  const [voiceMode, setVoiceMode] = useState<VoiceMode>('multi_voice');
+  const [isAutoScrollEnabled, setIsAutoScrollEnabled] = useState<boolean>(true);
+  const [isAudioPlayerVisible, setIsAudioPlayerVisible] = useState<boolean>(false);
   const synthRef = useRef<SpeechSynthesis | null>(null);
   const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
 
-  // Comic reader states
+  // Comic reader & Publishing states (NetTruyen / Webtoon)
   const [comicChapters, setComicChapters] = useState<ComicChapter[]>(() => {
     return propsComicChapters && propsComicChapters.length > 0 ? propsComicChapters : sampleComicChapters;
   });
+
+  // Trạng thái xuất bản truyện tranh (Độc giả chỉ thấy khi chương được xuất bản)
+  const [publishedComicChapterIds, setPublishedComicChapterIds] = useState<string[]>(() => {
+    try {
+      const stored = localStorage.getItem('longanky_published_comic_chapters');
+      if (stored) return JSON.parse(stored);
+    } catch {}
+    return []; // Mặc định: Chưa xuất bản hồi nào -> Hiện Coming Soon
+  });
+  const [isAuthorPreviewingDraft, setIsAuthorPreviewingDraft] = useState<boolean>(false);
+
+  const handlePublishComicChapter = (chapterId: string) => {
+    setPublishedComicChapterIds(prev => {
+      const next = prev.includes(chapterId)
+        ? prev.filter(id => id !== chapterId)
+        : [...prev, chapterId];
+      try {
+        localStorage.setItem('longanky_published_comic_chapters', JSON.stringify(next));
+      } catch {}
+      return next;
+    });
+  };
 
   useEffect(() => {
     if (propsComicChapters && propsComicChapters.length > 0) {
@@ -419,6 +459,21 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
   const currentChapter: Chapter | undefined = chapters[activeChapterIndex] || chapters[0];
   const activeComic = comicChapters[activeComicIndex] || comicChapters[0];
 
+  // Phân tích văn bản chương thành các câu thoại & dẫn truyện để đọc Karaoke đa giọng
+  const audioDramaSentences = useMemo(() => {
+    if (!currentChapter?.content) return [];
+    return AudioDramaService.parseChapterToSentences(currentChapter.id, currentChapter.content);
+  }, [currentChapter?.id, currentChapter?.content]);
+
+  // Reset câu đọc khi đổi chương
+  useEffect(() => {
+    setCurrentSentenceIndex(0);
+    if (isPlayingAudio && synthRef.current) {
+      synthRef.current.cancel();
+      setIsPlayingAudio(false);
+    }
+  }, [currentChapter?.id]);
+
   const totalWords = currentChapter?.wordCount || 0;
   const estimatedReadTime = Math.max(1, Math.ceil(totalWords / 220));
 
@@ -430,6 +485,70 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
     }
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
+
+  // Điều hướng từ Lịch Sử Đọc (NetTruyen)
+  const handleNavigateFromHistory = (type: 'novel' | 'comic', chapterId: string, partId?: string, chapterIndex?: number) => {
+    if (type === 'novel') {
+      setReaderType('novel');
+      if (partId && parts.some(p => p.id === partId)) {
+        setSelectedPartId(partId);
+        if (typeof chapterIndex === 'number') {
+          setActiveChapterIndex(chapterIndex);
+        }
+      } else {
+        for (const p of parts) {
+          const cIdx = p.chapters.findIndex(c => c.id === chapterId);
+          if (cIdx >= 0) {
+            setSelectedPartId(p.id);
+            setActiveChapterIndex(cIdx);
+            break;
+          }
+        }
+      }
+    } else {
+      setReaderType('comic');
+      if (typeof chapterIndex === 'number') {
+        setActiveComicIndex(chapterIndex);
+      } else {
+        const cIdx = comicChapters.findIndex(c => c.id === chapterId);
+        if (cIdx >= 0) setActiveComicIndex(cIdx);
+      }
+    }
+    scrollToTop();
+  };
+
+  // Tự động lưu Lịch Sử Đọc Tiểu Thuyết (NetTruyen style)
+  useEffect(() => {
+    if (currentChapter && activePart && readerType === 'novel') {
+      UserService.recordReadingHistory({
+        type: 'novel',
+        chapterId: currentChapter.id,
+        chapterTitle: currentChapter.title,
+        partTitle: activePart.title,
+        partId: selectedPartId,
+        chapterIndex: activeChapterIndex,
+        progressPercent: readingProgress,
+        wordCount: currentChapter.wordCount,
+      });
+      setCurrentUser(UserService.getCurrentUser());
+    }
+  }, [selectedPartId, activeChapterIndex, currentChapter?.id, readerType]);
+
+  // Tự động lưu Lịch Sử Đọc Truyện Tranh (NetTruyen style)
+  useEffect(() => {
+    if (readerType === 'comic' && comicChapters[activeComicIndex]) {
+      const chap = comicChapters[activeComicIndex];
+      UserService.recordReadingHistory({
+        type: 'comic',
+        chapterId: chap.id,
+        chapterTitle: chap.title,
+        partTitle: chap.subtitle,
+        chapterIndex: activeComicIndex,
+        progressPercent: 100,
+      });
+      setCurrentUser(UserService.getCurrentUser());
+    }
+  }, [readerType, activeComicIndex]);
 
   // Keyboard navigation: Mũi tên trái (←) hoặc phải (→) chuyển chapter chuẩn NetTruyen
   useEffect(() => {
@@ -492,23 +611,64 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
     };
   }, []);
 
+  // Đọc câu thoại tương ứng với nhân vật và tự động cuộn trang (Karaoke Multi-Voice)
+  const playSentence = useCallback((index: number) => {
+    if (!synthRef.current || !audioDramaSentences[index]) return;
+
+    synthRef.current.cancel();
+
+    const sentence = audioDramaSentences[index];
+    const utterance = new SpeechSynthesisUtterance(sentence.text);
+    utterance.lang = 'vi-VN';
+
+    const viVoice = AudioDramaService.getBestVietnameseVoice(synthRef.current);
+    if (viVoice) {
+      utterance.voice = viVoice;
+    }
+
+    const { pitch, rate } = AudioDramaService.getVoiceParameters(sentence, voiceMode, speechRate);
+    utterance.pitch = pitch;
+    utterance.rate = rate;
+
+    utterance.onend = () => {
+      if (index < audioDramaSentences.length - 1) {
+        setCurrentSentenceIndex(index + 1);
+        playSentence(index + 1);
+      } else {
+        setIsPlayingAudio(false);
+      }
+    };
+
+    utterance.onerror = () => {
+      setIsPlayingAudio(false);
+    };
+
+    utteranceRef.current = utterance;
+    synthRef.current.speak(utterance);
+    setCurrentSentenceIndex(index);
+    setIsPlayingAudio(true);
+    setIsAudioPlayerVisible(true);
+
+    // Tự động cuộn trang tới đúng câu thoại đang phát (Karaoke Auto-scroll)
+    if (isAutoScrollEnabled) {
+      setTimeout(() => {
+        const el = document.getElementById(sentence.id);
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }, 50);
+    }
+  }, [audioDramaSentences, voiceMode, speechRate, isAutoScrollEnabled]);
+
   const handleToggleAudio = () => {
-    if (!synthRef.current || !currentChapter?.content) return;
+    if (!synthRef.current || audioDramaSentences.length === 0) return;
 
     if (isPlayingAudio) {
       synthRef.current.cancel();
       setIsPlayingAudio(false);
     } else {
-      synthRef.current.cancel();
-      const textToRead = currentChapter.content.replace(/[*#—_]/g, ' ').slice(0, 4000);
-      const utterance = new SpeechSynthesisUtterance(textToRead);
-      utterance.lang = 'vi-VN';
-      utterance.rate = speechRate;
-      utterance.onend = () => setIsPlayingAudio(false);
-      utterance.onerror = () => setIsPlayingAudio(false);
-      utteranceRef.current = utterance;
-      synthRef.current.speak(utterance);
-      setIsPlayingAudio(true);
+      setIsAudioPlayerVisible(true);
+      playSentence(currentSentenceIndex);
     }
   };
 
@@ -829,6 +989,14 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
 
           {/* Right: Essential Tools & Reading Settings */}
           <div className="flex items-center space-x-1.5 sm:space-x-2 text-xs">
+            {/* NetTruyen Member Account & Profile */}
+            <UserProfileDropdown
+              currentUser={currentUser}
+              onOpenAuthModal={() => setIsAuthModalOpen(true)}
+              onOpenHistoryModal={() => setIsHistoryModalOpen(true)}
+              onUserUpdated={(u) => setCurrentUser(u)}
+            />
+
             {/* Audio Read-Aloud Button (Truyện Chữ) */}
             {readerType === 'novel' && (
               <button
@@ -838,7 +1006,7 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
                     ? 'bg-rose-500/20 text-rose-300 border-rose-500/40 animate-pulse'
                     : 'bg-black/25 hover:bg-black/35 border-white/10 text-slate-300'
                 }`}
-                title="Đọc to truyện bằng giọng AI tiếng Việt"
+                title="Đọc to truyện bằng giọng AI tiếng Việt (Karaoke & Đa giọng)"
               >
                 {isPlayingAudio ? <Pause className="w-3.5 h-3.5 text-rose-400" /> : <Play className="w-3.5 h-3.5 text-amber-400" />}
                 <span className="hidden md:inline">{isPlayingAudio ? 'Đang đọc...' : 'Đọc Audio'}</span>
@@ -1011,6 +1179,11 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
                       </div>
                     </div>
                     <div className="flex items-center space-x-1.5 flex-shrink-0">
+                      {currentUser?.readChapterIds?.includes(prologueChap.id) && (
+                        <span className="text-[9px] px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-300 font-sans flex items-center gap-0.5 border border-emerald-500/30">
+                          <CheckCircle2 className="w-2.5 h-2.5" /> Đã đọc
+                        </span>
+                      )}
                       {isPrologueActive ? (
                         <span className="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse shadow-[0_0_8px_rgba(251,191,36,0.9)]" />
                       ) : (
@@ -1116,7 +1289,12 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
                                     </div>
                                   </div>
 
-                                  <div className="flex items-center space-x-2 flex-shrink-0 text-[10px] font-mono opacity-80 group-hover:opacity-100">
+                                  <div className="flex items-center space-x-1.5 flex-shrink-0 text-[10px] font-mono opacity-80 group-hover:opacity-100">
+                                    {currentUser?.readChapterIds?.includes(chap.id) && (
+                                      <span className="text-[9px] px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-300 font-sans flex items-center gap-0.5 border border-emerald-500/30">
+                                        <CheckCircle2 className="w-2.5 h-2.5" /> Đã đọc
+                                      </span>
+                                    )}
                                     <span className={isActive ? 'text-amber-300 font-semibold' : 'text-slate-400'}>
                                       {chap.wordCount.toLocaleString()}
                                     </span>
@@ -1188,14 +1366,23 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
                         <h4 className={`font-serif font-bold text-xs truncate ${isActive ? 'text-rose-200' : 'text-slate-100 group-hover:text-rose-300'}`}>
                           {chap.title}
                         </h4>
-                        <div className="text-[10px] text-slate-400 flex items-center gap-1.5 mt-0.5 truncate">
-                          <span>{panelCount} khung tranh</span>
-                          {chap.subtitle && (
-                            <>
-                              <span>•</span>
-                              <span className="truncate">{chap.subtitle}</span>
-                            </>
+                        <div className="text-[10px] text-slate-400 flex flex-wrap items-center gap-1.5 mt-0.5 truncate">
+                          {publishedComicChapterIds.includes(chap.id) ? (
+                            <span className="text-[9px] px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-300 font-mono border border-emerald-500/30">
+                              Đã Xuất Bản
+                            </span>
+                          ) : (
+                            <span className="text-[9px] px-1.5 py-0.2 rounded bg-amber-500/15 text-amber-300 font-mono border border-amber-500/25">
+                              Coming Soon
+                            </span>
                           )}
+                          {currentUser?.readChapterIds?.includes(chap.id) && (
+                            <span className="text-[9px] px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-300 font-sans flex items-center gap-0.5 border border-emerald-500/30">
+                              <CheckCircle2 className="w-2.5 h-2.5" /> Đã đọc
+                            </span>
+                          )}
+                          <span>•</span>
+                          <span>{panelCount} khung tranh</span>
                         </div>
                       </div>
                     </div>
@@ -1296,24 +1483,53 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
                     }}
                   >
                     {currentChapter?.content ? (
-                      currentChapter.content.split('\n\n').map((paragraph, pIdx) => {
-                        if (paragraph.startsWith('“') || paragraph.startsWith('﻿“')) {
+                      currentChapter.content.split('\n\n').filter(p => p.trim().length > 0).map((paragraph, pIdx) => {
+                        const isQuote = paragraph.startsWith('“') || paragraph.startsWith('﻿“');
+                        const isDialogueDash = paragraph.startsWith('—');
+                        const paraSentences = audioDramaSentences.filter(s => s.paragraphIndex === pIdx);
+
+                        const paragraphInner = paraSentences.length > 0 ? (
+                          paraSentences.map((sent) => {
+                            const sentGlobalIdx = audioDramaSentences.findIndex(s => s.id === sent.id);
+                            const isCurrentlySpoken = isPlayingAudio && currentSentenceIndex === sentGlobalIdx;
+
+                            return (
+                              <span
+                                key={sent.id}
+                                id={sent.id}
+                                onClick={() => playSentence(sentGlobalIdx)}
+                                className={`transition-all duration-200 rounded cursor-pointer ${
+                                  isCurrentlySpoken
+                                    ? 'bg-amber-400/30 text-amber-100 font-semibold shadow-[0_0_14px_rgba(251,191,36,0.55)] border-b-2 border-amber-400 px-1 py-0.5 ring-2 ring-amber-400/40 inline'
+                                    : 'hover:bg-amber-500/10'
+                                }`}
+                                title="Nhấn để nghe audio từ câu này"
+                              >
+                                {sent.text}{' '}
+                              </span>
+                            );
+                          })
+                        ) : (
+                          paragraph
+                        );
+
+                        if (isQuote) {
                           return (
                             <p key={pIdx} className="italic text-amber-200 font-medium pl-5 pr-4 py-3.5 border-l-2 border-amber-400/80 bg-gradient-to-r from-amber-500/10 via-pink-500/5 to-transparent rounded-r-2xl my-6 shadow-sm">
-                              {paragraph}
+                              {paragraphInner}
                             </p>
                           );
                         }
-                        if (paragraph.startsWith('—')) {
+                        if (isDialogueDash) {
                           return (
                             <p key={pIdx} className="font-sans pl-2 my-4 text-slate-100 font-medium tracking-wide">
-                              {paragraph}
+                              {paragraphInner}
                             </p>
                           );
                         }
                         return (
                           <p key={pIdx} className="indent-8 my-5 leading-relaxed text-slate-200/95">
-                            {paragraph}
+                            {paragraphInner}
                           </p>
                         );
                       })
@@ -1472,18 +1688,61 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
             )}
           </main>
         ) : (
-          /* ================= COMIC VIEW: CHẾ ĐỘ TRUYỆN TRANH (ĐỌC TRỰC TIẾP CHO TẤT CẢ) ================= */
+          /* ================= COMIC VIEW: CHẾ ĐỘ TRUYỆN TRANH (COMING SOON HOẶC ĐÃ XUẤT BẢN) ================= */
           <div ref={scrollContainerRef} className="flex-1 overflow-y-auto custom-scrollbar relative">
-            <div className="w-full max-w-4xl mx-auto px-2 sm:px-4 py-6">
-              {/* DRAFT PREVIEW ALERT FOR AUTHOR */}
-              {isAuthorMode && (
-                <div className="mb-4 p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-between text-xs text-amber-200 shadow-md">
-                  <span className="flex items-center gap-2">
-                    <Sparkles className="w-4 h-4 text-amber-400 shrink-0" />
-                    <span><strong>Chế độ Tác giả:</strong> Bạn có thể quản lý phân cảnh & kịch bản Webtoon.</span>
-                  </span>
-                </div>
-              )}
+            {(() => {
+              const isCurrentComicPublished = publishedComicChapterIds.includes(activeComic.id);
+              const shouldShowComingSoon = !isAuthorPreviewingDraft && !isCurrentComicPublished;
+
+              if (shouldShowComingSoon) {
+                return (
+                  <ComicComingSoonView
+                    comicChapters={comicChapters}
+                    isAuthorMode={isAuthorMode}
+                    currentUser={currentUser}
+                    onOpenAuthModal={() => setIsAuthModalOpen(true)}
+                    onPreviewDraft={(idx) => {
+                      setActiveComicIndex(idx);
+                      setIsAuthorPreviewingDraft(true);
+                      scrollToTop();
+                    }}
+                    onPublishChapter={handlePublishComicChapter}
+                    publishedChapterIds={publishedComicChapterIds}
+                  />
+                );
+              }
+
+              return (
+                <div className="w-full max-w-4xl mx-auto px-2 sm:px-4 py-6">
+                  {/* DRAFT PREVIEW & PUBLISH CONTROL BAR FOR AUTHOR */}
+                  {isAuthorMode && (
+                    <div className="mb-4 p-4 rounded-2xl bg-gradient-to-r from-amber-950/60 via-slate-900/90 to-purple-950/60 border border-amber-500/40 flex flex-wrap items-center justify-between gap-3 text-xs text-amber-200 shadow-md">
+                      <div className="flex items-center gap-2">
+                        <Sparkles className="w-4 h-4 text-amber-400 shrink-0" />
+                        <span>
+                          <strong>Chế độ Tác giả:</strong> {isCurrentComicPublished ? 'Hồi này đã xuất bản cho độc giả!' : 'Đang xem trước bản thảo (Độc giả đang thấy Coming Soon).'}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() => setIsAuthorPreviewingDraft(false)}
+                          className="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-slate-200 font-medium transition-all cursor-pointer"
+                        >
+                          Trở về Coming Soon
+                        </button>
+                        <button
+                          onClick={() => handlePublishComicChapter(activeComic.id)}
+                          className={`px-3 py-1.5 rounded-xl font-bold transition-all cursor-pointer shadow-sm ${
+                            isCurrentComicPublished
+                              ? 'bg-rose-500/20 hover:bg-rose-500/30 border border-rose-500/40 text-rose-300'
+                              : 'bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-sans shadow-emerald-500/20'
+                          }`}
+                        >
+                          {isCurrentComicPublished ? 'Thu Hồi Chương' : '🚀 Xuất Bản Chương Này'}
+                        </button>
+                      </div>
+                    </div>
+                  )}
 
               {/* 1. TOP INFO & BREADCRUMBS (NETTRUYEN) */}
               <div className="mb-4 pb-3 border-b border-white/10">
@@ -1792,8 +2051,10 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
                 </button>
               )}
             </div>
-          </div>
-        )}
+          );
+        })()}
+      </div>
+    )}
       </div>
 
       {/* ================= PANEL LIGHTBOX MODAL ================= */}
@@ -2039,6 +2300,57 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
         onClose={() => setIsSettingsModalOpen(false)}
         prefs={readingPrefs}
         onUpdatePrefs={handleUpdatePrefs}
+      />
+
+      {/* 7. Smart Audio Drama Karaoke Player Bar */}
+      {isAudioPlayerVisible && (
+        <AudioDramaPlayerBar
+          currentSentence={audioDramaSentences[currentSentenceIndex] || null}
+          currentIndex={currentSentenceIndex}
+          totalSentences={audioDramaSentences.length}
+          isPlaying={isPlayingAudio}
+          voiceMode={voiceMode}
+          speed={speechRate}
+          isAutoScrollEnabled={isAutoScrollEnabled}
+          onTogglePlay={handleToggleAudio}
+          onPrevSentence={() => {
+            const nextIdx = Math.max(0, currentSentenceIndex - 1);
+            playSentence(nextIdx);
+          }}
+          onNextSentence={() => {
+            const nextIdx = Math.min(audioDramaSentences.length - 1, currentSentenceIndex + 1);
+            playSentence(nextIdx);
+          }}
+          onChangeVoiceMode={(mode) => {
+            setVoiceMode(mode);
+            if (isPlayingAudio) playSentence(currentSentenceIndex);
+          }}
+          onChangeSpeed={(s) => {
+            setSpeechRate(s);
+            if (isPlayingAudio) playSentence(currentSentenceIndex);
+          }}
+          onToggleAutoScroll={() => setIsAutoScrollEnabled(prev => !prev)}
+          onClose={() => {
+            if (synthRef.current) synthRef.current.cancel();
+            setIsPlayingAudio(false);
+            setIsAudioPlayerVisible(false);
+          }}
+        />
+      )}
+
+      {/* 8. NetTruyen Member Auth Modal */}
+      <UserAuthModal
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
+        onLoginSuccess={(user) => setCurrentUser(user)}
+      />
+
+      {/* 9. NetTruyen Reading History & Bookmarks Modal */}
+      <UserHistoryModal
+        isOpen={isHistoryModalOpen}
+        onClose={() => setIsHistoryModalOpen(false)}
+        currentUser={currentUser}
+        onNavigateChapter={handleNavigateFromHistory}
       />
     </div>
   );
