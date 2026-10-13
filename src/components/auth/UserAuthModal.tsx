@@ -1,18 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   X, 
   Sparkles, 
   User, 
   Mail, 
-  ShieldCheck, 
   Lock, 
   Eye, 
   EyeOff, 
-  CheckCircle2, 
   KeyRound,
-  Database
+  Database,
+  Cloud,
+  CheckCircle2,
+  AlertCircle,
+  Loader2,
+  ChevronRight,
+  Info
 } from 'lucide-react';
-import { UserService } from '../../services/userService';
+import { UserService, DatabaseStatus } from '../../services/userService';
 import { UserProfile, AVATAR_PRESETS } from '../../types/user';
 
 interface UserAuthModalProps {
@@ -42,13 +46,27 @@ export const UserAuthModal: React.FC<UserAuthModalProps> = ({
   const [email, setEmail] = useState('');
   const [selectedAvatar, setSelectedAvatar] = useState('🐉');
 
-  // Messages
+  // Async & Status states
+  const [isLoading, setIsLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
+  const [dbStatus, setDbStatus] = useState<DatabaseStatus | null>(null);
+  const [showDbGuide, setShowDbGuide] = useState(false);
+
+  // Check database status when modal opens
+  useEffect(() => {
+    if (isOpen) {
+      setErrorMsg('');
+      setSuccessMsg('');
+      UserService.checkDatabaseStatus().then(status => {
+        setDbStatus(status);
+      });
+    }
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg('');
     setSuccessMsg('');
@@ -58,19 +76,26 @@ export const UserAuthModal: React.FC<UserAuthModalProps> = ({
       return;
     }
 
-    const res = UserService.login(loginUsername, loginPassword);
-    if (res.success && res.user) {
-      setSuccessMsg(res.message);
-      setTimeout(() => {
-        onLoginSuccess(res.user!);
-        onClose();
-      }, 600);
-    } else {
-      setErrorMsg(res.message);
+    setIsLoading(true);
+    try {
+      const res = await UserService.login(loginUsername, loginPassword);
+      if (res.success && res.user) {
+        setSuccessMsg(res.message);
+        setTimeout(() => {
+          onLoginSuccess(res.user!);
+          onClose();
+        }, 600);
+      } else {
+        setErrorMsg(res.message);
+      }
+    } catch (err: any) {
+      setErrorMsg(err.message || 'Lỗi kết nối khi đăng nhập. Vui lòng thử lại!');
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const handleRegister = (e: React.FormEvent) => {
+  const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg('');
     setSuccessMsg('');
@@ -85,22 +110,29 @@ export const UserAuthModal: React.FC<UserAuthModalProps> = ({
       return;
     }
 
-    const res = UserService.register({
-      username: regUsername,
-      password: regPassword,
-      displayName,
-      email,
-      avatar: selectedAvatar,
-    });
+    setIsLoading(true);
+    try {
+      const res = await UserService.register({
+        username: regUsername,
+        password: regPassword,
+        displayName,
+        email,
+        avatar: selectedAvatar,
+      });
 
-    if (res.success && res.user) {
-      setSuccessMsg(res.message);
-      setTimeout(() => {
-        onLoginSuccess(res.user!);
-        onClose();
-      }, 700);
-    } else {
-      setErrorMsg(res.message);
+      if (res.success && res.user) {
+        setSuccessMsg(res.message);
+        setTimeout(() => {
+          onLoginSuccess(res.user!);
+          onClose();
+        }, 700);
+      } else {
+        setErrorMsg(res.message);
+      }
+    } catch (err: any) {
+      setErrorMsg(err.message || 'Lỗi lưu tài khoản. Vui lòng thử lại!');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -123,7 +155,7 @@ export const UserAuthModal: React.FC<UserAuthModalProps> = ({
               </h3>
               <p className="text-[11px] text-amber-300/80 flex items-center gap-1 mt-0.5">
                 <Database className="w-3 h-3 text-amber-400" />
-                <span>Xác thực mật khẩu & Đồng bộ tiến độ đọc NetTruyen</span>
+                <span>Xác thực mật khẩu &amp; Database Vercel Cloud</span>
               </p>
             </div>
           </div>
@@ -136,86 +168,146 @@ export const UserAuthModal: React.FC<UserAuthModalProps> = ({
           </button>
         </div>
 
-        {/* Tab Switcher */}
-        <div className="flex border-b border-white/10 bg-black/40">
+        {/* Database Status Strip */}
+        <div className="px-5 py-2 bg-black/60 border-b border-white/5 flex items-center justify-between text-[11px]">
+          <div className="flex items-center gap-1.5">
+            <div className={`w-2 h-2 rounded-full ${dbStatus?.connected ? 'bg-emerald-400 animate-pulse' : 'bg-sky-400'}`} />
+            <span className="text-slate-300 font-medium">
+              {dbStatus?.connected ? (
+                <span className="text-emerald-300 flex items-center gap-1">
+                  <Cloud className="w-3 h-3 text-emerald-400" />
+                  <span>Vercel Database: <strong>{dbStatus.provider}</strong></span>
+                </span>
+              ) : (
+                <span className="text-sky-300 flex items-center gap-1">
+                  <Database className="w-3 h-3 text-sky-400" />
+                  <span>Database: <strong>Lưu Trữ Cục Bộ + Vercel Sync</strong></span>
+                </span>
+              )}
+            </span>
+          </div>
+
           <button
-            onClick={() => { setTab('login'); setErrorMsg(''); setSuccessMsg(''); }}
-            className={`flex-1 py-3 text-xs font-serif font-bold text-center transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
-              tab === 'login'
-                ? 'text-amber-300 border-b-2 border-amber-500 bg-white/5'
-                : 'text-slate-400 hover:text-slate-200'
-            }`}
+            type="button"
+            onClick={() => setShowDbGuide(prev => !prev)}
+            className="text-[10px] text-amber-400 hover:text-amber-300 flex items-center gap-0.5 transition-colors cursor-pointer"
+            title="Xem hướng dẫn kết nối Vercel Database"
           >
-            <Lock className="w-3.5 h-3.5" />
-            <span>Đăng Nhập</span>
-          </button>
-          <button
-            onClick={() => { setTab('register'); setErrorMsg(''); setSuccessMsg(''); }}
-            className={`flex-1 py-3 text-xs font-serif font-bold text-center transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
-              tab === 'register'
-                ? 'text-amber-300 border-b-2 border-amber-500 bg-white/5'
-                : 'text-slate-400 hover:text-slate-200'
-            }`}
-          >
-            <KeyRound className="w-3.5 h-3.5" />
-            <span>Tạo Tài Khoản Mới</span>
+            <Info className="w-3 h-3" />
+            <span>{showDbGuide ? 'Ẩn Hướng Dẫn' : 'Cấu Hình DB'}</span>
           </button>
         </div>
 
-        {/* Body Content */}
+        {/* Collapsible Vercel Database Connection Guide */}
+        {showDbGuide && (
+          <div className="p-3.5 bg-amber-500/10 border-b border-amber-500/20 text-[11px] text-amber-200/90 space-y-1.5 animate-fade-in">
+            <div className="font-bold flex items-center gap-1.5 text-amber-300">
+              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+              <span>Cách kích hoạt Vercel Postgres trong 1 phút:</span>
+            </div>
+            <ol className="list-decimal list-inside space-y-1 text-slate-300 text-[10px] pl-1">
+              <li>Mở dự án trên <strong>Vercel Dashboard</strong> → Bấm tab <strong>Storage</strong>.</li>
+              <li>Bấm <strong>Create Database</strong> → Chọn <strong>Postgres (Neon)</strong> hoặc <strong>KV</strong>.</li>
+              <li>Bấm <strong>Connect Project</strong> → Vercel tự động tạo biến <code className="text-amber-300 bg-black/40 px-1 py-0.5 rounded">POSTGRES_URL</code>. Xong!</li>
+            </ol>
+            <p className="text-[9px] text-slate-400 italic">
+              *Hệ thống đã viết sẵn Serverless Function tự động tạo bảng <code className="text-slate-300">users</code> và lưu mọi tài khoản ngay khi DB được bật.
+            </p>
+          </div>
+        )}
+
+        {/* Tab Switcher */}
+        <div className="flex border-b border-white/10 bg-black/40">
+          <button
+            onClick={() => {
+              setTab('login');
+              setErrorMsg('');
+              setSuccessMsg('');
+            }}
+            className={`flex-1 py-3 text-xs font-semibold font-serif transition-all cursor-pointer flex items-center justify-center gap-2 border-b-2 ${
+              tab === 'login'
+                ? 'border-amber-400 text-amber-400 bg-amber-500/10'
+                : 'border-transparent text-slate-400 hover:text-slate-200'
+            }`}
+          >
+            <KeyRound className="w-3.5 h-3.5" />
+            <span>Đăng Nhập Mật Khẩu</span>
+          </button>
+
+          <button
+            onClick={() => {
+              setTab('register');
+              setErrorMsg('');
+              setSuccessMsg('');
+            }}
+            className={`flex-1 py-3 text-xs font-semibold font-serif transition-all cursor-pointer flex items-center justify-center gap-2 border-b-2 ${
+              tab === 'register'
+                ? 'border-rose-400 text-rose-400 bg-rose-500/10'
+                : 'border-transparent text-slate-400 hover:text-slate-200'
+            }`}
+          >
+            <User className="w-3.5 h-3.5" />
+            <span>Đăng Ký Tài Khoản Mới</span>
+          </button>
+        </div>
+
+        {/* Modal Body */}
         <div className="p-6">
+          {/* Error Message */}
           {errorMsg && (
-            <div className="mb-4 p-3 rounded-xl bg-rose-500/15 border border-rose-500/30 text-rose-300 text-xs flex items-center gap-2">
-              <span>⚠️</span>
+            <div className="mb-4 p-3 rounded-2xl bg-rose-500/15 border border-rose-500/30 text-rose-300 text-xs flex items-center gap-2 animate-shake">
+              <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
               <span>{errorMsg}</span>
             </div>
           )}
+
+          {/* Success Message */}
           {successMsg && (
-            <div className="mb-4 p-3 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 shrink-0" />
+            <div className="mb-4 p-3 rounded-2xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs flex items-center gap-2">
+              <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
               <span>{successMsg}</span>
             </div>
           )}
 
-          {tab === 'login' ? (
+          {/* FORM 1: LOGIN WITH PASSWORD VERIFICATION */}
+          {tab === 'login' && (
             <form onSubmit={handleLogin} className="space-y-4">
-              {/* Username Input */}
               <div>
-                <label className="block text-xs font-medium text-slate-300 mb-1.5">
-                  Tên tài khoản hoặc Email:
+                <label className="block text-xs font-medium text-slate-300 mb-1 flex items-center gap-1.5">
+                  <User className="w-3.5 h-3.5 text-amber-400" />
+                  <span>Tên đăng nhập hoặc Email:</span>
                 </label>
-                <div className="relative">
-                  <User className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-                  <input
-                    type="text"
-                    required
-                    value={loginUsername}
-                    onChange={e => setLoginUsername(e.target.value)}
-                    placeholder="Nhập tên tài khoản hoặc email..."
-                    className="w-full pl-9 pr-3 py-2.5 rounded-xl bg-slate-950 border border-white/10 focus:border-amber-400 text-slate-200 text-xs outline-none transition-colors"
-                  />
-                </div>
+                <input
+                  type="text"
+                  required
+                  value={loginUsername}
+                  onChange={e => setLoginUsername(e.target.value)}
+                  placeholder="nhập tên tài khoản..."
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-white/10 focus:border-amber-400 text-slate-200 text-xs outline-none transition-colors"
+                />
               </div>
 
-              {/* Password Input */}
               <div>
-                <label className="block text-xs font-medium text-slate-300 mb-1.5">
-                  Mật khẩu tài khoản:
+                <label className="block text-xs font-medium text-slate-300 mb-1 flex items-center justify-between">
+                  <span className="flex items-center gap-1.5">
+                    <Lock className="w-3.5 h-3.5 text-amber-400" />
+                    <span>Mật khẩu bảo mật:</span>
+                  </span>
+                  <span className="text-[10px] text-amber-400/80">Xác thực Database</span>
                 </label>
                 <div className="relative">
-                  <Lock className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
                   <input
                     type={showLoginPassword ? 'text' : 'password'}
                     required
                     value={loginPassword}
                     onChange={e => setLoginPassword(e.target.value)}
-                    placeholder="Nhập mật khẩu..."
-                    className="w-full pl-9 pr-10 py-2.5 rounded-xl bg-slate-950 border border-white/10 focus:border-amber-400 text-slate-200 text-xs outline-none transition-colors"
+                    placeholder="nhập mật khẩu của bạn..."
+                    className="w-full px-3.5 py-2.5 pr-10 rounded-xl bg-slate-950 border border-white/10 focus:border-amber-400 text-slate-200 text-xs outline-none transition-colors"
                   />
                   <button
                     type="button"
-                    onClick={() => setShowLoginPassword(!showLoginPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-200 cursor-pointer"
+                    onClick={() => setShowLoginPassword(prev => !prev)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white transition-colors cursor-pointer"
                   >
                     {showLoginPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
@@ -224,74 +316,97 @@ export const UserAuthModal: React.FC<UserAuthModalProps> = ({
 
               <button
                 type="submit"
-                className="w-full py-3 mt-2 rounded-xl bg-gradient-to-r from-amber-500 via-rose-600 to-purple-600 hover:from-amber-400 hover:to-purple-500 text-slate-950 font-serif font-bold text-xs shadow-lg shadow-amber-500/25 active:scale-95 transition-all cursor-pointer flex items-center justify-center gap-2"
+                disabled={isLoading}
+                className="w-full py-3 rounded-xl bg-gradient-to-r from-amber-500 via-rose-500 to-purple-600 hover:from-amber-400 hover:to-purple-500 disabled:opacity-50 text-slate-950 font-serif font-bold text-xs shadow-lg shadow-amber-500/20 active:scale-95 transition-all cursor-pointer flex items-center justify-center gap-2 mt-2"
               >
-                <ShieldCheck className="w-4 h-4" />
-                <span>Xác Thực & Đăng Nhập</span>
+                {isLoading ? (
+                  <>
+                    <Loader2 className="w-4 h-4 text-slate-950 animate-spin" />
+                    <span>Đang Xác Thực Cơ Sở Dữ Liệu...</span>
+                  </>
+                ) : (
+                  <>
+                    <KeyRound className="w-4 h-4 text-slate-950" />
+                    <span>Xác Thực Mật Khẩu &amp; Đăng Nhập</span>
+                  </>
+                )}
               </button>
+
+              <div className="text-center pt-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setTab('register');
+                    setErrorMsg('');
+                    setSuccessMsg('');
+                  }}
+                  className="text-xs text-amber-400/90 hover:text-amber-300 transition-colors cursor-pointer"
+                >
+                  Chưa có tài khoản? Bấm vào đây để đăng ký mới →
+                </button>
+              </div>
             </form>
-          ) : (
+          )}
+
+          {/* FORM 2: REGISTER WITH REAL PASSWORD */}
+          {tab === 'register' && (
             <form onSubmit={handleRegister} className="space-y-3.5">
-              {/* Username Input */}
+              {/* Username */}
               <div>
-                <label className="block text-xs font-medium text-slate-300 mb-1">
-                  Tên đăng nhập (viết liền không dấu):
+                <label className="block text-xs font-medium text-slate-300 mb-1 flex items-center gap-1.5">
+                  <User className="w-3.5 h-3.5 text-rose-400" />
+                  <span>Tên đăng nhập (viết liền không dấu):</span>
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={regUsername}
+                  onChange={e => setRegUsername(e.target.value)}
+                  placeholder="ví dụ: longkiem_dao, huyennguyet"
+                  className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-white/10 focus:border-amber-400 text-slate-200 text-xs outline-none"
+                />
+              </div>
+
+              {/* Password */}
+              <div>
+                <label className="block text-xs font-medium text-slate-300 mb-1 flex items-center gap-1.5">
+                  <Lock className="w-3.5 h-3.5 text-rose-400" />
+                  <span>Mật khẩu (tối thiểu 6 ký tự):</span>
                 </label>
                 <div className="relative">
-                  <User className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
                   <input
-                    type="text"
+                    type={showRegPassword ? 'text' : 'password'}
                     required
-                    value={regUsername}
-                    onChange={e => setRegUsername(e.target.value)}
-                    placeholder="ví dụ: daohuu_longan"
-                    className="w-full pl-8 pr-3 py-2 rounded-xl bg-slate-950 border border-white/10 focus:border-amber-400 text-slate-200 text-xs outline-none"
+                    minLength={6}
+                    value={regPassword}
+                    onChange={e => setRegPassword(e.target.value)}
+                    placeholder="nhập mật khẩu an toàn..."
+                    className="w-full px-3 py-2 pr-10 rounded-xl bg-slate-950 border border-white/10 focus:border-amber-400 text-slate-200 text-xs outline-none"
                   />
+                  <button
+                    type="button"
+                    onClick={() => setShowRegPassword(prev => !prev)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white transition-colors cursor-pointer"
+                  >
+                    {showRegPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
                 </div>
               </div>
 
-              {/* Password Input */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                <div>
-                  <label className="block text-xs font-medium text-slate-300 mb-1">
-                    Mật khẩu (≥ 6 ký tự):
-                  </label>
-                  <div className="relative">
-                    <Lock className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-                    <input
-                      type={showRegPassword ? 'text' : 'password'}
-                      required
-                      value={regPassword}
-                      onChange={e => setRegPassword(e.target.value)}
-                      placeholder="Mật khẩu..."
-                      className="w-full pl-8 pr-8 py-2 rounded-xl bg-slate-950 border border-white/10 focus:border-amber-400 text-slate-200 text-xs outline-none"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowRegPassword(!showRegPassword)}
-                      className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-200 cursor-pointer"
-                    >
-                      {showRegPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
-                    </button>
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-medium text-slate-300 mb-1">
-                    Nhập lại mật khẩu:
-                  </label>
-                  <div className="relative">
-                    <Lock className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-                    <input
-                      type={showRegPassword ? 'text' : 'password'}
-                      required
-                      value={regConfirmPassword}
-                      onChange={e => setRegConfirmPassword(e.target.value)}
-                      placeholder="Nhập lại..."
-                      className="w-full pl-8 pr-3 py-2 rounded-xl bg-slate-950 border border-white/10 focus:border-amber-400 text-slate-200 text-xs outline-none"
-                    />
-                  </div>
-                </div>
+              {/* Confirm Password */}
+              <div>
+                <label className="block text-xs font-medium text-slate-300 mb-1 flex items-center gap-1.5">
+                  <Lock className="w-3.5 h-3.5 text-rose-400" />
+                  <span>Xác nhận lại mật khẩu:</span>
+                </label>
+                <input
+                  type={showRegPassword ? 'text' : 'password'}
+                  required
+                  value={regConfirmPassword}
+                  onChange={e => setRegConfirmPassword(e.target.value)}
+                  placeholder="nhập lại mật khẩu ở trên..."
+                  className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-white/10 focus:border-amber-400 text-slate-200 text-xs outline-none"
+                />
               </div>
 
               {/* Display Name */}
@@ -352,10 +467,20 @@ export const UserAuthModal: React.FC<UserAuthModalProps> = ({
 
               <button
                 type="submit"
-                className="w-full py-3 mt-2 rounded-xl bg-gradient-to-r from-amber-500 via-rose-600 to-purple-600 hover:from-amber-400 hover:to-purple-500 text-slate-950 font-serif font-bold text-xs shadow-lg shadow-amber-500/30 active:scale-95 transition-all cursor-pointer flex items-center justify-center gap-2"
+                disabled={isLoading}
+                className="w-full py-3 mt-2 rounded-xl bg-gradient-to-r from-amber-500 via-rose-600 to-purple-600 hover:from-amber-400 hover:to-purple-500 disabled:opacity-50 text-slate-950 font-serif font-bold text-xs shadow-lg shadow-amber-500/30 active:scale-95 transition-all cursor-pointer flex items-center justify-center gap-2"
               >
-                <Sparkles className="w-4 h-4 text-slate-950" />
-                <span>Đăng Ký & Nhận 50 EXP Tu Vi</span>
+                {isLoading ? (
+                  <>
+                    <Loader2 className="w-4 h-4 text-slate-950 animate-spin" />
+                    <span>Đang Lưu Vào Cơ Sở Dữ Liệu...</span>
+                  </>
+                ) : (
+                  <>
+                    <Sparkles className="w-4 h-4 text-slate-950" />
+                    <span>Đăng Ký &amp; Lưu Vào Database (+50 EXP)</span>
+                  </>
+                )}
               </button>
             </form>
           )}
@@ -372,7 +497,7 @@ export const UserAuthModal: React.FC<UserAuthModalProps> = ({
               <span className="text-emerald-400">✓</span> Đánh dấu chap đã đọc
             </div>
             <div className="flex items-center gap-1.5">
-              <span className="text-emerald-400">✓</span> Bình luận có huy hiệu
+              <span className="text-emerald-400">✓</span> Đồng bộ tài khoản đám mây
             </div>
           </div>
         </div>

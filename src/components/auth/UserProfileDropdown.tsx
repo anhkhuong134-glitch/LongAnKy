@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { User, LogIn, LogOut, Clock, Bookmark, Sparkles, Bell, Calendar, ChevronDown, Award, Play, ShieldCheck, Zap } from 'lucide-react';
+import { User, LogIn, LogOut, Clock, Bookmark, Sparkles, Bell, Calendar, ChevronDown, Award, Play, ShieldCheck, Zap, Cloud, Database } from 'lucide-react';
 import { UserProfile } from '../../types/user';
 import { UserService } from '../../services/userService';
 
@@ -131,6 +131,10 @@ export const UserProfileDropdown: React.FC<UserProfileDropdownProps> = ({
               <p className="text-[10px] text-slate-400 font-mono">
                 @{currentUser.username} • {currentUser.streakDays || 1} ngày liên tiếp
               </p>
+              <div className="flex items-center gap-1 mt-1 text-[9px] text-emerald-400 font-mono">
+                <Cloud className="w-2.5 h-2.5 text-emerald-400" />
+                <span>Đồng bộ Vercel Database</span>
+              </div>
             </div>
           </div>
 

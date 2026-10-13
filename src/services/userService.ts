@@ -4,7 +4,15 @@ const STORAGE_KEYS = {
   CURRENT_USER: 'longanky_current_user',
   ALL_USERS: 'longanky_user_accounts',
   READING_HISTORY: 'longanky_reading_history',
+  DB_CACHE_STATUS: 'longanky_db_status_cache',
 };
+
+export interface DatabaseStatus {
+  connected: boolean;
+  provider: string;
+  userCount?: number;
+  message: string;
+}
 
 // Calculate level & title based on EXP
 export function calculateLevelFromExp(exp: number) {
@@ -26,7 +34,7 @@ export function calculateLevelFromExp(exp: number) {
 }
 
 export class UserService {
-  // 1. Get current logged in user
+  // 1. Get current logged in user from localStorage cache
   static getCurrentUser(): UserProfile | null {
     try {
       const data = localStorage.getItem(STORAGE_KEYS.CURRENT_USER);
@@ -37,7 +45,7 @@ export class UserService {
     }
   }
 
-  // 2. Save current user
+  // 2. Save current user locally & trigger background cloud sync
   static saveCurrentUser(user: UserProfile | null): void {
     if (!user) {
       localStorage.removeItem(STORAGE_KEYS.CURRENT_USER);
@@ -55,16 +63,19 @@ export class UserService {
 
     // Update in all users store as well
     const all = this.getAllUsers();
-    const idx = all.findIndex(u => u.id === user.id);
+    const idx = all.findIndex(u => u.id === user.id || u.username === user.username);
     if (idx >= 0) {
       all[idx] = updatedUser;
     } else {
       all.push(updatedUser);
     }
     localStorage.setItem(STORAGE_KEYS.ALL_USERS, JSON.stringify(all));
+
+    // Synchronize to Vercel Database in background
+    this.syncCloudUser(updatedUser);
   }
 
-  // 3. Get all registered users
+  // 3. Get all registered users from local cache
   static getAllUsers(): UserProfile[] {
     try {
       const data = localStorage.getItem(STORAGE_KEYS.ALL_USERS);
@@ -75,14 +86,42 @@ export class UserService {
     }
   }
 
-  // 4. Register new user with password validation and database storage
-  static register(params: {
+  // 4. Check Vercel Database Connection Status
+  static async checkDatabaseStatus(): Promise<DatabaseStatus> {
+    try {
+      const res = await fetch('/api/auth?action=status', {
+        headers: { 'Accept': 'application/json' }
+      });
+      if (res.ok) {
+        const data = await res.json();
+        const status: DatabaseStatus = {
+          connected: Boolean(data.connected),
+          provider: data.provider || 'local_storage',
+          userCount: data.userCount,
+          message: data.message || '',
+        };
+        localStorage.setItem(STORAGE_KEYS.DB_CACHE_STATUS, JSON.stringify(status));
+        return status;
+      }
+    } catch (e) {
+      // Offline or network error
+    }
+
+    return {
+      connected: false,
+      provider: 'local_storage',
+      message: 'Đang sử dụng cơ sở dữ liệu lưu trữ cục bộ an toàn.',
+    };
+  }
+
+  // 5. Register new user with Vercel Database + Local Storage fallback
+  static async register(params: {
     username: string;
     password: string;
     displayName: string;
     email?: string;
     avatar?: string;
-  }): { success: boolean; message: string; user?: UserProfile } {
+  }): Promise<{ success: boolean; message: string; user?: UserProfile }> {
     const cleanUsername = params.username.trim().toLowerCase();
     if (!cleanUsername || cleanUsername.length < 3) {
       return { success: false, message: 'Tên đăng nhập phải từ 3 ký tự trở lên!' };
@@ -92,6 +131,46 @@ export class UserService {
       return { success: false, message: 'Mật khẩu bảo mật phải từ 6 ký tự trở lên!' };
     }
 
+    // Try cloud database registration via Vercel Serverless API first
+    try {
+      const response = await fetch('/api/auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'register',
+          username: cleanUsername,
+          password: params.password,
+          displayName: params.displayName.trim() || params.username,
+          email: params.email?.trim(),
+          avatar: params.avatar || '🐉',
+        }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        if (data.success && data.user) {
+          const userWithPass: UserProfile = { ...data.user, password: params.password };
+          this.saveCurrentUser(userWithPass);
+          return {
+            success: true,
+            message: data.message || 'Đăng ký thành công và đã lưu vào Vercel Database!',
+            user: userWithPass,
+          };
+        } else if (!data.useLocalFallback && data.message) {
+          // Cloud reported a definitive error (e.g. duplicate username in cloud DB)
+          return { success: false, message: data.message };
+        }
+      } else {
+        const errData = await response.json().catch(() => ({}));
+        if (errData.message) {
+          return { success: false, message: errData.message };
+        }
+      }
+    } catch (err) {
+      console.warn('Vercel DB register failed, falling back to local DB:', err);
+    }
+
+    // Fallback: Check local duplicate
     const all = this.getAllUsers();
     if (all.some(u => u.username.toLowerCase() === cleanUsername)) {
       return { success: false, message: 'Tên tài khoản này đã tồn tại trong cơ sở dữ liệu. Vui lòng chọn tên khác!' };
@@ -100,12 +179,12 @@ export class UserService {
     const newUser: UserProfile = {
       id: `user_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`,
       username: cleanUsername,
-      password: params.password, // Lưu mật khẩu xác thực vào database
+      password: params.password,
       displayName: params.displayName.trim() || params.username,
       email: params.email?.trim() || `${cleanUsername}@longan.vn`,
       avatar: params.avatar || '🐉',
       level: 1,
-      exp: 50, // Welcome gift EXP
+      exp: 50,
       nextLevelExp: 100,
       levelTitle: 'Phàm Nhân Luyện Khí',
       joinedDate: new Date().toLocaleDateString('vi-VN'),
@@ -119,37 +198,104 @@ export class UserService {
     all.push(newUser);
     localStorage.setItem(STORAGE_KEYS.ALL_USERS, JSON.stringify(all));
     this.saveCurrentUser(newUser);
-    return { success: true, message: 'Đăng ký tài khoản thành công! Thông tin đã được lưu vào cơ sở dữ liệu.', user: newUser };
+
+    return {
+      success: true,
+      message: 'Đăng ký tài khoản thành công! Thông tin đã được lưu an toàn.',
+      user: newUser,
+    };
   }
 
-  // 5. Login with credentials verification against database
-  static login(usernameOrEmail: string, password: string): { success: boolean; message: string; user?: UserProfile } {
+  // 6. Login with password verification against Vercel Database + Local Storage fallback
+  static async login(
+    usernameOrEmail: string,
+    password: string
+  ): Promise<{ success: boolean; message: string; user?: UserProfile }> {
     const clean = usernameOrEmail.trim().toLowerCase();
     if (!clean) return { success: false, message: 'Vui lòng nhập tên tài khoản hoặc email!' };
     if (!password) return { success: false, message: 'Vui lòng nhập mật khẩu tài khoản!' };
 
+    // Try cloud authentication via Vercel Serverless API first
+    try {
+      const response = await fetch('/api/auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'login',
+          username: clean,
+          password: password,
+        }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        if (data.success && data.user) {
+          const userWithPass: UserProfile = { ...data.user, password };
+          this.saveCurrentUser(userWithPass);
+          return {
+            success: true,
+            message: data.message || `Xác thực Vercel Database thành công! Chào mừng ${data.user.displayName} trở lại.`,
+            user: userWithPass,
+          };
+        } else if (!data.useLocalFallback && data.message) {
+          // Cloud reported invalid credentials
+          return { success: false, message: data.message };
+        }
+      } else {
+        const errData = await response.json().catch(() => ({}));
+        if (errData.message && response.status === 401) {
+          return { success: false, message: errData.message };
+        }
+      }
+    } catch (err) {
+      console.warn('Vercel DB login attempt skipped, trying local accounts:', err);
+    }
+
+    // Fallback: Check local accounts
     const all = this.getAllUsers();
     const found = all.find(u => u.username.toLowerCase() === clean || (u.email && u.email.toLowerCase() === clean));
 
     if (!found) {
-      return { success: false, message: 'Tài khoản không tồn tại trong cơ sở dữ liệu. Vui lòng kiểm tra lại hoặc đăng ký mới!' };
+      return {
+        success: false,
+        message: 'Tài khoản không tồn tại trong cơ sở dữ liệu. Vui lòng kiểm tra lại hoặc đăng ký mới!',
+      };
     }
 
-    // Xác nhận mật khẩu có đúng không
+    // Verify password
     if (found.password && found.password !== password) {
       return { success: false, message: 'Mật khẩu không chính xác! Vui lòng kiểm tra lại.' };
     }
 
-    // Cập nhật mật khẩu nếu tài khoản cũ chưa có
     if (!found.password) {
       found.password = password;
     }
 
     this.saveCurrentUser(found);
-    return { success: true, message: `Xác thực thành công! Chào mừng đạo hữu ${found.displayName} trở lại.`, user: found };
+    return {
+      success: true,
+      message: `Xác thực thành công! Chào mừng đạo hữu ${found.displayName} trở lại.`,
+      user: found,
+    };
   }
 
-  // 6. Guest 1-click quick login (NetTruyen style)
+  // 7. Background synchronization to Vercel Database
+  static syncCloudUser(user: UserProfile): void {
+    if (!user) return;
+    try {
+      fetch('/api/auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'sync', user }),
+      }).catch(() => {
+        // Silently catch background network sync issues
+      });
+    } catch (e) {
+      // Ignored
+    }
+  }
+
+  // 8. Guest quick login
   static guestLogin(): UserProfile {
     const randomNum = Math.floor(1000 + Math.random() * 9000);
     const guestUser: UserProfile = {
@@ -174,13 +320,13 @@ export class UserService {
     return guestUser;
   }
 
-  // 7. Logout
+  // 9. Logout
   static logout(): void {
     localStorage.removeItem(STORAGE_KEYS.CURRENT_USER);
   }
 
-  // 8. Award EXP (e.g. read chapter, comment, check-in)
-  static awardExp(amount: number, reason: string): { user: UserProfile; leveledUp: boolean; diff: number } | null {
+  // 10. Award EXP
+  static awardExp(amount: number, _reason: string): { user: UserProfile; leveledUp: boolean; diff: number } | null {
     const user = this.getCurrentUser();
     if (!user) return null;
 
@@ -199,7 +345,7 @@ export class UserService {
     };
   }
 
-  // 9. Daily Check-In (Điểm danh nhận EXP)
+  // 11. Daily Check-In
   static dailyCheckIn(): { success: boolean; message: string; expGained: number } {
     const user = this.getCurrentUser();
     if (!user) return { success: false, message: 'Vui lòng đăng nhập để điểm danh!', expGained: 0 };
@@ -221,7 +367,7 @@ export class UserService {
     };
   }
 
-  // 10. Toggle Follow Story (Theo Dõi Truyện - NetTruyen style)
+  // 12. Toggle Follow Story
   static toggleFollowStory(): boolean {
     const user = this.getCurrentUser();
     if (!user) return false;
@@ -231,7 +377,7 @@ export class UserService {
     return user.isFollowing;
   }
 
-  // 11. Toggle Chapter Bookmark
+  // 13. Toggle Chapter Bookmark
   static toggleChapterBookmark(chapterId: string): boolean {
     const user = this.getCurrentUser();
     if (!user) return false;
@@ -248,7 +394,7 @@ export class UserService {
     return !exists;
   }
 
-  // 12. Mark Chapter As Read (Đánh dấu đã đọc trong mục lục giống NetTruyen)
+  // 14. Mark Chapter As Read
   static markChapterAsRead(chapterId: string): void {
     const user = this.getCurrentUser();
     if (!user) return;
@@ -260,7 +406,7 @@ export class UserService {
     }
   }
 
-  // 13. Reading History Management
+  // 15. Reading History Management
   static getReadingHistory(): ReadingHistoryItem[] {
     try {
       const data = localStorage.getItem(STORAGE_KEYS.READING_HISTORY);
@@ -273,7 +419,6 @@ export class UserService {
 
   static recordReadingHistory(item: Omit<ReadingHistoryItem, 'id' | 'readAt'>): void {
     const history = this.getReadingHistory();
-    // Remove if already exists for this chapter to bump to top
     const filtered = history.filter(h => h.chapterId !== item.chapterId);
 
     const newEntry: ReadingHistoryItem = {
@@ -283,14 +428,11 @@ export class UserService {
     };
 
     filtered.unshift(newEntry);
-    // Keep max 30 recent history items
     const trimmed = filtered.slice(0, 30);
     localStorage.setItem(STORAGE_KEYS.READING_HISTORY, JSON.stringify(trimmed));
 
-    // Also mark chapter as read for current user
     this.markChapterAsRead(item.chapterId);
 
-    // Save exact last read progress to current user profile for NetTruyen auto-resume
     const user = this.getCurrentUser();
     if (user) {
       user.lastRead = {
@@ -312,7 +454,7 @@ export class UserService {
     return user?.lastRead || null;
   }
 
-  // Sổ tay trích đoạn tâm đắc (Chỉ người dùng có)
+  // 16. Saved Quotes
   static saveQuote(chapterId: string, chapterTitle: string, text: string): { success: boolean; quotes: SavedQuote[]; message: string } {
     const user = this.getCurrentUser();
     if (!user) return { success: false, quotes: [], message: 'Vui lòng đăng nhập để lưu trích đoạn vào Sổ Tay!' };

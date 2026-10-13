@@ -32,6 +32,36 @@ export default defineConfig({
             res.end(JSON.stringify({ error: err.message || 'Failed to fetch Google Doc' }));
           }
         });
+        server.middlewares.use('/api/auth', async (req, res) => {
+          let bodyStr = '';
+          req.on('data', chunk => { bodyStr += chunk; });
+          req.on('end', async () => {
+            try {
+              (req as any).body = bodyStr ? JSON.parse(bodyStr) : {};
+            } catch {
+              (req as any).body = {};
+            }
+            const urlObj = new URL(req.url || '', `http://${req.headers.host || 'localhost'}`);
+            (req as any).query = Object.fromEntries(urlObj.searchParams.entries());
+            (res as any).status = (code: number) => {
+              res.statusCode = code;
+              return res;
+            };
+            (res as any).json = (data: any) => {
+              res.setHeader('Content-Type', 'application/json; charset=utf-8');
+              res.end(JSON.stringify(data));
+              return res;
+            };
+            try {
+              const authModule = await import('./api/auth.js');
+              await authModule.default(req, res);
+            } catch (err: any) {
+              res.statusCode = 500;
+              res.setHeader('Content-Type', 'application/json; charset=utf-8');
+              res.end(JSON.stringify({ error: err.message || 'Auth internal error' }));
+            }
+          });
+        });
       }
     }
   ],
