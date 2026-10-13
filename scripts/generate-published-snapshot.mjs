@@ -1,10 +1,11 @@
 import fs from 'fs';
 
-const raw = fs.readFileSync('src/data/google_doc_raw.txt', 'utf8');
+const rawPath = fs.existsSync('temp_doc.txt') ? 'temp_doc.txt' : 'src/data/google_doc_raw.txt';
+const raw = fs.readFileSync(rawPath, 'utf8');
 const lines = raw.split(/\r?\n/);
 const pIdx = lines.findIndex(l => l.trim().startsWith('PHẦN I'));
 const banCuIdx = lines.findIndex(l => l.trim().startsWith('BẢN CŨ'));
-const dossierIdx = lines.findIndex(l => /^[0-9]{2}\./.test(l.trim()));
+const dossierIdx = lines.findIndex(l => /^[0-9]{2}\./.test(l.trim()) || l.trim().startsWith('LONG ẤN KÝ — HỒ SƠ'));
 
 // 1. Prologue
 const prologueLines = lines.slice(0, pIdx !== -1 ? pIdx : 0).map(l => l.trim()).filter(Boolean);
@@ -27,9 +28,10 @@ for (let i = 0; i < part1Lines.length; i++) {
       currentChapLines = [];
     }
     const chapOrder = chapters.length + 1;
-    const chapNum = (line.match(/^Chương\s+([0-9]+)/i) || [])[1] || chapOrder;
+    const chapNum = (line.match(/^Chương\s+([0-9]+)/i) || [])[1] || `${chapOrder}`;
+    const formattedNum = Number(chapNum) < 10 ? `0${chapNum}` : `${chapNum}`;
     currentChap = {
-      id: 'doc_chap_0' + chapNum,
+      id: `doc_chap_${formattedNum}`,
       partId: 'part_mua_nuoc_dung',
       title: line,
       order: chapOrder,
@@ -75,7 +77,7 @@ const publishedSnapshot = {
       title: 'PHẦN I — MÙA NƯỚC ĐỨNG',
       order: 2,
       description: 'Bến Arumo, giếng cảng trên sông Asera, chiếc tời số bảy và thảm họa bí ẩn từ thượng nguồn.',
-      chapters: chapters.slice(0, 5) // Mở đầu + 5 chương công khai
+      chapters: chapters
     }
   ]
 };
@@ -84,3 +86,4 @@ fs.mkdirSync('public/content', { recursive: true });
 fs.writeFileSync('public/content/published-story.json', JSON.stringify(publishedSnapshot, null, 2), 'utf8');
 console.log('✅ Đã tạo thành công snapshot public/content/published-story.json');
 console.log(`Số phần: ${publishedSnapshot.parts.length}, Tổng số chương: ${publishedSnapshot.parts[0].chapters.length + publishedSnapshot.parts[1].chapters.length}`);
+chapters.forEach(c => console.log(`  - ${c.id}: ${c.title} (${c.wordCount} từ)`));

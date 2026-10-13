@@ -1,7 +1,7 @@
 import { Part, Chapter } from '../types';
 
 /**
- * Phân tích cú pháp văn bản từ Google Docs thành cấu trúc Phần và Chương hoàn chỉnh của Mạch Studio.
+ * Phân tích cú pháp văn bản từ Google Docs thành cấu trúc Phần và Chương hoàn chỉnh của Long Ấn Thức Tỉnh.
  * URL: https://docs.google.com/document/d/1KAF0QBoZNjey7jQGP4ogHx4qu0M8HPfymSiSnITr61Y/edit
  */
 export function parseGoogleDocTextToParts(rawText: string): Part[] {
@@ -13,11 +13,11 @@ export function parseGoogleDocTextToParts(rawText: string): Part[] {
   
   const pIdx = lines.findIndex(l => l.trim().startsWith('PHẦN I'));
   const banCuIdx = lines.findIndex(l => l.trim().startsWith('BẢN CŨ'));
-  const dossierIdx = lines.findIndex(l => /^[0-9]{2}\./.test(l.trim()));
+  const dossierIdx = lines.findIndex(l => /^[0-9]{2}\./.test(l.trim()) || l.trim().startsWith('LONG ẤN KÝ — HỒ SƠ'));
   
   const parts: Part[] = [];
 
-  // 1. Phân tích Phần Mở Đầu (Prologue) — Tách thành Phần độc lập ngoài Phần 1
+  // 1. Phân tích Phần Mở Đầu (Prologue)
   const prologueLines = lines
     .slice(0, pIdx !== -1 ? pIdx : 0)
     .map(l => l.trim())
@@ -51,7 +51,7 @@ export function parseGoogleDocTextToParts(rawText: string): Part[] {
     });
   }
 
-  // 2. Phân tích PHẦN I — MÙA NƯỚC ĐỨNG (Chỉ chứa các Chương 1-4 chính thức, không chứa Mở Đầu)
+  // 2. Phân tích PHẦN I — MÙA NƯỚC ĐỨNG
   const part1Title = pIdx !== -1 ? lines[pIdx].trim() : 'PHẦN I — MÙA NƯỚC ĐỨNG';
   const part1EndIdx = banCuIdx !== -1 ? banCuIdx : (dossierIdx !== -1 ? dossierIdx : lines.length);
   const part1Lines = lines.slice(pIdx !== -1 ? pIdx + 1 : 0, part1EndIdx);
@@ -73,7 +73,8 @@ export function parseGoogleDocTextToParts(rawText: string): Part[] {
       
       const chapOrder = part1Chapters.length + 1;
       const chapNum = (line.match(/^Chương\s+([0-9]+)/i) || [])[1] || `${chapOrder}`;
-      const chapId = `doc_chap_0${chapNum}`;
+      const formattedNum = Number(chapNum) < 10 ? `0${chapNum}` : `${chapNum}`;
+      const chapId = `doc_chap_${formattedNum}`;
       
       let pov = 'Rento';
       let location = 'Bến cảng Arumo';
@@ -86,6 +87,12 @@ export function parseGoogleDocTextToParts(rawText: string): Part[] {
       } else if (line.includes('Món nợ')) {
         pov = 'Rento & Mira & Seika';
         location = 'Khu sửa máy ven sông Asera & Nhà quỹ';
+      } else if (line.includes('Nước ngừng chảy')) {
+        pov = 'Rento & Nari & Dagan';
+        location = 'Bến Arumo — Giếng cảng & Bờ sông';
+      } else if (line.includes('Ai giữ đầu dây')) {
+        pov = 'Rento & Oren & Tovan';
+        location = 'Bến Arumo — Trụ cáp & Đường sơ tán';
       }
       
       currentChap = {
@@ -127,6 +134,6 @@ export function parseGoogleDocTextToParts(rawText: string): Part[] {
   };
   parts.push(part1);
 
-  // 3. Bản Cũ (Các chương Aesvorn 2-4) đã được xóa bỏ hoàn toàn theo yêu cầu của tác giả
   return parts;
 }
+

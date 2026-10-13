@@ -33,6 +33,7 @@ import { AdminSettingsView } from './components/admin/AdminSettingsView';
 import { PublicNavigationService, ParsedRoute } from './services/publicNavigation';
 import { PublishedContentService, PublishedStorySnapshot } from './services/publishedContent';
 import { ReadingProgressService, ReadingHistoryItem } from './services/readingProgress';
+import { GoogleSyncService } from './services/googleSyncService';
 import { UserService } from './services/userService';
 import { UserProfile } from './types';
 import { ShieldAlert } from 'lucide-react';
@@ -62,9 +63,39 @@ export default function App() {
   const [activeAdminChapterId, setActiveAdminChapterId] = useState<string | null>(null);
   const [activeAdminCharId, setActiveAdminCharId] = useState<string | null>(null);
 
-  // Load published snapshot on mount
+  // Load published snapshot on mount & listen for continuous updates
   useEffect(() => {
     PublishedContentService.loadSnapshot().then((data) => setSnapshot(data));
+
+    const handleStoryUpdated = (e: any) => {
+      if (e?.detail) {
+        setSnapshot(e.detail);
+      } else {
+        PublishedContentService.loadSnapshot().then((data) => setSnapshot(data));
+      }
+    };
+    window.addEventListener('story-content-updated', handleStoryUpdated);
+
+    // Initial background auto-sync from Google Docs
+    GoogleSyncService.autoSyncIfNeeded().then(changed => {
+      if (changed) {
+        PublishedContentService.loadSnapshot().then(s => setSnapshot(s));
+      }
+    });
+
+    // Continuous auto-sync interval: checks every 60s
+    const syncInterval = setInterval(() => {
+      GoogleSyncService.autoSyncIfNeeded().then(changed => {
+        if (changed) {
+          PublishedContentService.loadSnapshot().then(s => setSnapshot(s));
+        }
+      });
+    }, 60000);
+
+    return () => {
+      window.removeEventListener('story-content-updated', handleStoryUpdated);
+      clearInterval(syncInterval);
+    };
   }, []);
 
   // Hash change listener
@@ -241,7 +272,7 @@ export default function App() {
         return <AdminCommentsView />;
       }
 
-      if (route.path === '/admin/doc-gia') {
+      if (route.path === '/admin/doc-gia' || route.path === '/admin/tai-khoan') {
         return <AdminReadersView />;
       }
 

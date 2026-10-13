@@ -101,8 +101,22 @@ export const NovelReaderPage: React.FC<NovelReaderPageProps> = ({
       setNextChapter(res.next);
     });
 
+    const handleStoryUpdated = () => {
+      PublishedContentService.getChapterById(chapterId).then(res => {
+        if (!isMounted) return;
+        if (res) {
+          setChapter(res.chapter);
+          setPart(res.part);
+        }
+      });
+    };
+    window.addEventListener('story-content-updated', handleStoryUpdated);
+
     window.scrollTo({ top: 0, behavior: 'instant' });
-    return () => { isMounted = false; };
+    return () => {
+      isMounted = false;
+      window.removeEventListener('story-content-updated', handleStoryUpdated);
+    };
   }, [chapterId]);
 
   // Track scroll to mark chapter completed

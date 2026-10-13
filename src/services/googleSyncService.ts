@@ -194,6 +194,34 @@ export class GoogleSyncService {
       // Lưu đè vào localStorage để bảo đảm chỉ có dữ liệu Google Docs thật
       localStorage.setItem('mach_parts', JSON.stringify(parsedParts));
 
+      // Cập nhật vào PublishedContentService để toàn bộ các trang truyện chữ đồng bộ ngay
+      const { PublishedContentService } = await import('./publishedContent');
+      const storySnapshot = {
+        version: '1.0.0',
+        title: 'Long Ấn Thức Tỉnh',
+        subtitle: 'Arumo Trong Nắng Sớm',
+        publishedAt: new Date().toLocaleDateString('vi-VN'),
+        parts: parsedParts.map(p => ({
+          id: p.id,
+          title: p.title,
+          order: p.order,
+          description: p.description || '',
+          chapters: p.chapters.map(c => ({
+            id: c.id,
+            partId: p.id,
+            title: c.title,
+            order: c.order,
+            content: c.content || '',
+            wordCount: c.wordCount || (c.content || '').split(/\s+/).filter(Boolean).length,
+            status: 'published' as const,
+            povCharacterName: c.povCharacterName,
+            location: c.location,
+            notes: c.notes
+          }))
+        }))
+      };
+      PublishedContentService.updateSnapshot(storySnapshot);
+
       const totalWords = parsedParts.reduce((sum, p) => sum + p.wordCount, 0);
       const totalChaps = parsedParts.reduce((sum, p) => sum + p.chapters.length, 0);
 
@@ -293,6 +321,35 @@ export class GoogleSyncService {
 
         if (parsedParts && parsedParts.length > 0) {
           localStorage.setItem('mach_parts', JSON.stringify(parsedParts));
+
+          // Đồng bộ sang PublishedContentService
+          const { PublishedContentService } = await import('./publishedContent');
+          const storySnapshot = {
+            version: '1.0.0',
+            title: 'Long Ấn Thức Tỉnh',
+            subtitle: 'Arumo Trong Nắng Sớm',
+            publishedAt: new Date().toLocaleDateString('vi-VN'),
+            parts: parsedParts.map(p => ({
+              id: p.id,
+              title: p.title,
+              order: p.order,
+              description: p.description || '',
+              chapters: p.chapters.map(c => ({
+                id: c.id,
+                partId: p.id,
+                title: c.title,
+                order: c.order,
+                content: c.content || '',
+                wordCount: c.wordCount || (c.content || '').split(/\s+/).filter(Boolean).length,
+                status: 'published' as const,
+                povCharacterName: c.povCharacterName,
+                location: c.location,
+                notes: c.notes
+              }))
+            }))
+          };
+          PublishedContentService.updateSnapshot(storySnapshot);
+
           const totalWords = parsedParts.reduce((sum, p) => sum + p.wordCount, 0);
           const totalChaps = parsedParts.reduce((sum, p) => sum + p.chapters.length, 0);
 
@@ -579,4 +636,30 @@ function doPost(e) {
   }
 }`;
   }
+
+  /**
+   * Đồng bộ ngay từ Google Docs và trả về chương cụ thể theo chapterId
+   */
+  static async syncSingleChapter(chapterId: string): Promise<Chapter | null> {
+    const res = await this.syncLiveGoogleDocs();
+    if (!res.parts) return null;
+    for (const p of res.parts) {
+      const found = p.chapters.find(c => c.id === chapterId);
+      if (found) return found;
+    }
+    return null;
+  }
+
+  /**
+   * Tự động kiểm tra và đồng bộ ngầm nếu có thay đổi mới từ Google Docs
+   */
+  static async autoSyncIfNeeded(): Promise<boolean> {
+    try {
+      const res = await this.checkAndAutoSyncOnDocChange();
+      return res.hasChanged;
+    } catch {
+      return false;
+    }
+  }
 }
+

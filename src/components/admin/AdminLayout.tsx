@@ -49,11 +49,11 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
       ],
     },
     {
-      title: 'WEBSITE',
+      title: 'WEBSITE & NGƯỜI DÙNG',
       items: [
+        { label: 'Quản lý tài khoản', path: '/admin/tai-khoan', icon: UserCheck, badge: 'Live DB' },
         { label: 'Trang chủ & Giao diện', path: '/admin/giao-dien', icon: Palette },
         { label: 'Bình luận độc giả', path: '/admin/binh-luan', icon: MessageSquare },
-        { label: 'Tài khoản độc giả', path: '/admin/doc-gia', icon: UserCheck },
       ],
     },
     {
@@ -72,6 +72,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
 
   const isCurrentActive = (itemPath: string) => {
     if (itemPath === '/admin') return currentPath === '/admin' || currentPath === '/admin/';
+    if (itemPath === '/admin/tai-khoan') return currentPath === '/admin/tai-khoan' || currentPath === '/admin/doc-gia';
     return currentPath.startsWith(itemPath);
   };
 
@@ -165,6 +166,11 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
                       )}
                       <Icon className="w-4 h-4 shrink-0" />
                       <span className="truncate">{it.label}</span>
+                      {(it as any).badge && (
+                        <span className="ml-auto text-[9px] font-black px-1.5 py-0.5 rounded-full bg-[#376F64] text-white shrink-0 tracking-wider shadow-xs">
+                          {(it as any).badge}
+                        </span>
+                      )}
                     </button>
                   );
                 })}

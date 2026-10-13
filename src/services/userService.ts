@@ -1,4 +1,6 @@
-import { UserProfile, ReadingHistoryItem, USER_LEVEL_TITLES, SavedQuote, UserLastRead } from '../types/user';
+import { UserProfile, ReadingHistoryItem, USER_LEVEL_TITLES, SavedQuote, UserLastRead, DatabaseStatus } from '../types/user';
+
+export type { DatabaseStatus };
 
 const STORAGE_KEYS = {
   CURRENT_USER: 'longanky_current_user',
@@ -6,13 +8,6 @@ const STORAGE_KEYS = {
   READING_HISTORY: 'longanky_reading_history',
   DB_CACHE_STATUS: 'longanky_db_status_cache',
 };
-
-export interface DatabaseStatus {
-  connected: boolean;
-  provider: string;
-  userCount?: number;
-  message: string;
-}
 
 // Calculate level & title based on EXP
 export function calculateLevelFromExp(exp: number) {
@@ -75,15 +70,95 @@ export class UserService {
     this.syncCloudUser(updatedUser);
   }
 
-  // 3. Get all registered users from local cache
+  // 3. Get all registered users from local cache (initialized with default admin & readers if empty)
   static getAllUsers(): UserProfile[] {
     try {
       const data = localStorage.getItem(STORAGE_KEYS.ALL_USERS);
-      if (!data) return [];
-      return JSON.parse(data);
-    } catch (e) {
-      return [];
-    }
+      if (data) {
+        const parsed = JSON.parse(data);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      }
+    } catch (e) {}
+
+    const defaultUsers: UserProfile[] = [
+      {
+        id: 'admin_initial_root',
+        username: 'admin123',
+        displayName: 'Quản Trị Viên Arumo',
+        email: 'admin123@arumo.vn',
+        role: 'admin',
+        status: 'active',
+        avatar: '👑',
+        level: 99,
+        exp: 999999,
+        nextLevelExp: 999999,
+        levelTitle: 'Quản Trị Viên Tối Cao',
+        joinedDate: '13/10/2026',
+        streakDays: 999,
+        isFollowing: true,
+        bookmarkedChapterIds: [],
+        readChapterIds: [],
+      },
+      {
+        id: 'admin_author_1',
+        username: '1',
+        displayName: 'Tác Giả & Quản Trị Viên',
+        email: 'tacgia@longan.vn',
+        role: 'admin',
+        status: 'active',
+        avatar: '👑',
+        level: 99,
+        exp: 999999,
+        nextLevelExp: 999999,
+        levelTitle: 'Tác Giả & Sáng Lập',
+        joinedDate: '13/10/2026',
+        streakDays: 999,
+        isFollowing: true,
+        bookmarkedChapterIds: [],
+        readChapterIds: [],
+      },
+      {
+        id: 'user_docgia_01',
+        username: 'thanhthao_arumo',
+        displayName: 'Thanh Thảo',
+        email: 'thao.arumo@gmail.com',
+        role: 'reader',
+        status: 'active',
+        avatar: '🌸',
+        level: 3,
+        exp: 280,
+        nextLevelExp: 400,
+        levelTitle: 'Trúc Cơ Kỳ Sơ',
+        joinedDate: '12/10/2026',
+        streakDays: 5,
+        isFollowing: true,
+        bookmarkedChapterIds: ['doc_chap_01', 'doc_chap_02'],
+        readChapterIds: ['doc_chap_prologue', 'doc_chap_01'],
+      },
+      {
+        id: 'user_docgia_02',
+        username: 'minhvu2026',
+        displayName: 'Minh Vũ',
+        email: 'minhvu.reader@gmail.com',
+        role: 'reader',
+        status: 'active',
+        avatar: '🐉',
+        level: 2,
+        exp: 150,
+        nextLevelExp: 200,
+        levelTitle: 'Luyện Khí Viên Mãn',
+        joinedDate: '10/10/2026',
+        streakDays: 3,
+        isFollowing: true,
+        bookmarkedChapterIds: ['doc_chap_01'],
+        readChapterIds: ['doc_chap_prologue'],
+      }
+    ];
+
+    try {
+      localStorage.setItem(STORAGE_KEYS.ALL_USERS, JSON.stringify(defaultUsers));
+    } catch {}
+    return defaultUsers;
   }
 
   // 4. Check Vercel Database Connection Status
@@ -539,7 +614,8 @@ export class UserService {
       const res = await fetch('/api/auth?action=get_all_users_admin');
       if (res.ok) {
         const data = await res.json();
-        if (data.success && Array.isArray(data.users)) {
+        if (data.success && Array.isArray(data.users) && data.users.length > 0) {
+          localStorage.setItem(STORAGE_KEYS.ALL_USERS, JSON.stringify(data.users));
           return data.users;
         }
       }
@@ -575,4 +651,170 @@ export class UserService {
       return { success: true, message: 'Đã xóa tài khoản khỏi bộ nhớ cục bộ.' };
     }
   }
+
+  // 19. Admin: Toggle lock/unlock user
+  static async toggleLockUserAdmin(userId: string, username: string, currentStatus: string): Promise<{ success: boolean; status: string; message: string }> {
+    const newStatus = currentStatus === 'locked' ? 'active' : 'locked';
+
+    try {
+      const res = await fetch('/api/auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'toggle_lock_user', userId, username, currentStatus }),
+      });
+      const data = await res.json();
+
+      // Update local storage
+      const all = this.getAllUsers();
+      const idx = all.findIndex(u => u.id === userId || u.username === username);
+      if (idx >= 0) {
+        all[idx].status = newStatus as 'active' | 'locked';
+        localStorage.setItem(STORAGE_KEYS.ALL_USERS, JSON.stringify(all));
+      }
+
+      return { success: true, status: newStatus, message: data.message || `Đã ${newStatus === 'locked' ? 'khóa' : 'mở khóa'} tài khoản!` };
+    } catch {
+      // Local fallback
+      const all = this.getAllUsers();
+      const idx = all.findIndex(u => u.id === userId || u.username === username);
+      if (idx >= 0) {
+        all[idx].status = newStatus as 'active' | 'locked';
+        localStorage.setItem(STORAGE_KEYS.ALL_USERS, JSON.stringify(all));
+      }
+      return { success: true, status: newStatus, message: `Đã đổi trạng thái sang ${newStatus}.` };
+    }
+  }
+
+  // 20. Admin: Update role (admin / reader)
+  static async updateUserRoleAdmin(userId: string, username: string, newRole: 'admin' | 'reader'): Promise<{ success: boolean; role: string; message: string }> {
+    try {
+      const res = await fetch('/api/auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'update_user_role', userId, username, newRole }),
+      });
+      const data = await res.json();
+
+      const all = this.getAllUsers();
+      const idx = all.findIndex(u => u.id === userId || u.username === username);
+      if (idx >= 0) {
+        all[idx].role = newRole;
+        if (newRole === 'admin') all[idx].isAdmin = true;
+        localStorage.setItem(STORAGE_KEYS.ALL_USERS, JSON.stringify(all));
+      }
+
+      return { success: true, role: newRole, message: data.message || `Đã chuyển vai trò sang ${newRole}!` };
+    } catch {
+      const all = this.getAllUsers();
+      const idx = all.findIndex(u => u.id === userId || u.username === username);
+      if (idx >= 0) {
+        all[idx].role = newRole;
+        if (newRole === 'admin') all[idx].isAdmin = true;
+        localStorage.setItem(STORAGE_KEYS.ALL_USERS, JSON.stringify(all));
+      }
+      return { success: true, role: newRole, message: `Đã cập nhật quyền ${newRole}.` };
+    }
+  }
+
+  // 21. Admin: Create account directly
+  static async createUserAdmin(params: {
+    username: string;
+    password: string;
+    displayName: string;
+    email?: string;
+    role: 'admin' | 'reader';
+  }): Promise<{ success: boolean; message: string; user?: UserProfile }> {
+    try {
+      const res = await fetch('/api/auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'admin_create_user', ...params }),
+      });
+      const data = await res.json();
+      if (data.success && data.user) {
+        const all = this.getAllUsers();
+        all.unshift(data.user);
+        localStorage.setItem(STORAGE_KEYS.ALL_USERS, JSON.stringify(all));
+        return { success: true, message: data.message, user: data.user };
+      }
+      if (data.message) {
+        return { success: false, message: data.message };
+      }
+    } catch {}
+
+    // Local fallback
+    const all = this.getAllUsers();
+    if (all.some(u => u.username.toLowerCase() === params.username.toLowerCase())) {
+      return { success: false, message: 'Tên đăng nhập này đã tồn tại!' };
+    }
+    const newUser: UserProfile = {
+      id: `user_${Date.now()}_${Math.random().toString(36).substr(2, 4)}`,
+      username: params.username.toLowerCase(),
+      displayName: params.displayName || params.username,
+      email: params.email || `${params.username}@arumo.vn`,
+      role: params.role,
+      status: 'active',
+      avatar: params.role === 'admin' ? '👑' : '🐉',
+      level: params.role === 'admin' ? 99 : 1,
+      exp: params.role === 'admin' ? 999999 : 50,
+      nextLevelExp: params.role === 'admin' ? 999999 : 100,
+      levelTitle: params.role === 'admin' ? 'Quản Trị Viên' : 'Độc Giả Mới',
+      streakDays: 1,
+      joinedDate: new Date().toLocaleDateString('vi-VN'),
+      isFollowing: true,
+      bookmarkedChapterIds: [],
+      readChapterIds: [],
+    };
+    all.unshift(newUser);
+    localStorage.setItem(STORAGE_KEYS.ALL_USERS, JSON.stringify(all));
+    return { success: true, message: 'Đã tạo tài khoản thành công!', user: newUser };
+  }
+
+  // 22. Admin: Update user details (Display name, email, level, status, password)
+  static async updateUserDetailsAdmin(params: {
+    userId: string;
+    username: string;
+    displayName?: string;
+    email?: string;
+    role?: 'admin' | 'reader';
+    status?: 'active' | 'locked';
+    level?: number;
+    levelTitle?: string;
+    newPassword?: string;
+  }): Promise<{ success: boolean; message: string; user?: UserProfile }> {
+    try {
+      const res = await fetch('/api/auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'admin_update_user', ...params }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        const all = this.getAllUsers();
+        const idx = all.findIndex(u => u.id === params.userId || u.username === params.username);
+        if (idx >= 0) {
+          all[idx] = { ...all[idx], ...data.user };
+          localStorage.setItem(STORAGE_KEYS.ALL_USERS, JSON.stringify(all));
+        }
+        return { success: true, message: data.message, user: data.user || all[idx] };
+      }
+    } catch {}
+
+    // Local fallback update
+    const all = this.getAllUsers();
+    const idx = all.findIndex(u => u.id === params.userId || u.username === params.username);
+    if (idx >= 0) {
+      if (params.displayName) all[idx].displayName = params.displayName;
+      if (params.email) all[idx].email = params.email;
+      if (params.role) all[idx].role = params.role;
+      if (params.status) all[idx].status = params.status;
+      if (params.level) all[idx].level = params.level;
+      if (params.levelTitle) all[idx].levelTitle = params.levelTitle;
+      localStorage.setItem(STORAGE_KEYS.ALL_USERS, JSON.stringify(all));
+      return { success: true, message: 'Đã cập nhật thông tin tài khoản!', user: all[idx] };
+    }
+    return { success: false, message: 'Không tìm thấy tài khoản!' };
+  }
 }
+
+

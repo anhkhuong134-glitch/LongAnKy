@@ -7,6 +7,9 @@ export interface PublishedChapter {
   wordCount: number;
   status: 'published';
   publishedAt?: string;
+  povCharacterName?: string;
+  location?: string;
+  notes?: string;
 }
 
 export interface PublishedPart {
@@ -25,37 +28,86 @@ export interface PublishedStorySnapshot {
   parts: PublishedPart[];
 }
 
+const STORAGE_KEY_PUBLISHED = 'arumo_published_snapshot_cache';
+
 export class PublishedContentService {
   private static cachedSnapshot: PublishedStorySnapshot | null = null;
 
-  // Load published snapshot from /content/published-story.json
+  // Clear memory cache so next call reloads freshest data
+  static clearMemoryCache() {
+    this.cachedSnapshot = null;
+  }
+
+  // Load published snapshot (LocalStorage cache first, then /content/published-story.json)
   static async loadSnapshot(): Promise<PublishedStorySnapshot> {
     if (this.cachedSnapshot) {
       return this.cachedSnapshot;
     }
 
+    // 1. Check local storage cache for user-published or synced version
+    try {
+      const local = localStorage.getItem(STORAGE_KEY_PUBLISHED);
+      if (local) {
+        const parsed: PublishedStorySnapshot = JSON.parse(local);
+        if (parsed?.parts && parsed.parts.length > 0) {
+          this.cachedSnapshot = parsed;
+          return parsed;
+        }
+      }
+    } catch (e) {
+      console.warn('Cannot parse local published snapshot cache:', e);
+    }
+
+    // 2. Fetch static bundle /content/published-story.json
     try {
       const res = await fetch('/content/published-story.json');
       if (res.ok) {
         const data: PublishedStorySnapshot = await res.json();
         this.cachedSnapshot = data;
+        try {
+          localStorage.setItem(STORAGE_KEY_PUBLISHED, JSON.stringify(data));
+        } catch {}
         return data;
       }
     } catch (e) {
-      console.warn('Cannot load published-story.json, falling back to local storage snapshot');
+      console.warn('Cannot load published-story.json from network:', e);
     }
 
-    // Fallback if network fails
-    const local = localStorage.getItem('arumo_published_snapshot_cache');
-    if (local) {
-      try {
-        const parsed = JSON.parse(local);
-        this.cachedSnapshot = parsed;
-        return parsed;
-      } catch (e) {}
-    }
+    // 3. Fallback to mach_parts if present
+    try {
+      const machPartsStr = localStorage.getItem('mach_parts');
+      if (machPartsStr) {
+        const parts = JSON.parse(machPartsStr);
+        const snapshot: PublishedStorySnapshot = {
+          version: '1.0.0',
+          title: 'Long Ấn Thức Tỉnh',
+          subtitle: 'Arumo Trong Nắng Sớm',
+          publishedAt: '2026-10-13',
+          parts: parts.map((p: any) => ({
+            id: p.id,
+            title: p.title,
+            order: p.order,
+            description: p.description || '',
+            chapters: (p.chapters || []).map((c: any) => ({
+              id: c.id,
+              partId: p.id,
+              title: c.title,
+              order: c.order,
+              content: c.content,
+              wordCount: c.wordCount || c.content.split(/\s+/).filter(Boolean).length,
+              status: 'published' as const,
+              povCharacterName: c.povCharacterName,
+              location: c.location,
+              notes: c.notes,
+            }))
+          }))
+        };
+        this.cachedSnapshot = snapshot;
+        return snapshot;
+      }
+    } catch {}
 
-    // Default minimal structure
+    // 4. Default minimal structure
     return {
       version: '1.0.0',
       title: 'Long Ấn Thức Tỉnh',
@@ -63,6 +115,41 @@ export class PublishedContentService {
       publishedAt: '2026-10-13',
       parts: []
     };
+  }
+
+  // Update and broadcast published snapshot
+  static updateSnapshot(newSnapshot: PublishedStorySnapshot) {
+    this.cachedSnapshot = newSnapshot;
+    try {
+      localStorage.setItem(STORAGE_KEY_PUBLISHED, JSON.stringify(newSnapshot));
+    } catch (e) {
+      console.error('Cannot save snapshot to localStorage:', e);
+    }
+    // Notify all active React views
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('story-content-updated', { detail: newSnapshot }));
+    }
+  }
+
+  // Update a single chapter's content and save
+  static async updateChapter(chapterId: string, title: string, content: string): Promise<boolean> {
+    const snapshot = await this.loadSnapshot();
+    let found = false;
+    for (const part of snapshot.parts) {
+      const ch = part.chapters.find(c => c.id === chapterId);
+      if (ch) {
+        ch.title = title;
+        ch.content = content;
+        ch.wordCount = content.trim().split(/\s+/).filter(Boolean).length;
+        found = true;
+        break;
+      }
+    }
+    if (found) {
+      this.updateSnapshot(snapshot);
+      return true;
+    }
+    return false;
   }
 
   // Get all published chapters flat
@@ -100,3 +187,4 @@ export class PublishedContentService {
     };
   }
 }
+

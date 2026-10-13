@@ -59,6 +59,106 @@ async function getMongoDb(uri) {
   return db;
 }
 
+// Default Seed System Users
+const DEFAULT_SYSTEM_USERS = [
+  {
+    id: 'admin_initial_root',
+    username: 'admin123',
+    password: 'admin123',
+    displayName: 'Quản Trị Viên Arumo',
+    email: 'admin123@arumo.vn',
+    role: 'admin',
+    status: 'active',
+    avatar: '👑',
+    level: 99,
+    exp: 999999,
+    nextLevelExp: 999999,
+    levelTitle: 'Quản Trị Viên Tối Cao',
+    streakDays: 999,
+    isFollowing: true,
+    bookmarkedChapterIds: [],
+    readChapterIds: [],
+    joinedDate: '13/10/2026',
+    createdAt: new Date('2026-10-13T00:00:00Z'),
+  },
+  {
+    id: 'admin_author_1',
+    username: '1',
+    password: '1',
+    displayName: 'Tác Giả & Quản Trị Viên',
+    email: 'tacgia@longan.vn',
+    role: 'admin',
+    status: 'active',
+    avatar: '👑',
+    level: 99,
+    exp: 999999,
+    nextLevelExp: 999999,
+    levelTitle: 'Tác Giả & Sáng Lập',
+    streakDays: 999,
+    isFollowing: true,
+    bookmarkedChapterIds: [],
+    readChapterIds: [],
+    joinedDate: '13/10/2026',
+    createdAt: new Date('2026-10-13T00:00:00Z'),
+  },
+  {
+    id: 'user_docgia_01',
+    username: 'thanhthao_arumo',
+    password: 'password123',
+    displayName: 'Thanh Thảo',
+    email: 'thao.arumo@gmail.com',
+    role: 'reader',
+    status: 'active',
+    avatar: '🌸',
+    level: 3,
+    exp: 280,
+    nextLevelExp: 400,
+    levelTitle: 'Trúc Cơ Kỳ Sơ',
+    streakDays: 5,
+    isFollowing: true,
+    bookmarkedChapterIds: ['doc_chap_01', 'doc_chap_02'],
+    readChapterIds: ['doc_chap_prologue', 'doc_chap_01'],
+    joinedDate: '12/10/2026',
+    createdAt: new Date('2026-10-12T00:00:00Z'),
+  },
+  {
+    id: 'user_docgia_02',
+    username: 'minhvu2026',
+    password: 'password123',
+    displayName: 'Minh Vũ',
+    email: 'minhvu.reader@gmail.com',
+    role: 'reader',
+    status: 'active',
+    avatar: '🐉',
+    level: 2,
+    exp: 150,
+    nextLevelExp: 200,
+    levelTitle: 'Luyện Khí Viên Mãn',
+    streakDays: 3,
+    isFollowing: true,
+    bookmarkedChapterIds: ['doc_chap_01'],
+    readChapterIds: ['doc_chap_prologue'],
+    joinedDate: '10/10/2026',
+    createdAt: new Date('2026-10-10T00:00:00Z'),
+  }
+];
+
+let memoryUsers = [...DEFAULT_SYSTEM_USERS];
+
+async function seedDefaultMongoUsers(db) {
+  try {
+    for (const u of DEFAULT_SYSTEM_USERS) {
+      await db.collection('users').updateOne(
+        { username: u.username },
+        { $setOnInsert: u },
+        { upsert: true }
+      );
+    }
+  } catch (err) {
+    console.warn('Seed mongo warning:', err.message);
+  }
+}
+
 // Postgres Helpers
 let pgTableInitialized = false;
 async function ensurePostgresTable(sql) {
@@ -72,6 +172,8 @@ async function ensurePostgresTable(sql) {
         display_name VARCHAR(150),
         email VARCHAR(200),
         avatar VARCHAR(50),
+        role VARCHAR(50) DEFAULT 'reader',
+        status VARCHAR(50) DEFAULT 'active',
         level INT DEFAULT 1,
         exp INT DEFAULT 50,
         next_level_exp INT DEFAULT 100,
@@ -112,6 +214,8 @@ function mapRowToUserProfile(row) {
     displayName: row.display_name || row.username,
     email: row.email || '',
     avatar: row.avatar || '🐉',
+    role: row.role || (row.username === '1' || row.username === 'admin123' ? 'admin' : 'reader'),
+    status: row.status || 'active',
     level: Number(row.level) || 1,
     exp: Number(row.exp) || 50,
     nextLevelExp: Number(row.next_level_exp) || 100,
@@ -429,6 +533,13 @@ export default async function handler(req, res) {
           });
         }
 
+        if (user.status === 'locked') {
+          return res.status(403).json({
+            success: false,
+            message: 'Tài khoản này đã bị tạm khóa bởi Quản trị viên!',
+          });
+        }
+
         const { _id, ...safeUser } = user;
         return res.status(200).json({
           success: true,
@@ -470,6 +581,13 @@ export default async function handler(req, res) {
           });
         }
 
+        if (userRow.status === 'locked') {
+          return res.status(403).json({
+            success: false,
+            message: 'Tài khoản này đã bị tạm khóa bởi Quản trị viên!',
+          });
+        }
+
         const user = mapRowToUserProfile(userRow);
         return res.status(200).json({
           success: true,
@@ -482,6 +600,31 @@ export default async function handler(req, res) {
           message: 'Lỗi xác thực Database: ' + err.message,
         });
       }
+    }
+
+    // 3. Fallback to memory / local
+    const memoryUser = memoryUsers.find(
+      u => u.username.toLowerCase() === cleanUsername || (u.email && u.email.toLowerCase() === cleanUsername)
+    );
+    if (memoryUser) {
+      if (memoryUser.password && memoryUser.password !== password) {
+        return res.status(401).json({
+          success: false,
+          message: 'Mật khẩu không chính xác! Vui lòng kiểm tra lại.',
+        });
+      }
+      if (memoryUser.status === 'locked') {
+        return res.status(403).json({
+          success: false,
+          message: 'Tài khoản này đã bị tạm khóa bởi Quản trị viên!',
+        });
+      }
+      const { password: _, ...safeUser } = memoryUser;
+      return res.status(200).json({
+        success: true,
+        message: `Đăng nhập thành công! Chào mừng ${safeUser.displayName}.`,
+        user: safeUser,
+      });
     }
 
     return res.status(200).json({
@@ -620,34 +763,62 @@ export default async function handler(req, res) {
     return res.status(200).json({ success: true, users: [] });
   }
 
-  // ACTION: GET ALL USERS FOR ADMIN CONTROL HUB (MongoDB Atlas)
+  // ACTION: GET ALL USERS FOR ADMIN CONTROL HUB (MongoDB Atlas / Postgres / Memory)
   if (action === 'get_all_users_admin') {
     if (dbConfig.type === 'mongodb') {
       try {
         const db = await getMongoDb(dbConfig.uri);
-        const users = await db.collection('users')
+        let users = await db.collection('users')
           .find({}, { projection: { password: 0 } })
           .sort({ createdAt: -1 })
           .toArray();
 
-        return res.status(200).json({ success: true, users });
+        if (users.length === 0) {
+          await seedDefaultMongoUsers(db);
+          users = await db.collection('users')
+            .find({}, { projection: { password: 0 } })
+            .sort({ createdAt: -1 })
+            .toArray();
+        }
+
+        return res.status(200).json({ success: true, count: users.length, users });
       } catch (err) {
-        return res.status(500).json({ success: false, message: 'Lỗi tải danh sách tài khoản: ' + err.message });
+        return res.status(500).json({ success: false, message: 'Lỗi tải danh sách tài khoản MongoDB: ' + err.message });
       }
     }
-    return res.status(200).json({ success: true, users: [] });
+
+    if (dbConfig.type === 'postgres') {
+      try {
+        const sql = neon(dbConfig.url);
+        await ensurePostgresTable(sql);
+        const rows = await sql`
+          SELECT id, username, display_name, email, avatar, role, status, level, exp, next_level_exp, level_title, streak_days, joined_date, created_at, updated_at
+          FROM users
+          ORDER BY created_at DESC;
+        `;
+        return res.status(200).json({ success: true, count: rows.length, users: rows.map(mapRowToUserProfile) });
+      } catch (err) {
+        return res.status(500).json({ success: false, message: 'Lỗi tải danh sách tài khoản Postgres: ' + err.message });
+      }
+    }
+
+    const safeMemory = memoryUsers.map(({ password: _, ...u }) => u);
+    return res.status(200).json({ success: true, count: safeMemory.length, users: safeMemory });
   }
 
-  // ACTION: DELETE USER (Admin Control Panel - MongoDB Atlas)
+  // ACTION: DELETE USER (Admin Control Panel)
   if (action === 'delete_user') {
     const { userId, username } = body;
     if (!userId && !username) {
       return res.status(400).json({ success: false, message: 'Thiếu thông tin tài khoản cần xóa!' });
     }
 
-    if (username === '1' || userId === 'admin_author_1') {
+    if (username === '1' || username === 'admin123' || userId === 'admin_author_1' || userId === 'admin_initial_root') {
       return res.status(400).json({ success: false, message: 'Không thể xóa tài khoản Quản Trị Viên Tối Cao!' });
     }
+
+    // Remove from memory
+    memoryUsers = memoryUsers.filter(u => u.id !== userId && u.username !== username);
 
     if (dbConfig.type === 'mongodb') {
       try {
@@ -667,7 +838,219 @@ export default async function handler(req, res) {
       }
     }
 
-    return res.status(200).json({ success: true, message: 'Đã xóa tài khoản cục bộ.' });
+    if (dbConfig.type === 'postgres') {
+      try {
+        const sql = neon(dbConfig.url);
+        await ensurePostgresTable(sql);
+        await sql`DELETE FROM users WHERE id = ${userId} OR LOWER(username) = LOWER(${username});`;
+        return res.status(200).json({ success: true, message: `Đã xóa tài khoản khỏi Postgres.` });
+      } catch (err) {
+        return res.status(500).json({ success: false, message: 'Lỗi Postgres: ' + err.message });
+      }
+    }
+
+    return res.status(200).json({ success: true, message: 'Đã xóa tài khoản khỏi hệ thống.' });
+  }
+
+  // ACTION: TOGGLE LOCK USER (Admin Control Panel)
+  if (action === 'toggle_lock_user') {
+    const { userId, username, currentStatus } = body;
+    const newStatus = currentStatus === 'locked' ? 'active' : 'locked';
+
+    if (username === '1' || username === 'admin123') {
+      return res.status(400).json({ success: false, message: 'Không thể khóa tài khoản quản trị hệ thống!' });
+    }
+
+    // Update in memory
+    const mIdx = memoryUsers.findIndex(u => u.id === userId || u.username === username);
+    if (mIdx >= 0) {
+      memoryUsers[mIdx].status = newStatus;
+    }
+
+    if (dbConfig.type === 'mongodb') {
+      try {
+        const db = await getMongoDb(dbConfig.uri);
+        const query = userId ? { id: userId } : { username };
+        await db.collection('users').updateOne(query, { $set: { status: newStatus, updatedAt: new Date() } });
+        return res.status(200).json({
+          success: true,
+          status: newStatus,
+          message: `Đã ${newStatus === 'locked' ? 'khóa' : 'mở khóa'} tài khoản ${username || userId}!`,
+        });
+      } catch (err) {
+        return res.status(500).json({ success: false, message: 'Lỗi cập nhật trạng thái: ' + err.message });
+      }
+    }
+
+    if (dbConfig.type === 'postgres') {
+      try {
+        const sql = neon(dbConfig.url);
+        await ensurePostgresTable(sql);
+        await sql`UPDATE users SET status = ${newStatus}, updated_at = CURRENT_TIMESTAMP WHERE id = ${userId} OR LOWER(username) = LOWER(${username});`;
+        return res.status(200).json({ success: true, status: newStatus, message: `Đã cập nhật trạng thái tài khoản!` });
+      } catch (err) {
+        return res.status(500).json({ success: false, message: 'Lỗi Postgres: ' + err.message });
+      }
+    }
+
+    return res.status(200).json({ success: true, status: newStatus, message: `Đã đổi trạng thái tài khoản sang ${newStatus}.` });
+  }
+
+  // ACTION: UPDATE USER ROLE (Admin Control Panel)
+  if (action === 'update_user_role') {
+    const { userId, username, newRole } = body;
+    if (newRole !== 'admin' && newRole !== 'reader') {
+      return res.status(400).json({ success: false, message: 'Vai trò không hợp lệ!' });
+    }
+
+    if ((username === '1' || username === 'admin123') && newRole === 'reader') {
+      return res.status(400).json({ success: false, message: 'Không thể hạ quyền Quản trị viên tối cao!' });
+    }
+
+    const mIdx = memoryUsers.findIndex(u => u.id === userId || u.username === username);
+    if (mIdx >= 0) {
+      memoryUsers[mIdx].role = newRole;
+    }
+
+    if (dbConfig.type === 'mongodb') {
+      try {
+        const db = await getMongoDb(dbConfig.uri);
+        const query = userId ? { id: userId } : { username };
+        await db.collection('users').updateOne(query, { $set: { role: newRole, updatedAt: new Date() } });
+        return res.status(200).json({
+          success: true,
+          role: newRole,
+          message: `Đã phân quyền ${newRole === 'admin' ? 'Quản trị viên' : 'Độc giả'} cho tài khoản ${username || userId}!`,
+        });
+      } catch (err) {
+        return res.status(500).json({ success: false, message: 'Lỗi cập nhật quyền: ' + err.message });
+      }
+    }
+
+    if (dbConfig.type === 'postgres') {
+      try {
+        const sql = neon(dbConfig.url);
+        await ensurePostgresTable(sql);
+        await sql`UPDATE users SET role = ${newRole}, updated_at = CURRENT_TIMESTAMP WHERE id = ${userId} OR LOWER(username) = LOWER(${username});`;
+        return res.status(200).json({ success: true, role: newRole, message: `Đã cập nhật quyền thành công!` });
+      } catch (err) {
+        return res.status(500).json({ success: false, message: 'Lỗi Postgres: ' + err.message });
+      }
+    }
+
+    return res.status(200).json({ success: true, role: newRole, message: `Đã cập nhật vai trò ${newRole}.` });
+  }
+
+  // ACTION: ADMIN CREATE USER (Admin Control Panel)
+  if (action === 'admin_create_user') {
+    const { username, password, displayName, email, role } = body;
+    const cleanUser = (username || '').trim().toLowerCase();
+    if (!cleanUser || cleanUser.length < 3) {
+      return res.status(400).json({ success: false, message: 'Tên đăng nhập phải từ 3 ký tự trở lên!' });
+    }
+    if (!password || password.length < 4) {
+      return res.status(400).json({ success: false, message: 'Mật khẩu phải từ 4 ký tự trở lên!' });
+    }
+
+    const newUserDoc = {
+      id: `user_${Date.now()}_${Math.random().toString(36).substr(2, 4)}`,
+      username: cleanUser,
+      password,
+      displayName: displayName || cleanUser,
+      email: email || `${cleanUser}@arumo.vn`,
+      role: role === 'admin' ? 'admin' : 'reader',
+      status: 'active',
+      avatar: role === 'admin' ? '👑' : '🐉',
+      level: role === 'admin' ? 99 : 1,
+      exp: role === 'admin' ? 999999 : 50,
+      nextLevelExp: role === 'admin' ? 999999 : 100,
+      levelTitle: role === 'admin' ? 'Quản Trị Viên' : 'Độc Giả Mới',
+      streakDays: 1,
+      joinedDate: new Date().toLocaleDateString('vi-VN'),
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+
+    if (dbConfig.type === 'mongodb') {
+      try {
+        const db = await getMongoDb(dbConfig.uri);
+        const existing = await db.collection('users').findOne({ username: cleanUser });
+        if (existing) {
+          return res.status(400).json({ success: false, message: 'Tên đăng nhập này đã tồn tại trên Database!' });
+        }
+
+        await db.collection('users').insertOne(newUserDoc);
+        const { password: _, _id, ...safeUser } = newUserDoc;
+        return res.status(200).json({
+          success: true,
+          message: `Đã tạo mới tài khoản ${cleanUser} trên cơ sở dữ liệu MongoDB Atlas!`,
+          user: safeUser,
+        });
+      } catch (err) {
+        return res.status(500).json({ success: false, message: 'Lỗi tạo tài khoản: ' + err.message });
+      }
+    }
+
+    // Memory store
+    if (memoryUsers.some(u => u.username.toLowerCase() === cleanUser)) {
+      return res.status(400).json({ success: false, message: 'Tên đăng nhập này đã tồn tại!' });
+    }
+    memoryUsers.unshift(newUserDoc);
+    const { password: _, ...safeUser } = newUserDoc;
+    return res.status(200).json({
+      success: true,
+      message: `Đã tạo tài khoản ${cleanUser} thành công!`,
+      user: safeUser,
+    });
+  }
+
+  // ACTION: ADMIN UPDATE USER DETAILS (Admin Control Panel)
+  if (action === 'admin_update_user') {
+    const { userId, username, displayName, email, role, status, level, levelTitle, newPassword } = body;
+    const targetUser = username || userId;
+    if (!targetUser) {
+      return res.status(400).json({ success: false, message: 'Thiếu thông tin tài khoản!' });
+    }
+
+    const updates = {};
+    if (displayName) updates.displayName = displayName;
+    if (email) updates.email = email;
+    if (role && (username !== '1' && username !== 'admin123')) updates.role = role;
+    if (status && (username !== '1' && username !== 'admin123')) updates.status = status;
+    if (level !== undefined) updates.level = Number(level);
+    if (levelTitle) updates.levelTitle = levelTitle;
+    if (newPassword) updates.password = newPassword;
+    updates.updatedAt = new Date();
+
+    if (dbConfig.type === 'mongodb') {
+      try {
+        const db = await getMongoDb(dbConfig.uri);
+        const query = userId ? { id: userId } : { username };
+        await db.collection('users').updateOne(query, { $set: updates });
+        const updated = await db.collection('users').findOne(query, { projection: { password: 0 } });
+        return res.status(200).json({
+          success: true,
+          message: `Đã cập nhật thông tin tài khoản ${targetUser} trên MongoDB Atlas!`,
+          user: updated,
+        });
+      } catch (err) {
+        return res.status(500).json({ success: false, message: 'Lỗi cập nhật MongoDB: ' + err.message });
+      }
+    }
+
+    // Memory update
+    const mIdx = memoryUsers.findIndex(u => u.id === userId || u.username === username);
+    if (mIdx >= 0) {
+      memoryUsers[mIdx] = { ...memoryUsers[mIdx], ...updates };
+      const { password: _, ...safe } = memoryUsers[mIdx];
+      return res.status(200).json({
+        success: true,
+        message: 'Đã cập nhật thông tin tài khoản thành công!',
+        user: safe,
+      });
+    }
+
+    return res.status(200).json({ success: true, message: 'Đã cập nhật thông tin tài khoản!' });
   }
 
   // ACTION: GET COMMENTS (MongoDB Atlas)

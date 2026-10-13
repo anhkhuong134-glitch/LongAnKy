@@ -40,6 +40,14 @@ export interface UserProfile {
   readingFontSize?: number;
   role?: 'admin' | 'reader';
   isAdmin?: boolean; // Quyền quản trị viên / Tác giả tối cao
+  status?: 'active' | 'locked';
+}
+
+export interface DatabaseStatus {
+  connected: boolean;
+  provider: string;
+  userCount?: number;
+  message?: string;
 }
 
 export interface ReadingHistoryItem {

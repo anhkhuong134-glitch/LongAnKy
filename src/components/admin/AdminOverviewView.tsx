@@ -1,9 +1,10 @@
 import React from 'react';
 import {
   BookOpen, Users, Film, CheckSquare, Clock, ArrowRight,
-  Sparkles, AlertCircle, CheckCircle2, ChevronRight
+  Sparkles, AlertCircle, CheckCircle2, ChevronRight, UserCheck
 } from 'lucide-react';
 import { ALL_CHARACTERS_DATA } from '../../data/publicCharacters';
+import { UserService } from '../../services/userService';
 
 interface AdminOverviewViewProps {
   onNavigate: (path: string) => void;
@@ -15,8 +16,10 @@ export const AdminOverviewView: React.FC<AdminOverviewViewProps> = ({ onNavigate
   const draftChaptersCount = 2; // Chap 6..7 in draft
   const incompleteCharactersCount = ALL_CHARACTERS_DATA.filter(c => !c.publicReady).length;
   const activeComicsCount = 1; // Storyboard prologue
+  const totalUsersCount = UserService.getAllUsers().length;
 
   const tasksList = [
+    { id: 't0', title: 'Quản lý tài khoản độc giả & cập nhật liên tục từ Database', area: 'Tài khoản', status: 'Trực tiếp', link: '/admin/tai-khoan' },
     { id: 't1', title: 'Hoàn thiện hồ sơ công khai cho Tovan và Eli', area: 'Nhân vật', status: 'Đang làm', link: '/admin/nhan-vat' },
     { id: 't2', title: 'Biên tập Chương 6 — Nước lạnh dưới giếng cảng', area: 'Truyện chữ', status: 'Đang làm', link: '/admin/chuong' },
     { id: 't3', title: 'Hoàn tất phác thảo phân khung tập Mở đầu truyện tranh', area: 'Truyện tranh', status: 'Chưa làm', link: '/admin/truyen-tranh' },
@@ -52,8 +55,8 @@ export const AdminOverviewView: React.FC<AdminOverviewViewProps> = ({ onNavigate
         </button>
       </div>
 
-      {/* 4 Stat Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      {/* 5 Stat Cards */}
+      <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
         {/* Card 1 */}
         <div
           onClick={() => onNavigate('/admin/chuong')}
@@ -113,7 +116,7 @@ export const AdminOverviewView: React.FC<AdminOverviewViewProps> = ({ onNavigate
             {incompleteCharactersCount}
           </div>
           <div className="text-xs font-bold text-[#5F706A] mt-0.5">
-            Hồ sơ cần hoàn thiện
+            Hồ sơ nhân vật
           </div>
         </div>
 
@@ -134,7 +137,29 @@ export const AdminOverviewView: React.FC<AdminOverviewViewProps> = ({ onNavigate
             {activeComicsCount}
           </div>
           <div className="text-xs font-bold text-[#5F706A] mt-0.5">
-            Chương tranh đang làm
+            Chương tranh
+          </div>
+        </div>
+
+        {/* Card 5: Quản lý tài khoản Live DB */}
+        <div
+          onClick={() => onNavigate('/admin/tai-khoan')}
+          className="bg-white border border-[#DCE6DF] rounded-2xl p-5 hover:border-[#376F64] transition-all cursor-pointer shadow-xs group col-span-2 lg:col-span-1"
+        >
+          <div className="flex items-center justify-between text-[#376F64] mb-3">
+            <span className="w-9 h-9 rounded-xl bg-[#E4F1E9] text-[#376F64] flex items-center justify-center">
+              <UserCheck className="w-5 h-5" />
+            </span>
+            <span className="text-[11px] font-bold text-[#376F64] bg-[#E4F1E9] px-2 py-0.5 rounded-full flex items-center gap-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#376F64] animate-ping" />
+              Live DB
+            </span>
+          </div>
+          <div className="text-2xl font-extrabold text-[#293B36] group-hover:text-[#376F64] transition-colors">
+            {totalUsersCount}
+          </div>
+          <div className="text-xs font-bold text-[#5F706A] mt-0.5">
+            Quản lý tài khoản
           </div>
         </div>
       </div>
