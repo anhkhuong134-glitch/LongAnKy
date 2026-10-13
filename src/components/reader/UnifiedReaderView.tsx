@@ -23,7 +23,13 @@ import {
   Compass,
   Music,
   Clock,
-  Palette
+  Palette,
+  Settings,
+  Maximize2,
+  Minimize2,
+  Lock,
+  KeyRound,
+  Headphones
 } from 'lucide-react';
 import { Project, Part, Chapter, ComicChapter, ComicPanel, ComicReadingMode, AISettings, Character } from '../../types';
 import { sampleComicChapters, GOOGLE_DOCS_URL } from '../../data/googleData';
@@ -36,6 +42,8 @@ import { WorldAtlasModal } from './WorldAtlasModal';
 import { AmbientSoundPlayer } from './AmbientSoundPlayer';
 import { LoreCodexDrawer } from './LoreCodexDrawer';
 import { ChronicleTimelineModal } from './ChronicleTimelineModal';
+import { ReadingSettingsModal, ReadingPreferences, THEME_OPTIONS, ReadingThemeId } from './ReadingSettingsModal';
+import { ChapterCommentsSection } from './ChapterCommentsSection';
 
 interface UnifiedReaderViewProps {
   project: Project;
@@ -48,6 +56,8 @@ interface UnifiedReaderViewProps {
   onSyncGoogleDocs?: () => Promise<void> | void;
   isSyncingDoc?: boolean;
   characters?: Character[];
+  onOpenAuthorLogin?: () => void;
+  onExitAuthorMode?: () => void;
 }
 
 type ReaderType = 'novel' | 'comic';
@@ -182,28 +192,90 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
   onOpenComicUploader,
   onSyncGoogleDocs,
   isSyncingDoc = false,
-  characters: propsCharacters
+  characters: propsCharacters,
+  onOpenAuthorLogin,
+  onExitAuthorMode
 }) => {
   // Mode selection: Novel (Truyện chữ - Đang sáng tác) vs Comic (Truyện tranh - Sắp ra mắt)
   const [readerType, setReaderType] = useState<ReaderType>('novel');
   const [authorPreviewComic, setAuthorPreviewComic] = useState<boolean>(false);
 
+  // Logo click counter to secret author prompt
+  const [logoClicks, setLogoClicks] = useState<number>(0);
+
+  // Reading Preferences state (Loaded & persisted in localStorage)
+  const [readingPrefs, setReadingPrefs] = useState<ReadingPreferences>(() => {
+    try {
+      const saved = localStorage.getItem('longanky_reader_prefs');
+      if (saved) return JSON.parse(saved);
+    } catch (e) {}
+    return {
+      theme: 'obsidian',
+      fontFamily: 'serif',
+      fontSize: 18,
+      lineHeight: 1.85,
+      pageWidth: 'standard'
+    };
+  });
+
+  const handleUpdatePrefs = (newPrefs: Partial<ReadingPreferences>) => {
+    setReadingPrefs(prev => {
+      const updated = { ...prev, ...newPrefs };
+      try {
+        localStorage.setItem('longanky_reader_prefs', JSON.stringify(updated));
+      } catch (e) {}
+      return updated;
+    });
+  };
+
+  // Modals & Drawers state
+  const [isSettingsModalOpen, setIsSettingsModalOpen] = useState<boolean>(false);
+  const [isZenMode, setIsZenMode] = useState<boolean>(false);
+  const [isChapterMenuOpen, setIsChapterMenuOpen] = useState<boolean>(false);
+
   // Character Dossier Drawer state (Tra cứu hồ sơ nhân vật bên phải)
   const [isCharacterDrawerOpen, setIsCharacterDrawerOpen] = useState<boolean>(false);
   const [selectedCharacterId, setSelectedCharacterId] = useState<string | undefined>(undefined);
 
-  // New Features: Atlas, Soundscape, Codex, Timeline, and Reading Themes
+  // New Features: Atlas, Soundscape, Codex, Timeline
   const [isAtlasOpen, setIsAtlasOpen] = useState<boolean>(false);
   const [isSoundPlayerOpen, setIsSoundPlayerOpen] = useState<boolean>(false);
   const [isCodexOpen, setIsCodexOpen] = useState<boolean>(false);
   const [isTimelineOpen, setIsTimelineOpen] = useState<boolean>(false);
-  const [readingTheme, setReadingTheme] = useState<'obsidian' | 'parchment' | 'abyss' | 'amber'>('obsidian');
-  const [showThemePicker, setShowThemePicker] = useState<boolean>(false);
   const [readingProgress, setReadingProgress] = useState<number>(0);
 
-  // Novel reader states
-  const [selectedPartId, setSelectedPartId] = useState<string>(parts[0]?.id || '');
-  const [activeChapterIndex, setActiveChapterIndex] = useState<number>(0);
+  // Novel reader states: Tự động khôi phục chương đọc dở dang từ localStorage
+  const [selectedPartId, setSelectedPartId] = useState<string>(() => {
+    try {
+      const last = localStorage.getItem('longanky_last_read');
+      if (last) {
+        const p = JSON.parse(last);
+        if (p.partId && parts.some(part => part.id === p.partId)) return p.partId;
+      }
+    } catch (e) {}
+    return parts[0]?.id || 'part_prologue';
+  });
+
+  const [activeChapterIndex, setActiveChapterIndex] = useState<number>(() => {
+    try {
+      const last = localStorage.getItem('longanky_last_read');
+      if (last) {
+        const p = JSON.parse(last);
+        if (typeof p.chapterIndex === 'number') return p.chapterIndex;
+      }
+    } catch (e) {}
+    return 0;
+  });
+
+  // Tự động lưu tiến độ đọc vào localStorage
+  useEffect(() => {
+    try {
+      localStorage.setItem('longanky_last_read', JSON.stringify({
+        partId: selectedPartId,
+        chapterIndex: activeChapterIndex
+      }));
+    } catch (e) {}
+  }, [selectedPartId, activeChapterIndex]);
 
   // Track scroll progress for the top reading progress bar
   useEffect(() => {
@@ -245,10 +317,6 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
     setChibiQuoteIndex(prev => (prev + 1) % CHIBI_QUOTES.length);
     setTimeout(() => setIsChibiBouncing(false), 500);
   };
-  const [pageLayout, setPageLayout] = useState<PageLayoutMode>('scroll');
-  const [fontSize, setFontSize] = useState<number>(18);
-  const [fontFamily, setFontFamily] = useState<'serif' | 'sans' | 'mono'>('serif');
-  const [lineHeight, setLineHeight] = useState<number>(1.8);
   const [isBookmarked, setIsBookmarked] = useState<boolean>(false);
 
   // Audio / TTS states
@@ -541,265 +609,200 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
     }
   };
 
-  const novelThemeClasses = THEME_STYLES[readingTheme];
-  const currentTheme = THEME_OPTIONS.find(t => t.id === readingTheme) || THEME_OPTIONS[0];
+  const novelThemeClasses = THEME_STYLES[readingPrefs.theme] || THEME_STYLES.obsidian;
+  const currentTheme = THEME_OPTIONS.find(t => t.id === readingPrefs.theme) || THEME_OPTIONS[0];
 
   return (
     <div className={`flex-1 flex flex-col h-full overflow-hidden transition-colors duration-200 ${novelThemeClasses.bg}`}>
-      {/* ================= TOP UNIFIED TOOLBAR ================= */}
-      <div className={`px-4 sm:px-6 py-2.5 border-b flex flex-wrap items-center justify-between gap-3 backdrop-blur-xl z-20 ${novelThemeClasses.toolbar}`}>
-        {/* Left: Branding & Mode Switcher */}
-        <div className="flex items-center space-x-3">
-          {readerType === 'novel' && (
-            <button
-              onClick={() => setIsSidebarOpen(prev => !prev)}
-              className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-xl border text-xs font-semibold cursor-pointer transition-all active:scale-95 shadow-sm ${
-                isSidebarOpen
-                  ? 'bg-amber-500/20 border-amber-500/40 text-amber-300'
-                  : 'bg-slate-800/60 hover:bg-slate-700/80 border-white/10 text-slate-300'
-              }`}
-              title="Đóng / Mở Bảng Cấu Trúc Tác Phẩm"
-            >
-              <Layers className="w-3.5 h-3.5 text-amber-400" />
-              <span className="hidden sm:inline">Cấu Trúc Tác Phẩm</span>
-              <span className="sm:hidden">Mục Lục</span>
-            </button>
-          )}
-
-          <div className="flex items-center bg-black/20 dark:bg-slate-900/80 p-1 rounded-xl border border-white/10">
-            <button
-              onClick={() => setReaderType('novel')}
-              className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
-                readerType === 'novel'
-                  ? 'bg-amber-500/25 text-amber-300 border border-amber-500/40 shadow-sm'
-                  : 'opacity-70 hover:opacity-100 text-slate-300'
-              }`}
-            >
-              <BookOpen className="w-3.5 h-3.5 text-amber-400" />
-              <span>Truyện Chữ (Đang sáng tác)</span>
-            </button>
-
-            <button
-              onClick={() => setReaderType('comic')}
-              className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
-                readerType === 'comic'
-                  ? 'bg-rose-500/25 text-rose-300 border border-rose-500/40 shadow-sm'
-                  : 'opacity-70 hover:opacity-100 text-slate-300'
-              }`}
-            >
-              <ImageIcon className="w-3.5 h-3.5 text-rose-400" />
-              <span>Truyện Tranh (Sắp ra mắt)</span>
-            </button>
-          </div>
-
-          <span className="hidden md:inline text-xs opacity-50">•</span>
-          <span className="hidden md:inline text-xs font-medium opacity-80 truncate max-w-xs font-serif">
-            {readerType === 'novel' 
-              ? currentChapter?.title 
-              : (authorPreviewComic ? activeComic.title : 'Dự Án Webtoon (Sắp ra mắt)')}
-          </span>
+      {/* ================= ZEN MODE FLOATING ESCAPE PILL ================= */}
+      {isZenMode && (
+        <div className="fixed top-4 right-4 z-50 animate-in fade-in">
+          <button
+            onClick={() => setIsZenMode(false)}
+            className="px-3.5 py-1.5 rounded-full bg-slate-900/90 hover:bg-slate-900 border border-white/20 text-slate-200 hover:text-white text-xs flex items-center gap-1.5 shadow-2xl backdrop-blur-md cursor-pointer transition-all hover:scale-105"
+            title="Thoát chế độ tập trung đọc (Esc)"
+          >
+            <Minimize2 className="w-3.5 h-3.5 text-amber-400" />
+            <span>Thoát Chế Độ Tập Trung (Esc)</span>
+          </button>
         </div>
+      )}
 
-        {/* Center: Controls based on Mode */}
-        {readerType === 'novel' ? (
-          <div className="flex items-center space-x-2">
-            {/* Part selector pills */}
-            <div className="hidden lg:flex items-center space-x-1 bg-black/15 p-1 rounded-lg">
-              {parts.map(p => (
-                <button
-                  key={p.id}
-                  onClick={() => {
-                    setSelectedPartId(p.id);
-                    setActiveChapterIndex(0);
-                  }}
-                  className={`px-2.5 py-1 rounded text-xs transition-all ${
-                    selectedPartId === p.id
-                      ? 'bg-amber-500/20 text-amber-300 font-bold'
-                      : 'opacity-70 hover:opacity-100'
-                  }`}
-                >
-                  {p.title.split('—')[0]}
-                </button>
-              ))}
-            </div>
-
-            {/* Audio Read-Aloud Button */}
-            <button
-              onClick={handleToggleAudio}
-              className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-xl text-xs font-medium border transition-all ${
-                isPlayingAudio
-                  ? 'bg-rose-500/20 text-rose-300 border-rose-500/40 animate-pulse'
-                  : 'bg-black/15 hover:bg-black/25 border-white/10'
-              }`}
-              title="Đọc to truyện bằng giọng AI tiếng Việt"
-            >
-              {isPlayingAudio ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5" />}
-              <span>{isPlayingAudio ? 'Đang đọc...' : 'Đọc Audio'}</span>
-            </button>
-
-            {/* Convert to Comic Trigger - Only for Author */}
-            {isAuthorMode && (
+      {/* ================= TOP UNIFIED HEADER (SINGLE SLIM BAR) ================= */}
+      {!isZenMode && (
+        <header className={`h-14 px-4 sm:px-6 border-b flex items-center justify-between gap-3 backdrop-blur-xl z-20 shrink-0 ${novelThemeClasses.toolbar}`}>
+          {/* Left: Mục Lục & Novel Title */}
+          <div className="flex items-center space-x-3">
+            {readerType === 'novel' && (
               <button
-                onClick={() => setShowPanelCreator(true)}
-                className="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl text-xs font-medium bg-gradient-to-r from-rose-500/20 to-amber-500/20 hover:from-rose-500/30 hover:to-amber-500/30 text-rose-300 border border-rose-500/30 shadow-sm"
-                title="Dành cho tác giả: Dùng AI phân cảnh đoạn văn thành truyện tranh và sinh ảnh"
+                onClick={() => setIsSidebarOpen(prev => !prev)}
+                className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-xl border text-xs font-semibold cursor-pointer transition-all active:scale-95 shadow-sm ${
+                  isSidebarOpen
+                    ? 'bg-amber-500/20 border-amber-500/40 text-amber-300'
+                    : 'bg-slate-800/60 hover:bg-slate-700/80 border-white/10 text-slate-300'
+                }`}
+                title="Đóng / Mở Mục Lục Tác Phẩm"
               >
-                <Sparkles className="w-3.5 h-3.5 text-amber-300" />
-                <span>Biến thành Truyện Tranh AI</span>
+                <Menu className="w-3.5 h-3.5 text-amber-400" />
+                <span className="hidden sm:inline">Mục Lục</span>
               </button>
             )}
-          </div>
-        ) : (
-          <div className="flex items-center space-x-2">
-            {authorPreviewComic ? (
-              <>
-                {/* Webtoon vs Manga Mode (Chỉ hiện khi tác giả bật xem thử) */}
-                <div className="flex items-center bg-black/15 p-1 rounded-xl border border-white/10 text-xs">
-                  <button
-                    onClick={() => setComicMode('webtoon')}
-                    className={`px-2.5 py-1 rounded-lg ${comicMode === 'webtoon' ? 'bg-rose-500/20 text-rose-300 font-bold' : 'opacity-70'}`}
-                  >
-                    Cuộn Dọc Webtoon
-                  </button>
-                  <button
-                    onClick={() => setComicMode('manga_pages')}
-                    className={`px-2.5 py-1 rounded-lg ${comicMode === 'manga_pages' ? 'bg-rose-500/20 text-rose-300 font-bold' : 'opacity-70'}`}
-                  >
-                    Lật Trang Manga
-                  </button>
+
+            {/* Brand Logo & Title */}
+            <div 
+              onClick={() => {
+                const next = logoClicks + 1;
+                setLogoClicks(next);
+                if (next >= 5 && onOpenAuthorLogin) {
+                  setLogoClicks(0);
+                  onOpenAuthorLogin();
+                }
+              }}
+              className="flex items-center space-x-2.5 cursor-pointer select-none"
+              title="Long Ấn Thức Tỉnh"
+            >
+              <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-amber-500 via-rose-600 to-purple-600 flex items-center justify-center text-white font-serif font-bold text-sm shadow-md shadow-amber-500/20">
+                🐉
+              </div>
+              <div className="hidden sm:block">
+                <div className="flex items-center gap-1.5">
+                  <h1 className="font-serif font-bold text-sm tracking-tight text-white leading-tight">
+                    Long Ấn Thức Tỉnh
+                  </h1>
+                  <span className="text-[10px] px-1.5 py-0.2 rounded-full font-bold bg-pink-500/20 text-pink-300 border border-pink-400/30">
+                    Sáng Tác
+                  </span>
                 </div>
+              </div>
+            </div>
+          </div>
 
-                <button
-                  onClick={() => setAuthorPreviewComic(false)}
-                  className="px-2.5 py-1 rounded-lg text-xs bg-white/10 hover:bg-white/15 text-slate-300 transition-colors"
-                >
-                  ✕ Đóng xem trước
-                </button>
-              </>
-            ) : (
-              <span className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-rose-500/15 text-rose-300 border border-rose-500/30 font-mono">
-                ⏳ Đang Chuẩn Bị Sản Xuất
-              </span>
+          {/* Center: Quick Chapter Jump Dropdown */}
+          {readerType === 'novel' ? (
+            <div className="relative">
+              <button
+                onClick={() => setIsChapterMenuOpen(prev => !prev)}
+                className="flex items-center space-x-2 px-3 py-1.5 rounded-xl bg-black/30 hover:bg-black/50 border border-white/10 hover:border-amber-400/40 transition-all cursor-pointer text-xs"
+                title="Nhảy nhanh đến chương bất kỳ"
+              >
+                <span className="text-amber-300 font-serif font-semibold truncate max-w-[150px] sm:max-w-[240px] md:max-w-xs">
+                  {currentChapter?.title || 'Chọn chương đọc'}
+                </span>
+                <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-300 hidden md:inline">
+                  {currentGlobalIndex + 1}/{allFlatChapters.length}
+                </span>
+                <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
+              </button>
+
+              {/* Dropdown Menu */}
+              {isChapterMenuOpen && (
+                <div className="absolute left-1/2 -translate-x-1/2 top-full mt-2 w-80 sm:w-96 max-h-96 overflow-y-auto custom-scrollbar p-2 rounded-2xl bg-slate-950/95 border border-indigo-500/30 shadow-2xl backdrop-blur-2xl z-50 space-y-1">
+                  <div className="px-3 py-1.5 border-b border-white/10 text-[11px] font-serif font-bold text-amber-300 flex items-center justify-between">
+                    <span>DANH SÁCH CHƯƠNG TOÀN TẬP</span>
+                    <span className="font-mono text-slate-400 font-normal">{allFlatChapters.length} chương</span>
+                  </div>
+                  {allFlatChapters.map((item, idx) => {
+                    const isCurrent = idx === currentGlobalIndex;
+                    return (
+                      <button
+                        key={item.chapter.id}
+                        onClick={() => {
+                          goToChapterByGlobalIndex(idx);
+                          setIsChapterMenuOpen(false);
+                        }}
+                        className={`w-full p-2.5 rounded-xl text-left transition-all flex items-center justify-between cursor-pointer ${
+                          isCurrent
+                            ? 'bg-amber-500/20 text-amber-200 border border-amber-500/30 font-bold'
+                            : 'text-slate-300 hover:bg-white/5 hover:text-white'
+                        }`}
+                      >
+                        <div className="min-w-0 flex-1 pr-2">
+                          <div className="font-serif text-xs truncate">
+                            {item.chapter.title}
+                          </div>
+                          <div className="text-[10px] text-slate-400 truncate">
+                            {item.partTitle}
+                          </div>
+                        </div>
+                        <span className="text-[10px] font-mono opacity-70">
+                          {item.chapter.wordCount.toLocaleString()} từ
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="text-xs font-serif font-bold text-rose-300 flex items-center gap-1.5">
+              <span>🎨</span>
+              <span>Dự Án Truyện Tranh Webtoon (Sắp ra mắt)</span>
+            </div>
+          )}
+
+          {/* Right: Essential Tools & Reading Settings */}
+          <div className="flex items-center space-x-1.5 sm:space-x-2 text-xs">
+            {/* Audio Read-Aloud Button */}
+            {readerType === 'novel' && (
+              <button
+                onClick={handleToggleAudio}
+                className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-xl text-xs font-medium border transition-all cursor-pointer ${
+                  isPlayingAudio
+                    ? 'bg-rose-500/20 text-rose-300 border-rose-500/40 animate-pulse'
+                    : 'bg-black/25 hover:bg-black/35 border-white/10 text-slate-300'
+                }`}
+                title="Đọc to truyện bằng giọng AI tiếng Việt"
+              >
+                {isPlayingAudio ? <Pause className="w-3.5 h-3.5 text-rose-400" /> : <Play className="w-3.5 h-3.5 text-amber-400" />}
+                <span className="hidden md:inline">{isPlayingAudio ? 'Đang đọc...' : 'Đọc Audio'}</span>
+              </button>
             )}
 
-            {isAuthorMode && !authorPreviewComic && (
+            {/* Reading Customizer Settings Button */}
+            <button
+              onClick={() => setIsSettingsModalOpen(true)}
+              className="flex items-center space-x-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl bg-black/25 hover:bg-black/35 border border-white/10 hover:border-amber-400/40 text-slate-300 hover:text-white transition-all cursor-pointer"
+              title="Tùy chỉnh phông chữ, cỡ chữ, giao diện đọc"
+            >
+              <Palette className="w-3.5 h-3.5 text-amber-400" />
+              <span className="hidden sm:inline text-xs">Tùy Chỉnh</span>
+            </button>
+
+            {/* Zen / Focus Mode Button */}
+            <button
+              onClick={() => setIsZenMode(true)}
+              className="p-2 rounded-xl bg-black/25 hover:bg-black/35 border border-white/10 hover:border-pink-400/40 text-slate-300 hover:text-white transition-all cursor-pointer"
+              title="Chế độ tập trung đọc (Ẩn toàn bộ thanh công cụ)"
+            >
+              <Maximize2 className="w-3.5 h-3.5 text-pink-400" />
+            </button>
+
+            {/* Bookmark */}
+            <button
+              onClick={() => setIsBookmarked(!isBookmarked)}
+              className={`p-2 rounded-xl border transition-all cursor-pointer ${
+                isBookmarked 
+                  ? 'text-amber-400 border-amber-400/50 bg-amber-400/10' 
+                  : 'text-slate-400 hover:text-white border-white/10 bg-black/25 hover:bg-black/35'
+              }`}
+              title={isBookmarked ? "Đã đánh dấu chương" : "Đánh dấu chương"}
+            >
+              <BookMarked className="w-3.5 h-3.5" />
+            </button>
+
+            {/* Discreet Author Mode Trigger */}
+            {onOpenAuthorLogin && (
               <button
-                onClick={() => setShowPanelCreator(true)}
-                className="flex items-center space-x-1 px-2.5 py-1.5 rounded-xl text-xs bg-rose-500/20 text-rose-300 border border-rose-500/30 hover:bg-rose-500/30 transition-colors"
-                title="Dành cho tác giả: Tạo hồi truyện tranh mới"
+                onClick={onOpenAuthorLogin}
+                className="p-2 rounded-xl text-slate-500 hover:text-amber-400 transition-colors cursor-pointer"
+                title="Dành cho Tác giả nhập mã PIN quản trị"
               >
-                <Sparkles className="w-3.5 h-3.5" />
-                <span>Tạo Hồi Mới</span>
+                <Lock className="w-3.5 h-3.5" />
               </button>
             )}
           </div>
-        )}
-
-        {/* Right: Essential Tools & Reading Settings */}
-        <div className="flex items-center space-x-1.5 sm:space-x-2 text-xs">
-          {/* Audio Read-Aloud Button */}
-          {readerType === 'novel' && (
-            <button
-              onClick={handleToggleAudio}
-              className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-xl text-xs font-medium border transition-all cursor-pointer ${
-                isPlayingAudio
-                  ? 'bg-rose-500/20 text-rose-300 border-rose-500/40 animate-pulse'
-                  : 'bg-black/15 hover:bg-black/25 border-white/10'
-              }`}
-              title="Đọc to truyện bằng giọng AI tiếng Việt"
-            >
-              {isPlayingAudio ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5" />}
-              <span className="hidden sm:inline">{isPlayingAudio ? 'Đang đọc...' : 'Đọc Audio'}</span>
-            </button>
-          )}
-
-          {/* Character Dossier Quick Trigger Button */}
-          <button
-            onClick={() => setIsCharacterDrawerOpen(prev => !prev)}
-            className={`flex items-center space-x-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-semibold border transition-all cursor-pointer shadow-sm active:scale-95 ${
-              isCharacterDrawerOpen
-                ? 'bg-cyan-500/25 text-cyan-200 border-cyan-400/50 shadow-md shadow-cyan-500/20'
-                : 'bg-gradient-to-r from-cyan-950/40 via-indigo-950/40 to-purple-950/40 hover:from-cyan-900/40 hover:to-purple-900/40 text-cyan-200 border-cyan-500/30'
-            }`}
-            title="Tra cứu hồ sơ nhân vật (Tên tuổi, xuất xứ, quá khứ, hình ảnh)"
-          >
-            <Users className="w-3.5 h-3.5 text-cyan-400" />
-            <span className="hidden sm:inline">Nhân Vật</span>
-            <span className="text-[10px] bg-cyan-500/30 text-cyan-200 font-mono font-bold px-1.5 py-0.2 rounded-full">
-              {allCharacters.length}
-            </span>
-          </button>
-
-          {/* Theme Switcher */}
-          <div className="relative">
-            <button
-              onClick={() => setShowThemePicker(prev => !prev)}
-              className="flex items-center space-x-1.5 px-2.5 py-1.5 rounded-xl bg-black/25 hover:bg-black/35 border border-white/10 text-xs text-slate-300 hover:text-white transition-all cursor-pointer"
-              title="Đổi phong cách giao diện đọc"
-            >
-              <span>{currentTheme.icon}</span>
-              <span className="hidden md:inline text-[11px] font-medium">{currentTheme.name}</span>
-              <Palette className="w-3 h-3 text-slate-400" />
-            </button>
-
-            {showThemePicker && (
-              <div className="absolute right-0 top-full mt-2 w-48 p-2 rounded-2xl bg-slate-950/95 border border-white/15 shadow-2xl backdrop-blur-xl z-50 space-y-1">
-                {THEME_OPTIONS.map(th => (
-                  <button
-                    key={th.id}
-                    onClick={() => {
-                      setReadingTheme(th.id);
-                      setShowThemePicker(false);
-                    }}
-                    className={`w-full flex items-center space-x-2 px-2.5 py-1.5 rounded-xl text-xs text-left transition-all cursor-pointer ${
-                      readingTheme === th.id
-                        ? 'bg-amber-500/20 text-amber-300 font-bold border border-amber-500/30'
-                        : 'text-slate-300 hover:bg-white/5 hover:text-white'
-                    }`}
-                  >
-                    <span>{th.icon}</span>
-                    <span>{th.name}</span>
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {readerType === 'novel' && (
-            <>
-              {/* Font Size Adjuster */}
-              <div className="flex items-center space-x-1 bg-black/25 px-2 py-1 rounded-xl border border-white/10 shadow-sm">
-                <button
-                  onClick={() => setFontSize(prev => Math.max(14, prev - 1))}
-                  className="px-1.5 hover:text-amber-400 font-bold text-slate-300 transition-colors cursor-pointer"
-                  title="Giảm kích cỡ chữ"
-                >
-                  A-
-                </button>
-                <span className="font-mono text-[11px] opacity-80 w-5 text-center text-amber-300">{fontSize}</span>
-                <button
-                  onClick={() => setFontSize(prev => Math.min(26, prev + 1))}
-                  className="px-1.5 hover:text-amber-400 font-bold text-slate-300 transition-colors cursor-pointer"
-                  title="Tăng kích cỡ chữ"
-                >
-                  A+
-                </button>
-              </div>
-            </>
-          )}
-
-          {/* Bookmark */}
-          <button
-            onClick={() => setIsBookmarked(!isBookmarked)}
-            className={`p-1.5 rounded-lg border transition-all ${
-              isBookmarked ? 'text-amber-400 border-amber-400/50 bg-amber-400/10' : 'opacity-60 hover:opacity-100 border-white/10'
-            }`}
-            title="Đánh dấu trang"
-          >
-            <BookMarked className="w-4 h-4" />
-          </button>
-        </div>
-      </div>
+        </header>
+      )}
 
       {/* ================= MAIN CONTENT VIEWPORT ================= */}
       {readerType === 'novel' ? (
@@ -813,24 +816,25 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
           )}
 
           {/* ================= LEFT SIDEBAR: CẤU TRÚC TÁC PHẨM (Matching Hình 4) ================= */}
+          {/* ================= LEFT SIDEBAR: MỤC LỤC TÁC PHẨM ================= */}
           <aside
             className={`w-80 sm:w-88 lg:w-96 flex-shrink-0 flex flex-col border-r select-none h-full transition-all duration-300 z-30 ${
               isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:hidden'
             } bg-[#080d1e]/90 border-r border-indigo-500/20 text-slate-200 backdrop-blur-2xl absolute lg:relative inset-y-0 left-0 shadow-2xl lg:shadow-none`}
           >
-            {/* 1. Header Card with Word Count Badge */}
-            <div className="p-3.5 border-b border-indigo-500/15 space-y-2.5">
+            {/* 1. Header Card with Title and Word Count */}
+            <div className="p-4 border-b border-indigo-500/15 space-y-2.5">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-2">
-                  <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-amber-500/20 via-pink-500/20 to-purple-500/20 border border-pink-400/30 flex items-center justify-center text-amber-300 shadow-sm animate-float-gentle">
+                  <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-amber-500/20 via-pink-500/20 to-purple-500/20 border border-pink-400/30 flex items-center justify-center text-amber-300 shadow-sm">
                     <span className="text-base">🐉</span>
                   </div>
                   <div>
                     <h3 className="font-serif font-bold text-sm tracking-tight text-slate-100 flex items-center gap-1.5">
-                      <span>Cấu Trúc Tác Phẩm</span>
+                      <span>Mục Lục Tác Phẩm</span>
                       <span className="text-pink-400 text-xs">✨</span>
                     </h3>
-                    <p className="text-[10px] text-pink-300/70">Đồng bộ từ Google Docs</p>
+                    <p className="text-[10px] text-pink-300/70">Tiểu Thuyết Huyền Huyễn Á Đông</p>
                   </div>
                 </div>
 
@@ -841,254 +845,192 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
                 </div>
               </div>
 
-              {/* 2. Google Docs Live Sync Card - Chỉ hiện khi ở chế độ Tác Giả */}
+              {/* Google Docs Live Sync - CHỈ hiển thị khi ở chế độ Tác Giả */}
               {isAuthorMode && (
-                <div className="p-2.5 rounded-xl bg-gradient-to-br from-emerald-950/40 via-sky-950/30 to-slate-900/50 border border-emerald-500/30 space-y-2 shadow-sm">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-1.5">
-                      <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                      <span className="text-[10px] font-bold text-emerald-300 tracking-wider uppercase font-mono">
-                        Google Doc Live
-                      </span>
-                    </div>
+                <div className="p-2.5 rounded-xl bg-gradient-to-br from-emerald-950/40 via-sky-950/30 to-slate-900/50 border border-emerald-500/30 space-y-1.5 shadow-sm">
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-[10px] font-bold text-emerald-300 font-mono">👑 GOOGLE DOC LIVE</span>
                     <a
                       href={GOOGLE_DOCS_URL}
                       target="_blank"
                       rel="noreferrer"
-                      className="text-[10px] text-sky-400 hover:text-sky-300 flex items-center space-x-1 hover:underline"
-                      title="Mở Google Doc trên tab mới"
+                      className="text-[10px] text-sky-400 hover:text-sky-300 flex items-center gap-1 hover:underline"
                     >
-                      <span>Mở link gốc</span>
+                      <span>Link gốc</span>
                       <ExternalLink className="w-2.5 h-2.5" />
                     </a>
                   </div>
-
                   <button
                     onClick={() => onSyncGoogleDocs && onSyncGoogleDocs()}
                     disabled={isSyncingDoc}
-                    className="w-full py-1.5 px-3 rounded-lg bg-emerald-500/25 hover:bg-emerald-500/35 active:scale-[0.98] border border-emerald-500/50 text-emerald-200 text-xs font-semibold flex items-center justify-center space-x-2 transition-all disabled:opacity-60 shadow-sm cursor-pointer"
+                    className="w-full py-1 rounded-lg bg-emerald-500/25 hover:bg-emerald-500/35 border border-emerald-500/50 text-emerald-200 text-xs font-semibold flex items-center justify-center gap-1.5 transition-all cursor-pointer"
                   >
-                    <RefreshCw className={`w-3.5 h-3.5 ${isSyncingDoc ? 'animate-spin text-emerald-300' : 'text-emerald-400'}`} />
-                    <span>{isSyncingDoc ? 'Đang lấy từ Google Doc...' : '🔄 Cập Nhật Live Từ Google Doc'}</span>
+                    <RefreshCw className={`w-3 h-3 ${isSyncingDoc ? 'animate-spin' : ''}`} />
+                    <span>{isSyncingDoc ? 'Đang cập nhật...' : 'Cập Nhật Từ Doc'}</span>
                   </button>
-                  
-                  <div className="flex items-center justify-between text-[10px] text-slate-400 px-0.5 pt-0.5">
-                    <span>Tự động kéo chương mới</span>
-                    <span className="text-emerald-400/90 font-mono font-medium">
-                      {parts.length} phần • {totalChaptersCount} chương
-                    </span>
-                  </div>
                 </div>
               )}
-
-              {/* 3. Cute Chibi Mascot Card in Sidebar */}
-              <div 
-                onClick={handlePokeChibi}
-                className="p-2 rounded-xl bg-gradient-to-r from-purple-950/40 via-pink-950/30 to-indigo-950/40 border border-pink-400/25 flex items-center gap-2.5 cursor-pointer hover:border-pink-400/50 transition-all group"
-                title="Bé Long Long đang đồng hành đọc truyện cùng bạn!"
-              >
-                <div className="w-7 h-7 rounded-lg bg-pink-500/20 border border-pink-400/30 flex items-center justify-center text-sm group-hover:scale-110 transition-transform">
-                  🐉
-                </div>
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-[11px] font-bold text-pink-200 flex items-center gap-1 font-serif">
-                      Bé Long Long <span className="text-amber-300 text-[10px]">✨</span>
-                    </span>
-                    <span className="text-[9px] text-pink-300/80 italic">Đang đọc</span>
-                  </div>
-                  <p className="text-[10px] text-pink-100/80 truncate">
-                    {CHIBI_QUOTES[chibiQuoteIndex]}
-                  </p>
-                </div>
-              </div>
-
-              {/* 4. Quick Explorer Links (Bản đồ, Dòng thời gian, Codex) */}
-              <div className="grid grid-cols-3 gap-1.5 pt-1">
-                <button
-                  onClick={() => setIsAtlasOpen(true)}
-                  className="p-1.5 rounded-lg bg-cyan-950/40 hover:bg-cyan-900/60 border border-cyan-500/30 text-cyan-200 text-[10px] font-medium flex flex-col items-center gap-1 transition-all cursor-pointer"
-                  title="Mở Bản Đồ Thế Giới Sông Asera"
-                >
-                  <Compass className="w-3.5 h-3.5 text-cyan-400" />
-                  <span>Bản Đồ</span>
-                </button>
-                <button
-                  onClick={() => setIsTimelineOpen(true)}
-                  className="p-1.5 rounded-lg bg-indigo-950/40 hover:bg-indigo-900/60 border border-indigo-500/30 text-indigo-200 text-[10px] font-medium flex flex-col items-center gap-1 transition-all cursor-pointer"
-                  title="Mở Biên Niên Sử Dòng Thời Gian"
-                >
-                  <Clock className="w-3.5 h-3.5 text-indigo-400" />
-                  <span>Thời Gian</span>
-                </button>
-                <button
-                  onClick={() => setIsCodexOpen(true)}
-                  className="p-1.5 rounded-lg bg-amber-950/40 hover:bg-amber-900/60 border border-amber-500/30 text-amber-200 text-[10px] font-medium flex flex-col items-center gap-1 transition-all cursor-pointer"
-                  title="Mở Bách Khoa Toàn Thư (Codex)"
-                >
-                  <BookMarked className="w-3.5 h-3.5 text-amber-400" />
-                  <span>Codex</span>
-                </button>
-              </div>
             </div>
 
-            {/* 4. Main Sections Tree (Mở đầu trực tiếp / Phần 1 / Các chương) */}
+            {/* 2. Main Sections Tree */}
             <div className="flex-1 overflow-y-auto custom-scrollbar p-3 space-y-2.5">
-              {parts.map((part, pIdx) => {
-                // ĐẶC BIỆT: Nếu là phần "Mở đầu" (chỉ có 1 chương duy nhất), hiển thị thẳng thành 1 mục chương bấm đọc ngay, KHÔNG tạo thư mục lồng nhau!
-                const isSinglePrologue = part.chapters.length === 1 && (part.id === 'part_prologue' || part.title.toLowerCase().includes('mở đầu'));
+              {/* Mục Mở Đầu (Prologue): Hiển thị trực tiếp 1 thẻ duy nhất, KHÔNG tạo thư mục lồng nhau */}
+              {(() => {
+                const prologuePart = parts.find(p => p.id === 'part_prologue' || p.title.toLowerCase().includes('mở đầu')) || parts[0];
+                const prologueChap = prologuePart?.chapters[0];
+                const isPrologueActive = selectedPartId === prologuePart?.id && activeChapterIndex === 0;
 
-                if (isSinglePrologue) {
-                  const chap = part.chapters[0];
-                  const isActive = part.id === selectedPartId && activeChapterIndex === 0;
-
-                  return (
-                    <div
-                      key={part.id}
-                      onClick={() => {
-                        setSelectedPartId(part.id);
-                        setActiveChapterIndex(0);
-                        scrollToTop();
-                        if (window.innerWidth < 1024) {
-                          setIsSidebarOpen(false);
-                        }
-                      }}
-                      className={`group p-3 rounded-2xl cursor-pointer transition-all flex items-center justify-between border ${
-                        isActive
-                          ? 'bg-gradient-to-r from-amber-500/25 via-pink-500/15 to-purple-500/15 border-amber-400/50 text-amber-100 shadow-md shadow-amber-500/15 ring-1 ring-amber-400/30'
-                          : 'bg-slate-900/40 border-white/5 hover:border-amber-400/30 hover:bg-white/5 text-slate-300'
-                      }`}
-                      title={chap.title}
-                    >
-                      <div className="flex items-center space-x-2.5 min-w-0 flex-1">
-                        <span className="text-base flex-shrink-0">📜</span>
-                        <div className="min-w-0 flex-1">
-                          <h4 className={`font-serif font-bold text-xs truncate ${isActive ? 'text-amber-200' : 'text-slate-100 group-hover:text-amber-300'}`}>
-                            {chap.title}
-                          </h4>
-                          <div className="text-[10px] text-slate-400 flex items-center gap-1.5 mt-0.5 truncate">
-                            <span>{chap.povCharacterName ? `POV: ${chap.povCharacterName}` : 'Khởi đầu saga'}</span>
-                            <span>•</span>
-                            <span className="font-mono text-amber-300/80">{chap.wordCount.toLocaleString()} từ</span>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="flex items-center space-x-1.5 flex-shrink-0">
-                        {isActive ? (
-                          <span className="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse shadow-[0_0_8px_rgba(251,191,36,0.9)]" />
-                        ) : (
-                          <span className="text-[10px] font-mono opacity-60 group-hover:opacity-100 text-slate-400">
-                            {chap.wordCount.toLocaleString()}
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  );
-                }
-
-                const isExpanded = expandedSections[part.id] !== false;
-                const theme = getSectionTheme(part.title, part.id);
+                if (!prologueChap) return null;
 
                 return (
-                  <div 
-                    key={part.id}
-                    className={`rounded-2xl border transition-all duration-200 overflow-hidden ${
-                      isExpanded 
-                        ? 'bg-slate-900/60 border-indigo-500/30 shadow-lg shadow-black/20' 
-                        : 'bg-slate-900/20 border-white/5 hover:border-white/15'
+                  <div
+                    key="prologue_direct_card"
+                    onClick={() => {
+                      setSelectedPartId(prologuePart.id);
+                      setActiveChapterIndex(0);
+                      scrollToTop();
+                      if (window.innerWidth < 1024) setIsSidebarOpen(false);
+                    }}
+                    className={`group p-3 rounded-2xl cursor-pointer transition-all flex items-center justify-between border ${
+                      isPrologueActive
+                        ? 'bg-gradient-to-r from-amber-500/25 via-pink-500/15 to-purple-500/15 border-amber-400/50 text-amber-100 shadow-md shadow-amber-500/15 ring-1 ring-amber-400/30'
+                        : 'bg-slate-900/40 border-white/5 hover:border-amber-400/30 hover:bg-white/5 text-slate-300'
                     }`}
+                    title={prologueChap.title}
                   >
-                    {/* Section Header */}
+                    <div className="flex items-center space-x-2.5 min-w-0 flex-1">
+                      <span className="text-base flex-shrink-0">📜</span>
+                      <div className="min-w-0 flex-1">
+                        <h4 className={`font-serif font-bold text-xs truncate ${isPrologueActive ? 'text-amber-200' : 'text-slate-100 group-hover:text-amber-300'}`}>
+                          {prologueChap.title}
+                        </h4>
+                        <div className="text-[10px] text-slate-400 flex items-center gap-1.5 mt-0.5 truncate">
+                          <span>Khởi đầu saga</span>
+                          <span>•</span>
+                          <span className="font-mono text-amber-300/80">{prologueChap.wordCount.toLocaleString()} từ</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex items-center space-x-1.5 flex-shrink-0">
+                      {isPrologueActive ? (
+                        <span className="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse shadow-[0_0_8px_rgba(251,191,36,0.9)]" />
+                      ) : (
+                        <span className="text-[10px] font-mono opacity-60 group-hover:opacity-100 text-slate-400">
+                          {prologueChap.wordCount.toLocaleString()}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                );
+              })()}
+
+              {/* Các phần tiếp theo (Phần I — Mùa Nước Đứng, v.v.): Bỏ qua phần mở đầu để không trùng lặp */}
+              {parts
+                .filter(p => !(p.id === 'part_prologue' || p.title.toLowerCase().includes('mở đầu')))
+                .map((part) => {
+                  const isExpanded = expandedSections[part.id] !== false;
+                  const theme = getSectionTheme(part.title, part.id);
+
+                  return (
                     <div 
-                      onClick={() => toggleSection(part.id)}
-                      className="p-3 flex items-center justify-between cursor-pointer hover:bg-white/5 transition-colors select-none group"
+                      key={part.id}
+                      className={`rounded-2xl border transition-all duration-200 overflow-hidden ${
+                        isExpanded 
+                          ? 'bg-slate-900/60 border-indigo-500/30 shadow-lg shadow-black/20' 
+                          : 'bg-slate-900/20 border-white/5 hover:border-white/15'
+                      }`}
                     >
-                      <div className="flex items-center space-x-2.5 min-w-0 flex-1">
-                        <span className="text-base flex-shrink-0">{theme.icon}</span>
-                        <div className="min-w-0 flex-1">
-                          <div className="flex items-center space-x-2">
-                            <span className="font-serif font-bold text-xs text-slate-100 group-hover:text-amber-300 transition-colors truncate">
-                              {part.title}
-                            </span>
+                      {/* Section Header */}
+                      <div 
+                        onClick={() => toggleSection(part.id)}
+                        className="p-3 flex items-center justify-between cursor-pointer hover:bg-white/5 transition-colors select-none group"
+                      >
+                        <div className="flex items-center space-x-2.5 min-w-0 flex-1">
+                          <span className="text-base flex-shrink-0">{theme.icon}</span>
+                          <div className="min-w-0 flex-1">
+                            <div className="flex items-center space-x-2">
+                              <span className="font-serif font-bold text-xs text-slate-100 group-hover:text-amber-300 transition-colors truncate">
+                                {part.title}
+                              </span>
+                            </div>
+                            <div className="text-[10px] text-slate-400 flex items-center space-x-2 mt-0.5">
+                              <span>{part.chapters.length} chương</span>
+                              <span>•</span>
+                              <span className="font-mono text-slate-300">{part.wordCount.toLocaleString()} từ</span>
+                            </div>
                           </div>
-                          <div className="text-[10px] text-slate-400 flex items-center space-x-2 mt-0.5">
-                            <span>{part.chapters.length} chương</span>
-                            <span>•</span>
-                            <span className="font-mono text-slate-300">{part.wordCount.toLocaleString()} từ</span>
-                          </div>
+                        </div>
+
+                        <div className="p-1 text-slate-400 group-hover:text-slate-200 transition-colors">
+                          {isExpanded ? (
+                            <ChevronDown className="w-4 h-4 text-amber-400" />
+                          ) : (
+                            <ChevronRight className="w-4 h-4" />
+                          )}
                         </div>
                       </div>
 
-                      <div className="p-1 text-slate-400 group-hover:text-slate-200 transition-colors">
-                        {isExpanded ? (
-                          <ChevronDown className="w-4 h-4 text-amber-400" />
-                        ) : (
-                          <ChevronRight className="w-4 h-4" />
-                        )}
-                      </div>
-                    </div>
+                      {/* List of Chapters inside this Section */}
+                      {isExpanded && (
+                        <div className="p-1.5 space-y-1 bg-slate-950/60 border-t border-white/5">
+                          {part.chapters.length === 0 ? (
+                            <div className="p-3 text-center text-slate-500 text-xs italic">
+                              Chưa có chương nào.
+                            </div>
+                          ) : (
+                            part.chapters.map((chap, cIdx) => {
+                              const isActive = part.id === selectedPartId && cIdx === activeChapterIndex;
 
-                    {/* List of Chapters inside this Section */}
-                    {isExpanded && (
-                      <div className="p-1.5 space-y-1 bg-slate-950/60 border-t border-white/5">
-                        {part.chapters.length === 0 ? (
-                          <div className="p-3 text-center text-slate-500 text-xs italic">
-                            Chưa có chương nào.
-                          </div>
-                        ) : (
-                          part.chapters.map((chap, cIdx) => {
-                            const isActive = part.id === selectedPartId && cIdx === activeChapterIndex;
+                              return (
+                                <div
+                                  key={chap.id}
+                                  onClick={() => {
+                                    setSelectedPartId(part.id);
+                                    setActiveChapterIndex(cIdx);
+                                    scrollToTop();
+                                    if (window.innerWidth < 1024) {
+                                      setIsSidebarOpen(false);
+                                    }
+                                  }}
+                                  className={`group p-2.5 rounded-xl cursor-pointer transition-all flex items-center justify-between border ${
+                                    isActive
+                                      ? 'bg-gradient-to-r from-amber-500/20 via-pink-500/10 to-transparent border-amber-500/40 text-amber-100 shadow-md shadow-amber-500/10'
+                                      : 'bg-slate-900/40 border-transparent hover:bg-white/5 text-slate-300 hover:border-white/10'
+                                  }`}
+                                >
+                                  <div className="flex items-center space-x-2.5 min-w-0 flex-1">
+                                    <div className={`w-2.5 h-2.5 rounded-full flex-shrink-0 transition-all ${
+                                      isActive ? 'bg-amber-400 ring-4 ring-amber-500/30 shadow-[0_0_8px_rgba(251,191,36,0.8)]' : 'bg-slate-600 group-hover:bg-slate-400'
+                                    }`} />
 
-                            return (
-                              <div
-                                key={chap.id}
-                                onClick={() => {
-                                  setSelectedPartId(part.id);
-                                  setActiveChapterIndex(cIdx);
-                                  scrollToTop();
-                                  if (window.innerWidth < 1024) {
-                                    setIsSidebarOpen(false);
-                                  }
-                                }}
-                                className={`group p-2.5 rounded-xl cursor-pointer transition-all flex items-center justify-between border ${
-                                  isActive
-                                    ? 'bg-gradient-to-r from-amber-500/20 via-pink-500/10 to-transparent border-amber-500/40 text-amber-100 shadow-md shadow-amber-500/10'
-                                    : 'bg-slate-900/40 border-transparent hover:bg-white/5 text-slate-300 hover:border-white/10'
-                                }`}
-                              >
-                                <div className="flex items-center space-x-2.5 min-w-0 flex-1">
-                                  <div className={`w-2.5 h-2.5 rounded-full flex-shrink-0 transition-all ${
-                                    isActive ? 'bg-amber-400 ring-4 ring-amber-500/30 shadow-[0_0_8px_rgba(251,191,36,0.8)]' : 'bg-slate-600 group-hover:bg-slate-400'
-                                  }`} />
+                                    <div className="min-w-0 flex-1">
+                                      <h4 className={`font-serif font-medium text-xs leading-snug truncate ${
+                                        isActive ? 'text-amber-200 font-bold' : 'text-slate-200 group-hover:text-white'
+                                      }`}>
+                                        {chap.title}
+                                      </h4>
+                                      {chap.povCharacterName && (
+                                        <span className="text-[10px] text-slate-400 block mt-0.5 truncate">
+                                          POV: {chap.povCharacterName} {chap.location ? `• ${chap.location}` : ''}
+                                        </span>
+                                      )}
+                                    </div>
+                                  </div>
 
-                                  <div className="min-w-0 flex-1">
-                                    <h4 className={`font-serif font-medium text-xs leading-snug truncate ${
-                                      isActive ? 'text-amber-200 font-bold' : 'text-slate-200 group-hover:text-white'
-                                    }`}>
-                                      {chap.title}
-                                    </h4>
-                                    {chap.povCharacterName && (
-                                      <span className="text-[10px] text-slate-400 block mt-0.5 truncate">
-                                        POV: {chap.povCharacterName} {chap.location ? `• ${chap.location}` : ''}
-                                      </span>
-                                    )}
+                                  <div className="flex items-center space-x-2 flex-shrink-0 text-[10px] font-mono opacity-80 group-hover:opacity-100">
+                                    <span className={isActive ? 'text-amber-300 font-semibold' : 'text-slate-400'}>
+                                      {chap.wordCount.toLocaleString()}
+                                    </span>
                                   </div>
                                 </div>
-
-                                <div className="flex items-center space-x-2 flex-shrink-0 text-[10px] font-mono opacity-80 group-hover:opacity-100">
-                                  <span className={isActive ? 'text-amber-300 font-semibold' : 'text-slate-400'}>
-                                    {chap.wordCount.toLocaleString()}
-                                  </span>
-                                </div>
-                              </div>
-                            );
-                          })
-                        )}
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
+                              );
+                            })
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
             </div>
           </aside>
 
@@ -1113,125 +1055,188 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
               <div className="absolute top-1/2 left-3/4 text-pink-300/25 animate-starlight text-xs" style={{ animationDelay: '1.9s' }}>🌸</div>
             </div>
 
-            <div className="max-w-3xl mx-auto relative z-10">
-              {/* Breadcrumbs & Chapter Header (Dreamy & Poetic Style) */}
-              <div className="mb-8 pb-5 border-b border-indigo-500/20">
-                <nav className="flex items-center space-x-2 text-xs text-amber-300/80 mb-3 font-serif overflow-x-auto whitespace-nowrap">
-                  <span onClick={() => goToChapterByGlobalIndex(0)} className="hover:text-pink-300 cursor-pointer opacity-75 transition-colors">
-                    Long Ấn Thức Tỉnh
-                  </span>
-                  <span>›</span>
-                  <span className="opacity-80 text-pink-200">{activePart?.title}</span>
-                  <span>›</span>
-                  <span className="text-amber-300 font-semibold">{currentChapter?.title}</span>
-                </nav>
+            {(() => {
+              const containerWidthClass = readingPrefs.pageWidth === 'narrow' ? 'max-w-2xl' : readingPrefs.pageWidth === 'wide' ? 'max-w-4xl' : 'max-w-3xl';
+              const fontFamStyle = readingPrefs.fontFamily === 'serif' 
+                ? "'Merriweather', Georgia, serif" 
+                : readingPrefs.fontFamily === 'lora' 
+                ? "'Lora', Georgia, serif" 
+                : readingPrefs.fontFamily === 'sans' 
+                ? "'Plus Jakarta Sans', Inter, sans-serif" 
+                : "'JetBrains Mono', monospace";
 
-                <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-amber-300/90 font-serif mb-2">
-                  <span className="text-pink-400">✨</span>
-                  <span>LONG ẤN THỨC TỈNH • {activePart?.title}</span>
-                  <span className="text-pink-400">🌸</span>
+              return (
+                <div className={`${containerWidthClass} mx-auto relative z-10`}>
+                  {/* Breadcrumbs & Chapter Header (Dreamy & Poetic Style) */}
+                  <div className="mb-8 pb-5 border-b border-indigo-500/20">
+                    <nav className="flex items-center space-x-2 text-xs text-amber-300/80 mb-3 font-serif overflow-x-auto whitespace-nowrap">
+                      <span onClick={() => goToChapterByGlobalIndex(0)} className="hover:text-pink-300 cursor-pointer opacity-75 transition-colors">
+                        Long Ấn Thức Tỉnh
+                      </span>
+                      <span>›</span>
+                      <span className="opacity-80 text-pink-200">{activePart?.title}</span>
+                      <span>›</span>
+                      <span className="text-amber-300 font-semibold">{currentChapter?.title}</span>
+                    </nav>
+
+                    <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-amber-300/90 font-serif mb-2">
+                      <span className="text-pink-400">✨</span>
+                      <span>LONG ẤN THỨC TỈNH • {activePart?.title}</span>
+                      <span className="text-pink-400">🌸</span>
+                    </div>
+
+                    <h1 className="text-2xl sm:text-4xl md:text-5xl font-bold font-serif tracking-tight leading-tight mb-4 bg-gradient-to-r from-amber-200 via-rose-100 to-amber-300 bg-clip-text text-transparent drop-shadow-[0_2px_15px_rgba(245,158,11,0.25)]">
+                      {currentChapter?.title || 'Chương Chưa Đặt Tên'}
+                    </h1>
+
+                    <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-xs font-mono text-slate-300">
+                      <span className="px-2.5 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/25 text-amber-300">
+                        ⭐ {totalWords.toLocaleString()} chữ
+                      </span>
+                      <span className="px-2.5 py-0.5 rounded-full bg-pink-500/10 border border-pink-500/25 text-pink-300">
+                        ⏱️ ~{estimatedReadTime} phút đọc
+                      </span>
+                      {currentChapter?.povCharacterName && (
+                        <span className="px-2.5 py-0.5 rounded-full bg-purple-500/10 border border-purple-500/25 text-purple-200">
+                          🌸 POV: {currentChapter.povCharacterName}
+                        </span>
+                      )}
+                      {currentChapter?.location && (
+                        <span className="px-2.5 py-0.5 rounded-full bg-sky-500/10 border border-sky-500/25 text-sky-200">
+                          🌊 {currentChapter.location}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Prose Article (Nội dung truyện chữ thơ mộng) */}
+                  <article 
+                    className={`font-serif prose prose-lg max-w-none text-justify px-4 sm:px-8 py-6 rounded-3xl ${novelThemeClasses.container} ${novelThemeClasses.prose}`}
+                    style={{
+                      fontSize: `${readingPrefs.fontSize}px`,
+                      lineHeight: readingPrefs.lineHeight,
+                      fontFamily: fontFamStyle
+                    }}
+                  >
+                    {currentChapter?.content ? (
+                      currentChapter.content.split('\n\n').map((paragraph, pIdx) => {
+                        if (paragraph.startsWith('“') || paragraph.startsWith('﻿“')) {
+                          return (
+                            <p key={pIdx} className="italic text-amber-200 font-medium pl-5 pr-4 py-3.5 border-l-2 border-amber-400/80 bg-gradient-to-r from-amber-500/10 via-pink-500/5 to-transparent rounded-r-2xl my-6 shadow-sm">
+                              {paragraph}
+                            </p>
+                          );
+                        }
+                        if (paragraph.startsWith('—')) {
+                          return (
+                            <p key={pIdx} className="font-sans pl-2 my-4 text-slate-100 font-medium tracking-wide">
+                              {paragraph}
+                            </p>
+                          );
+                        }
+                        return (
+                          <p key={pIdx} className="indent-8 my-5 leading-relaxed text-slate-200/95">
+                            {paragraph}
+                          </p>
+                        );
+                      })
+                    ) : (
+                      <div className="text-center py-20 opacity-50 font-serif">Chưa có nội dung trong chương này.</div>
+                    )}
+                  </article>
+
+                  {/* Clean Novel Navigation Footer */}
+                  <div className="mt-14 pt-8 border-t border-indigo-500/20 flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <button
+                      disabled={currentGlobalIndex <= 0}
+                      onClick={() => goToChapterByGlobalIndex(currentGlobalIndex - 1)}
+                      className="w-full sm:w-auto px-5 py-3 rounded-2xl border border-white/15 bg-white/5 hover:bg-white/10 disabled:opacity-30 disabled:pointer-events-none text-slate-200 font-serif text-xs flex items-center justify-center gap-2.5 transition-all cursor-pointer shadow-sm hover:scale-[1.02] active:scale-95"
+                    >
+                      <ChevronLeft className="w-4 h-4 text-amber-400" />
+                      <div className="text-left">
+                        <div className="text-[10px] text-pink-300/80 font-sans uppercase">🐾 Chương Trước</div>
+                        <div className="font-medium truncate max-w-[200px]">
+                          {currentGlobalIndex > 0 ? allFlatChapters[currentGlobalIndex - 1]?.chapter.title : 'Đầu danh sách'}
+                        </div>
+                      </div>
+                    </button>
+
+                    <button
+                      onClick={scrollToTop}
+                      className="px-4 py-2.5 rounded-2xl text-xs text-slate-400 hover:text-pink-300 border border-white/10 hover:border-pink-400/30 transition-all flex items-center gap-1.5 cursor-pointer bg-white/5 hover:bg-pink-500/10 active:scale-95"
+                      title="Cuộn lên đầu trang"
+                    >
+                      <ArrowUp className="w-3.5 h-3.5" />
+                      <span>🌸 Lên đầu trang</span>
+                    </button>
+
+                    <button
+                      disabled={currentGlobalIndex >= allFlatChapters.length - 1}
+                      onClick={() => goToChapterByGlobalIndex(currentGlobalIndex + 1)}
+                      className="w-full sm:w-auto px-5 py-3 rounded-2xl border border-pink-400/40 bg-gradient-to-r from-pink-500/15 via-purple-500/15 to-amber-500/15 hover:from-pink-500/25 hover:to-amber-500/25 disabled:opacity-30 disabled:pointer-events-none text-pink-100 font-serif text-xs flex items-center justify-center gap-2.5 transition-all cursor-pointer shadow-lg shadow-pink-500/10 hover:scale-[1.02] active:scale-95"
+                    >
+                      <div className="text-right">
+                        <div className="text-[10px] text-amber-300 font-sans uppercase">Chương Kế Tiếp 🐾</div>
+                        <div className="font-medium truncate max-w-[200px]">
+                          {currentGlobalIndex < allFlatChapters.length - 1 ? allFlatChapters[currentGlobalIndex + 1]?.chapter.title : 'Cuối danh sách'}
+                        </div>
+                      </div>
+                      <ChevronRight className="w-4 h-4 text-amber-400" />
+                    </button>
+                  </div>
+
+                  {/* Reader Community Reactions & Thoughts Section */}
+                  <ChapterCommentsSection 
+                    chapterId={currentChapter?.id || 'doc_chap_prologue'} 
+                    chapterTitle={currentChapter?.title || 'Chương hiện tại'} 
+                  />
                 </div>
+              );
+            })()}
 
-                <h1 className="text-2xl sm:text-4xl md:text-5xl font-bold font-serif tracking-tight leading-tight mb-4 bg-gradient-to-r from-amber-200 via-rose-100 to-amber-300 bg-clip-text text-transparent drop-shadow-[0_2px_15px_rgba(245,158,11,0.25)]">
-                  {currentChapter?.title || 'Chương Chưa Đặt Tên'}
-                </h1>
-
-                <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-xs font-mono text-slate-300">
-                  <span className="px-2.5 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/25 text-amber-300">
-                    ⭐ {totalWords.toLocaleString()} chữ
-                  </span>
-                  <span className="px-2.5 py-0.5 rounded-full bg-pink-500/10 border border-pink-500/25 text-pink-300">
-                    ⏱️ ~{estimatedReadTime} phút đọc
-                  </span>
-                  {currentChapter?.povCharacterName && (
-                    <span className="px-2.5 py-0.5 rounded-full bg-purple-500/10 border border-purple-500/25 text-purple-200">
-                      🌸 POV: {currentChapter.povCharacterName}
-                    </span>
-                  )}
-                  {currentChapter?.location && (
-                    <span className="px-2.5 py-0.5 rounded-full bg-sky-500/10 border border-sky-500/25 text-sky-200">
-                      🌊 {currentChapter.location}
-                    </span>
-                  )}
-                </div>
-              </div>
-
-              {/* Prose Article (Nội dung truyện chữ thơ mộng) */}
-              <article 
-                className={`font-serif prose prose-lg max-w-none text-justify px-4 sm:px-8 py-6 rounded-3xl ${novelThemeClasses.container} ${novelThemeClasses.prose}`}
-                style={{
-                  fontSize: `${fontSize}px`,
-                  lineHeight: lineHeight,
-                  fontFamily: fontFamily === 'serif' ? 'Merriweather, Georgia, serif' : fontFamily === 'sans' ? 'Inter, sans-serif' : 'monospace'
-                }}
-              >
-                {currentChapter?.content ? (
-                  currentChapter.content.split('\n\n').map((paragraph, pIdx) => {
-                    if (paragraph.startsWith('“') || paragraph.startsWith('﻿“')) {
-                      return (
-                        <p key={pIdx} className="italic text-amber-200 font-medium pl-5 pr-4 py-3.5 border-l-2 border-amber-400/80 bg-gradient-to-r from-amber-500/10 via-pink-500/5 to-transparent rounded-r-2xl my-6 shadow-sm">
-                          {paragraph}
-                        </p>
-                      );
-                    }
-                    if (paragraph.startsWith('—')) {
-                      return (
-                        <p key={pIdx} className="font-sans pl-2 my-4 text-slate-100 font-medium tracking-wide">
-                          {paragraph}
-                        </p>
-                      );
-                    }
-                    return (
-                      <p key={pIdx} className="indent-8 my-5 leading-relaxed text-slate-200/95">
-                        {paragraph}
-                      </p>
-                    );
-                  })
-                ) : (
-                  <div className="text-center py-20 opacity-50 font-serif">Chưa có nội dung trong chương này.</div>
-                )}
-              </article>
-
-              {/* Clean Novel Navigation Footer */}
-              <div className="mt-14 pt-8 border-t border-indigo-500/20 flex flex-col sm:flex-row items-center justify-between gap-4">
+            {/* ================= FLOATING QUICK BOTTOM NAVIGATOR ================= */}
+            {!isZenMode && (
+              <div className="sticky bottom-4 z-30 mx-auto px-4 py-2 rounded-2xl bg-slate-900/95 backdrop-blur-xl border border-white/15 shadow-2xl flex items-center gap-2 text-xs w-fit">
                 <button
                   disabled={currentGlobalIndex <= 0}
                   onClick={() => goToChapterByGlobalIndex(currentGlobalIndex - 1)}
-                  className="w-full sm:w-auto px-5 py-3 rounded-2xl border border-white/15 bg-white/5 hover:bg-white/10 disabled:opacity-30 disabled:pointer-events-none text-slate-200 font-serif text-xs flex items-center justify-center gap-2.5 transition-all cursor-pointer shadow-sm hover:scale-[1.02] active:scale-95"
+                  className="px-2.5 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 disabled:opacity-30 text-white font-medium flex items-center gap-1 cursor-pointer transition-all"
+                  title="Chương trước"
                 >
-                  <ChevronLeft className="w-4 h-4 text-amber-400" />
-                  <div className="text-left">
-                    <div className="text-[10px] text-pink-300/80 font-sans uppercase">🐾 Chương Trước</div>
-                    <div className="font-medium truncate max-w-[200px]">
-                      {currentGlobalIndex > 0 ? allFlatChapters[currentGlobalIndex - 1]?.chapter.title : 'Đầu danh sách'}
-                    </div>
-                  </div>
+                  <ChevronLeft className="w-3.5 h-3.5" /> <span className="hidden sm:inline">Trước</span>
                 </button>
 
-                <button
-                  onClick={scrollToTop}
-                  className="px-4 py-2.5 rounded-2xl text-xs text-slate-400 hover:text-pink-300 border border-white/10 hover:border-pink-400/30 transition-all flex items-center gap-1.5 cursor-pointer bg-white/5 hover:bg-pink-500/10 active:scale-95"
-                  title="Cuộn lên đầu trang"
+                <select
+                  value={currentGlobalIndex}
+                  onChange={e => goToChapterByGlobalIndex(Number(e.target.value))}
+                  className="px-2.5 py-1.5 rounded-xl bg-slate-800 border border-slate-700 text-amber-300 font-serif font-medium text-xs max-w-[150px] sm:max-w-[220px] truncate cursor-pointer outline-none"
+                  title="Chọn nhanh chương"
                 >
-                  <ArrowUp className="w-3.5 h-3.5" />
-                  <span>🌸 Lên đầu trang</span>
-                </button>
+                  {allFlatChapters.map((item, idx) => (
+                    <option key={item.chapter.id} value={idx}>
+                      {item.chapter.title}
+                    </option>
+                  ))}
+                </select>
 
                 <button
                   disabled={currentGlobalIndex >= allFlatChapters.length - 1}
                   onClick={() => goToChapterByGlobalIndex(currentGlobalIndex + 1)}
-                  className="w-full sm:w-auto px-5 py-3 rounded-2xl border border-pink-400/40 bg-gradient-to-r from-pink-500/15 via-purple-500/15 to-amber-500/15 hover:from-pink-500/25 hover:to-amber-500/25 disabled:opacity-30 disabled:pointer-events-none text-pink-100 font-serif text-xs flex items-center justify-center gap-2.5 transition-all cursor-pointer shadow-lg shadow-pink-500/10 hover:scale-[1.02] active:scale-95"
+                  className="px-2.5 py-1.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/30 disabled:opacity-30 font-medium flex items-center gap-1 cursor-pointer transition-all"
+                  title="Chương sau"
                 >
-                  <div className="text-right">
-                    <div className="text-[10px] text-amber-300 font-sans uppercase">Chương Kế Tiếp 🐾</div>
-                    <div className="font-medium truncate max-w-[200px]">
-                      {currentGlobalIndex < allFlatChapters.length - 1 ? allFlatChapters[currentGlobalIndex + 1]?.chapter.title : 'Cuối danh sách'}
-                    </div>
-                  </div>
-                  <ChevronRight className="w-4 h-4 text-amber-400" />
+                  <span className="hidden sm:inline">Sau</span> <ChevronRight className="w-3.5 h-3.5" />
+                </button>
+
+                <button
+                  onClick={scrollToTop}
+                  className="p-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-slate-300 hover:text-white cursor-pointer transition-all"
+                  title="Lên đầu trang"
+                >
+                  <ArrowUp className="w-3.5 h-3.5" />
                 </button>
               </div>
-            </div>
+            )}
 
             {/* ================= FLOATING CHIBI COMPANION (BÉ LONG LONG) ================= */}
             {!isChibiMinimized ? (
@@ -1796,53 +1801,64 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
       )}
 
       {/* ================= RIGHT EDGE FLOATING ACTION DOCK ================= */}
-      <div className="fixed right-0 top-1/2 -translate-y-1/2 z-40 flex flex-col items-end space-y-2 pointer-events-auto">
-        {/* Tab 1: Hồ Sơ Nhân Vật */}
-        <button
-          onClick={() => setIsCharacterDrawerOpen(prev => !prev)}
-          className="group flex items-center gap-1.5 py-3.5 px-2 bg-gradient-to-b from-slate-900/95 via-cyan-950/95 to-slate-900/95 border-l-2 border-y border-cyan-400/60 hover:border-cyan-300 text-cyan-300 rounded-l-2xl shadow-[-6px_0_30px_rgba(0,0,0,0.7)] backdrop-blur-xl hover:translate-x-[-6px] hover:text-cyan-100 transition-all cursor-pointer ring-1 ring-cyan-500/20"
-          title="Mở hồ sơ toàn bộ nhân vật"
-        >
-          <div className="flex flex-col items-center gap-1.5">
-            <Users className="w-4 h-4 text-cyan-400 group-hover:scale-125 transition-transform" />
-            <span className="[writing-mode:vertical-rl] text-[10px] font-bold tracking-widest text-slate-200 group-hover:text-cyan-200 font-serif uppercase">
-              NHÂN VẬT
-            </span>
-            <span className="w-4 h-4 rounded-full bg-cyan-500/25 border border-cyan-400/50 text-[9px] font-mono font-bold flex items-center justify-center text-cyan-300">
-              {allCharacters.length}
-            </span>
-          </div>
-        </button>
+      {!isZenMode && (
+        <div className="fixed right-0 top-1/2 -translate-y-1/2 z-40 flex flex-col items-end space-y-2 pointer-events-auto">
+          {/* Tab 1: Hồ Sơ Nhân Vật */}
+          <button
+            onClick={() => setIsCharacterDrawerOpen(prev => !prev)}
+            className="group flex items-center gap-1.5 py-3.5 px-2 bg-gradient-to-b from-slate-900/95 via-cyan-950/95 to-slate-900/95 border-l-2 border-y border-cyan-400/60 hover:border-cyan-300 text-cyan-300 rounded-l-2xl shadow-[-6px_0_30px_rgba(0,0,0,0.7)] backdrop-blur-xl hover:translate-x-[-6px] hover:text-cyan-100 transition-all cursor-pointer ring-1 ring-cyan-500/20"
+            title="Mở hồ sơ toàn bộ nhân vật"
+          >
+            <div className="flex flex-col items-center gap-1.5">
+              <Users className="w-4 h-4 text-cyan-400 group-hover:scale-125 transition-transform" />
+              <span className="[writing-mode:vertical-rl] text-[10px] font-bold tracking-widest text-slate-200 group-hover:text-cyan-200 font-serif uppercase">
+                NHÂN VẬT
+              </span>
+              <span className="w-4 h-4 rounded-full bg-cyan-500/25 border border-cyan-400/50 text-[9px] font-mono font-bold flex items-center justify-center text-cyan-300">
+                {allCharacters.length}
+              </span>
+            </div>
+          </button>
 
-        {/* Tab 2: Bản Đồ Thế Giới */}
-        <button
-          onClick={() => setIsAtlasOpen(true)}
-          className="group flex items-center gap-1 py-2.5 px-2 bg-slate-900/95 border-l-2 border-y border-cyan-500/40 hover:border-cyan-300 text-cyan-300 rounded-l-xl shadow-lg backdrop-blur-xl hover:translate-x-[-4px] transition-all cursor-pointer"
-          title="Mở bản đồ thế giới sông Asera & Bến Arumo"
-        >
-          <Compass className="w-4 h-4 text-cyan-400 group-hover:scale-125 transition-transform" />
-        </button>
+          {/* Tab 2: Bản Đồ Thế Giới */}
+          <button
+            onClick={() => setIsAtlasOpen(true)}
+            className="group flex items-center gap-1 py-2.5 px-2 bg-slate-900/95 border-l-2 border-y border-cyan-500/40 hover:border-cyan-300 text-cyan-300 rounded-l-xl shadow-lg backdrop-blur-xl hover:translate-x-[-4px] transition-all cursor-pointer"
+            title="Mở bản đồ thế giới sông Asera & Bến Arumo"
+          >
+            <Compass className="w-4 h-4 text-cyan-400 group-hover:scale-125 transition-transform" />
+          </button>
 
-        {/* Tab 3: Âm Thanh Nền */}
-        <button
-          onClick={() => setIsSoundPlayerOpen(true)}
-          className="group flex items-center gap-1 py-2.5 px-2 bg-slate-900/95 border-l-2 border-y border-indigo-500/40 hover:border-indigo-300 text-indigo-300 rounded-l-xl shadow-lg backdrop-blur-xl hover:translate-x-[-4px] transition-all cursor-pointer"
-          title="Mở âm thanh môi trường thư giãn khi đọc"
-        >
-          <Music className="w-4 h-4 text-indigo-400 group-hover:scale-125 transition-transform" />
-        </button>
+          {/* Tab 3: Âm Thanh Nền */}
+          <button
+            onClick={() => setIsSoundPlayerOpen(true)}
+            className="group flex items-center gap-1 py-2.5 px-2 bg-slate-900/95 border-l-2 border-y border-indigo-500/40 hover:border-indigo-300 text-indigo-300 rounded-l-xl shadow-lg backdrop-blur-xl hover:translate-x-[-4px] transition-all cursor-pointer"
+            title="Mở âm thanh môi trường thư giãn khi đọc"
+          >
+            <Music className="w-4 h-4 text-indigo-400 group-hover:scale-125 transition-transform" />
+          </button>
 
-        {/* Tab 4: Từ Điển Lore */}
-        <button
-          onClick={() => setIsCodexOpen(true)}
-          className="group flex items-center gap-1 py-2.5 px-2 bg-slate-900/95 border-l-2 border-y border-amber-500/40 hover:border-amber-300 text-amber-300 rounded-l-xl shadow-lg backdrop-blur-xl hover:translate-x-[-4px] transition-all cursor-pointer"
-          title="Mở Từ Điển Bách Khoa Thế Giới (Codex)"
-        >
-          <BookMarked className="w-4 h-4 text-amber-400 group-hover:scale-125 transition-transform" />
-        </button>
-      </div>
+          {/* Tab 4: Từ Điển Lore */}
+          <button
+            onClick={() => setIsCodexOpen(true)}
+            className="group flex items-center gap-1 py-2.5 px-2 bg-slate-900/95 border-l-2 border-y border-amber-500/40 hover:border-amber-300 text-amber-300 rounded-l-xl shadow-lg backdrop-blur-xl hover:translate-x-[-4px] transition-all cursor-pointer"
+            title="Mở Từ Điển Bách Khoa Thế Giới (Codex)"
+          >
+            <BookMarked className="w-4 h-4 text-amber-400 group-hover:scale-125 transition-transform" />
+          </button>
 
-      {/* ================= ALL 5 POWERHOUSE MODALS & DRAWERS ================= */}
+          {/* Tab 5: Dòng Thời Gian */}
+          <button
+            onClick={() => setIsTimelineOpen(true)}
+            className="group flex items-center gap-1 py-2.5 px-2 bg-slate-900/95 border-l-2 border-y border-rose-500/40 hover:border-rose-300 text-rose-300 rounded-l-xl shadow-lg backdrop-blur-xl hover:translate-x-[-4px] transition-all cursor-pointer"
+            title="Mở Biên Niên Sử (Thời Gian)"
+          >
+            <Clock className="w-4 h-4 text-rose-400 group-hover:scale-125 transition-transform" />
+          </button>
+        </div>
+      )}
+
+      {/* ================= ALL 6 POWERHOUSE MODALS & DRAWERS ================= */}
       {/* 1. Character Dossier Drawer */}
       <CharacterDossierDrawer
         isOpen={isCharacterDrawerOpen}
@@ -1874,6 +1890,14 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
       <ChronicleTimelineModal
         isOpen={isTimelineOpen}
         onClose={() => setIsTimelineOpen(false)}
+      />
+
+      {/* 6. Reading Settings Modal */}
+      <ReadingSettingsModal
+        isOpen={isSettingsModalOpen}
+        onClose={() => setIsSettingsModalOpen(false)}
+        prefs={readingPrefs}
+        onUpdatePrefs={handleUpdatePrefs}
       />
     </div>
   );

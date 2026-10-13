@@ -483,38 +483,40 @@ export default function App() {
     <div className={`h-screen flex flex-col overflow-hidden transition-colors duration-200 ${
       isWarmTheme ? 'bg-parchment-50 text-stone-900' : 'bg-[#060911] text-slate-100'
     }`}>
-      {/* Global Header */}
-      <AppHeader
-        project={project}
-        activeTab={activeTab}
-        setActiveTab={setActiveTab}
-        isWarmTheme={isWarmTheme}
-        setIsWarmTheme={setIsWarmTheme}
-        onOpenImport={() => setShowImportExport({ open: true, mode: 'import' })}
-        onOpenExport={() => setShowImportExport({ open: true, mode: 'export' })}
-        onOpenSettings={() => setShowSettings(true)}
-        onResetSample={handleResetSample}
-        stagedSyncCount={docsSyncState.stagedChangesCount}
-        isAuthorMode={isAuthorMode}
-        onOpenAuthorLogin={() => setShowAuthorLogin(true)}
-        onExitAuthorMode={() => {
-          sessionStorage.removeItem('mach_author_session');
-          StorageService.setAuthorAuthenticated(false);
-          setIsAuthorMode(false);
-          setActiveTab('reader');
-          if (typeof window !== 'undefined') {
-            const url = new URL(window.location.href);
-            url.searchParams.delete('author');
-            url.searchParams.delete('pin');
-            url.searchParams.delete('admin');
-            window.location.href = url.pathname;
-          }
-        }}
-        isAutoSyncLive={isAutoSyncLive}
-        onToggleAutoSync={() => setIsAutoSyncLive(prev => !prev)}
-        onTriggerLiveCheck={() => checkAndApplyDocChanges(false)}
-        lastLiveCheckTime={lastLiveCheckTime}
-      />
+      {/* Top Application Header - CHỈ HIỂN THỊ KHI Ở CHẾ ĐỘ TÁC GIẢ */}
+      {isAuthorMode && (
+        <AppHeader
+          project={project}
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+          isWarmTheme={isWarmTheme}
+          setIsWarmTheme={setIsWarmTheme}
+          onOpenImport={() => setShowImportExport({ open: true, mode: 'import' })}
+          onOpenExport={() => setShowImportExport({ open: true, mode: 'export' })}
+          onOpenSettings={() => setShowSettings(true)}
+          onResetSample={handleResetSample}
+          stagedSyncCount={docsSyncState.stagedChangesCount}
+          isAuthorMode={isAuthorMode}
+          onOpenAuthorLogin={() => setShowAuthorLogin(true)}
+          onExitAuthorMode={() => {
+            sessionStorage.removeItem('mach_author_session');
+            StorageService.setAuthorAuthenticated(false);
+            setIsAuthorMode(false);
+            setActiveTab('reader');
+            if (typeof window !== 'undefined') {
+              const url = new URL(window.location.href);
+              url.searchParams.delete('author');
+              url.searchParams.delete('pin');
+              url.searchParams.delete('admin');
+              window.location.href = url.pathname;
+            }
+          }}
+          isAutoSyncLive={isAutoSyncLive}
+          onToggleAutoSync={() => setIsAutoSyncLive(prev => !prev)}
+          onTriggerLiveCheck={() => checkAndApplyDocChanges(false)}
+          lastLiveCheckTime={lastLiveCheckTime}
+        />
+      )}
 
       {/* Main Studio Viewport */}
       <div className="flex-1 overflow-hidden flex flex-col relative">
@@ -658,6 +660,13 @@ export default function App() {
               }}
               onSyncGoogleDocs={() => handleSyncGoogleDocs(true)}
               isSyncingDoc={isSyncingDoc}
+              onOpenAuthorLogin={() => setShowAuthorLogin(true)}
+              onExitAuthorMode={() => {
+                sessionStorage.removeItem('mach_author_session');
+                StorageService.setAuthorAuthenticated(false);
+                setIsAuthorMode(false);
+                setActiveTab('reader');
+              }}
             />
           </div>
         )}
