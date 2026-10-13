@@ -199,6 +199,30 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
   const [isTimelineOpen, setIsTimelineOpen] = useState<boolean>(false);
   const [readingTheme, setReadingTheme] = useState<'obsidian' | 'parchment' | 'abyss' | 'amber'>('obsidian');
   const [showThemePicker, setShowThemePicker] = useState<boolean>(false);
+  const [readingProgress, setReadingProgress] = useState<number>(0);
+
+  // Novel reader states
+  const [selectedPartId, setSelectedPartId] = useState<string>(parts[0]?.id || '');
+  const [activeChapterIndex, setActiveChapterIndex] = useState<number>(0);
+
+  // Track scroll progress for the top reading progress bar
+  useEffect(() => {
+    const el = scrollContainerRef.current;
+    if (!el) return;
+
+    const onScroll = () => {
+      const { scrollTop, scrollHeight, clientHeight } = el;
+      if (scrollHeight <= clientHeight) {
+        setReadingProgress(100);
+        return;
+      }
+      const p = Math.min(100, Math.max(0, (scrollTop / (scrollHeight - clientHeight)) * 100));
+      setReadingProgress(p);
+    };
+
+    el.addEventListener('scroll', onScroll, { passive: true });
+    return () => el.removeEventListener('scroll', onScroll);
+  }, [readerType, selectedPartId, activeChapterIndex]);
 
   // Combine characters (Google doc characters + Lore characters)
   const allCharacters = useMemo(() => {
@@ -210,10 +234,6 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
     });
     return list;
   }, [propsCharacters]);
-  
-  // Novel reader states
-  const [selectedPartId, setSelectedPartId] = useState<string>(parts[0]?.id || '');
-  const [activeChapterIndex, setActiveChapterIndex] = useState<number>(0);
   
   // Chibi Mascot State
   const [chibiQuoteIndex, setChibiQuoteIndex] = useState<number>(0);
@@ -675,43 +695,25 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
           </div>
         )}
 
-        {/* Right: Tools & Reading Settings */}
-        <div className="flex items-center space-x-1 sm:space-x-1.5 text-xs">
-          {/* 1. World Atlas Button */}
-          <button
-            onClick={() => setIsAtlasOpen(true)}
-            className="flex items-center space-x-1 px-2 sm:px-2.5 py-1.5 rounded-xl text-xs font-medium bg-cyan-950/40 hover:bg-cyan-900/60 text-cyan-300 border border-cyan-500/30 transition-all cursor-pointer shadow-sm active:scale-95"
-            title="Mở Bản Đồ Thế Giới Sông Asera & Bến Arumo"
-          >
-            <Compass className="w-3.5 h-3.5 text-cyan-400" />
-            <span className="hidden md:inline">Bản Đồ</span>
-          </button>
+        {/* Right: Essential Tools & Reading Settings */}
+        <div className="flex items-center space-x-1.5 sm:space-x-2 text-xs">
+          {/* Audio Read-Aloud Button */}
+          {readerType === 'novel' && (
+            <button
+              onClick={handleToggleAudio}
+              className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-xl text-xs font-medium border transition-all cursor-pointer ${
+                isPlayingAudio
+                  ? 'bg-rose-500/20 text-rose-300 border-rose-500/40 animate-pulse'
+                  : 'bg-black/15 hover:bg-black/25 border-white/10'
+              }`}
+              title="Đọc to truyện bằng giọng AI tiếng Việt"
+            >
+              {isPlayingAudio ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5" />}
+              <span className="hidden sm:inline">{isPlayingAudio ? 'Đang đọc...' : 'Đọc Audio'}</span>
+            </button>
+          )}
 
-          {/* 2. Ambient Sound Button */}
-          <button
-            onClick={() => setIsSoundPlayerOpen(true)}
-            className={`flex items-center space-x-1 px-2 sm:px-2.5 py-1.5 rounded-xl text-xs font-medium border transition-all cursor-pointer shadow-sm active:scale-95 ${
-              soundscapeEngine.isPlaying()
-                ? 'bg-indigo-500/25 text-indigo-200 border-indigo-400/50 shadow-indigo-500/20 animate-pulse'
-                : 'bg-indigo-950/40 hover:bg-indigo-900/60 text-indigo-300 border-indigo-500/30'
-            }`}
-            title="Mở trình phát Âm Thanh Nền Không Gian (Sóng nước, Mưa đêm)"
-          >
-            <Music className="w-3.5 h-3.5 text-indigo-400" />
-            <span className="hidden md:inline">Âm Thanh</span>
-          </button>
-
-          {/* 3. World Codex Button */}
-          <button
-            onClick={() => setIsCodexOpen(true)}
-            className="flex items-center space-x-1 px-2 sm:px-2.5 py-1.5 rounded-xl text-xs font-medium bg-amber-950/40 hover:bg-amber-900/60 text-amber-300 border border-amber-500/30 transition-all cursor-pointer shadow-sm active:scale-95"
-            title="Mở Từ Điển Bách Khoa Lore & Quy luật thế giới"
-          >
-            <BookMarked className="w-3.5 h-3.5 text-amber-400" />
-            <span className="hidden md:inline">Codex</span>
-          </button>
-
-          {/* 4. Character Dossier Quick Trigger Button */}
+          {/* Character Dossier Quick Trigger Button */}
           <button
             onClick={() => setIsCharacterDrawerOpen(prev => !prev)}
             className={`flex items-center space-x-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-semibold border transition-all cursor-pointer shadow-sm active:scale-95 ${
@@ -728,14 +730,15 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
             </span>
           </button>
 
-          {/* 5. Theme Switcher */}
+          {/* Theme Switcher */}
           <div className="relative">
             <button
               onClick={() => setShowThemePicker(prev => !prev)}
-              className="flex items-center space-x-1 px-2 py-1.5 rounded-xl bg-black/25 hover:bg-black/35 border border-white/10 text-xs text-slate-300 hover:text-white transition-all cursor-pointer"
+              className="flex items-center space-x-1.5 px-2.5 py-1.5 rounded-xl bg-black/25 hover:bg-black/35 border border-white/10 text-xs text-slate-300 hover:text-white transition-all cursor-pointer"
               title="Đổi phong cách giao diện đọc"
             >
               <span>{currentTheme.icon}</span>
+              <span className="hidden md:inline text-[11px] font-medium">{currentTheme.name}</span>
               <Palette className="w-3 h-3 text-slate-400" />
             </button>
 
@@ -838,43 +841,45 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
                 </div>
               </div>
 
-              {/* 2. Google Docs Live Sync Card */}
-              <div className="p-2.5 rounded-xl bg-gradient-to-br from-emerald-950/40 via-sky-950/30 to-slate-900/50 border border-emerald-500/30 space-y-2 shadow-sm">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-1.5">
-                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                    <span className="text-[10px] font-bold text-emerald-300 tracking-wider uppercase font-mono">
-                      Google Doc Live
+              {/* 2. Google Docs Live Sync Card - Chỉ hiện khi ở chế độ Tác Giả */}
+              {isAuthorMode && (
+                <div className="p-2.5 rounded-xl bg-gradient-to-br from-emerald-950/40 via-sky-950/30 to-slate-900/50 border border-emerald-500/30 space-y-2 shadow-sm">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-1.5">
+                      <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                      <span className="text-[10px] font-bold text-emerald-300 tracking-wider uppercase font-mono">
+                        Google Doc Live
+                      </span>
+                    </div>
+                    <a
+                      href={GOOGLE_DOCS_URL}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-[10px] text-sky-400 hover:text-sky-300 flex items-center space-x-1 hover:underline"
+                      title="Mở Google Doc trên tab mới"
+                    >
+                      <span>Mở link gốc</span>
+                      <ExternalLink className="w-2.5 h-2.5" />
+                    </a>
+                  </div>
+
+                  <button
+                    onClick={() => onSyncGoogleDocs && onSyncGoogleDocs()}
+                    disabled={isSyncingDoc}
+                    className="w-full py-1.5 px-3 rounded-lg bg-emerald-500/25 hover:bg-emerald-500/35 active:scale-[0.98] border border-emerald-500/50 text-emerald-200 text-xs font-semibold flex items-center justify-center space-x-2 transition-all disabled:opacity-60 shadow-sm cursor-pointer"
+                  >
+                    <RefreshCw className={`w-3.5 h-3.5 ${isSyncingDoc ? 'animate-spin text-emerald-300' : 'text-emerald-400'}`} />
+                    <span>{isSyncingDoc ? 'Đang lấy từ Google Doc...' : '🔄 Cập Nhật Live Từ Google Doc'}</span>
+                  </button>
+                  
+                  <div className="flex items-center justify-between text-[10px] text-slate-400 px-0.5 pt-0.5">
+                    <span>Tự động kéo chương mới</span>
+                    <span className="text-emerald-400/90 font-mono font-medium">
+                      {parts.length} phần • {totalChaptersCount} chương
                     </span>
                   </div>
-                  <a
-                    href={GOOGLE_DOCS_URL}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="text-[10px] text-sky-400 hover:text-sky-300 flex items-center space-x-1 hover:underline"
-                    title="Mở Google Doc trên tab mới"
-                  >
-                    <span>Mở link gốc</span>
-                    <ExternalLink className="w-2.5 h-2.5" />
-                  </a>
                 </div>
-
-                <button
-                  onClick={() => onSyncGoogleDocs && onSyncGoogleDocs()}
-                  disabled={isSyncingDoc}
-                  className="w-full py-1.5 px-3 rounded-lg bg-emerald-500/25 hover:bg-emerald-500/35 active:scale-[0.98] border border-emerald-500/50 text-emerald-200 text-xs font-semibold flex items-center justify-center space-x-2 transition-all disabled:opacity-60 shadow-sm cursor-pointer"
-                >
-                  <RefreshCw className={`w-3.5 h-3.5 ${isSyncingDoc ? 'animate-spin text-emerald-300' : 'text-emerald-400'}`} />
-                  <span>{isSyncingDoc ? 'Đang lấy từ Google Doc...' : '🔄 Cập Nhật Live Từ Google Doc'}</span>
-                </button>
-                
-                <div className="flex items-center justify-between text-[10px] text-slate-400 px-0.5 pt-0.5">
-                  <span>Tự động kéo chương mới</span>
-                  <span className="text-emerald-400/90 font-mono font-medium">
-                    {parts.length} phần • {totalChaptersCount} chương
-                  </span>
-                </div>
-              </div>
+              )}
 
               {/* 3. Cute Chibi Mascot Card in Sidebar */}
               <div 
@@ -927,9 +932,60 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
               </div>
             </div>
 
-            {/* 4. Main Sections Tree (Mở đầu / Phần 1 / Phần 2 / Các chương) */}
+            {/* 4. Main Sections Tree (Mở đầu trực tiếp / Phần 1 / Các chương) */}
             <div className="flex-1 overflow-y-auto custom-scrollbar p-3 space-y-2.5">
               {parts.map((part, pIdx) => {
+                // ĐẶC BIỆT: Nếu là phần "Mở đầu" (chỉ có 1 chương duy nhất), hiển thị thẳng thành 1 mục chương bấm đọc ngay, KHÔNG tạo thư mục lồng nhau!
+                const isSinglePrologue = part.chapters.length === 1 && (part.id === 'part_prologue' || part.title.toLowerCase().includes('mở đầu'));
+
+                if (isSinglePrologue) {
+                  const chap = part.chapters[0];
+                  const isActive = part.id === selectedPartId && activeChapterIndex === 0;
+
+                  return (
+                    <div
+                      key={part.id}
+                      onClick={() => {
+                        setSelectedPartId(part.id);
+                        setActiveChapterIndex(0);
+                        scrollToTop();
+                        if (window.innerWidth < 1024) {
+                          setIsSidebarOpen(false);
+                        }
+                      }}
+                      className={`group p-3 rounded-2xl cursor-pointer transition-all flex items-center justify-between border ${
+                        isActive
+                          ? 'bg-gradient-to-r from-amber-500/25 via-pink-500/15 to-purple-500/15 border-amber-400/50 text-amber-100 shadow-md shadow-amber-500/15 ring-1 ring-amber-400/30'
+                          : 'bg-slate-900/40 border-white/5 hover:border-amber-400/30 hover:bg-white/5 text-slate-300'
+                      }`}
+                      title={chap.title}
+                    >
+                      <div className="flex items-center space-x-2.5 min-w-0 flex-1">
+                        <span className="text-base flex-shrink-0">📜</span>
+                        <div className="min-w-0 flex-1">
+                          <h4 className={`font-serif font-bold text-xs truncate ${isActive ? 'text-amber-200' : 'text-slate-100 group-hover:text-amber-300'}`}>
+                            {chap.title}
+                          </h4>
+                          <div className="text-[10px] text-slate-400 flex items-center gap-1.5 mt-0.5 truncate">
+                            <span>{chap.povCharacterName ? `POV: ${chap.povCharacterName}` : 'Khởi đầu saga'}</span>
+                            <span>•</span>
+                            <span className="font-mono text-amber-300/80">{chap.wordCount.toLocaleString()} từ</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="flex items-center space-x-1.5 flex-shrink-0">
+                        {isActive ? (
+                          <span className="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse shadow-[0_0_8px_rgba(251,191,36,0.9)]" />
+                        ) : (
+                          <span className="text-[10px] font-mono opacity-60 group-hover:opacity-100 text-slate-400">
+                            {chap.wordCount.toLocaleString()}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  );
+                }
+
                 const isExpanded = expandedSections[part.id] !== false;
                 const theme = getSectionTheme(part.title, part.id);
 
@@ -1041,6 +1097,13 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
             ref={scrollContainerRef} 
             className="flex-1 h-full overflow-y-auto custom-scrollbar relative px-4 sm:px-8 lg:px-12 py-8 transition-all duration-300"
           >
+            {/* Top Reading Progress Bar */}
+            <div className="fixed top-0 left-0 right-0 h-1 bg-transparent z-50 pointer-events-none">
+              <div 
+                className="h-full bg-gradient-to-r from-amber-500 via-pink-500 to-cyan-400 transition-all duration-150 shadow-[0_0_8px_rgba(251,191,36,0.8)]"
+                style={{ width: `${readingProgress}%` }}
+              />
+            </div>
             {/* Ambient Dreamy Floating Stardust */}
             <div className="pointer-events-none absolute inset-0 overflow-hidden z-0">
               <div className="absolute top-12 left-1/4 text-amber-300/30 animate-starlight text-lg">✦</div>
