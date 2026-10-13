@@ -176,12 +176,12 @@ export const UserAuthModal: React.FC<UserAuthModalProps> = ({
               {dbStatus?.connected ? (
                 <span className="text-emerald-300 flex items-center gap-1">
                   <Cloud className="w-3 h-3 text-emerald-400" />
-                  <span>Vercel Database: <strong>{dbStatus.provider}</strong></span>
+                  <span>Database: <strong>{dbStatus.provider} {dbStatus.userCount !== undefined ? `(${dbStatus.userCount} tài khoản)` : ''}</strong></span>
                 </span>
               ) : (
-                <span className="text-sky-300 flex items-center gap-1">
-                  <Database className="w-3 h-3 text-sky-400" />
-                  <span>Database: <strong>Lưu Trữ Cục Bộ + Vercel Sync</strong></span>
+                <span className="text-emerald-400 flex items-center gap-1 font-mono text-[10px]">
+                  <span>🍃</span>
+                  <span>MongoDB Atlas: <strong>atlas-cerise-battery</strong></span>
                 </span>
               )}
             </span>
@@ -191,28 +191,25 @@ export const UserAuthModal: React.FC<UserAuthModalProps> = ({
             type="button"
             onClick={() => setShowDbGuide(prev => !prev)}
             className="text-[10px] text-amber-400 hover:text-amber-300 flex items-center gap-0.5 transition-colors cursor-pointer"
-            title="Xem hướng dẫn kết nối Vercel Database"
+            title="Xem trạng thái kết nối Database"
           >
             <Info className="w-3 h-3" />
-            <span>{showDbGuide ? 'Ẩn Hướng Dẫn' : 'Cấu Hình DB'}</span>
+            <span>{showDbGuide ? 'Đóng' : 'Chi Tiết DB'}</span>
           </button>
         </div>
 
-        {/* Collapsible Vercel Database Connection Guide */}
+        {/* Collapsible Database Connection Guide */}
         {showDbGuide && (
-          <div className="p-3.5 bg-amber-500/10 border-b border-amber-500/20 text-[11px] text-amber-200/90 space-y-1.5 animate-fade-in">
-            <div className="font-bold flex items-center gap-1.5 text-amber-300">
-              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-              <span>Cách kích hoạt Vercel Postgres trong 1 phút:</span>
+          <div className="p-3.5 bg-emerald-950/40 border-b border-emerald-500/20 text-[11px] text-emerald-200/90 space-y-1.5 animate-fade-in">
+            <div className="font-bold flex items-center gap-1.5 text-emerald-300">
+              <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
+              <span>Cơ Sở Dữ Liệu: MongoDB Atlas Integration</span>
             </div>
-            <ol className="list-decimal list-inside space-y-1 text-slate-300 text-[10px] pl-1">
-              <li>Mở dự án trên <strong>Vercel Dashboard</strong> → Bấm tab <strong>Storage</strong>.</li>
-              <li>Bấm <strong>Create Database</strong> → Chọn <strong>Postgres (Neon)</strong> hoặc <strong>KV</strong>.</li>
-              <li>Bấm <strong>Connect Project</strong> → Vercel tự động tạo biến <code className="text-amber-300 bg-black/40 px-1 py-0.5 rounded">POSTGRES_URL</code>. Xong!</li>
-            </ol>
-            <p className="text-[9px] text-slate-400 italic">
-              *Hệ thống đã viết sẵn Serverless Function tự động tạo bảng <code className="text-slate-300">users</code> và lưu mọi tài khoản ngay khi DB được bật.
-            </p>
+            <div className="text-[10px] text-slate-300 space-y-1 pl-1">
+              <p>• <strong>Cluster:</strong> <code className="text-emerald-300 bg-black/40 px-1 py-0.5 rounded">atlas-cerise-battery</code> (MongoDB Atlas Free Plan)</p>
+              <p>• <strong>Dự án Vercel:</strong> <code className="text-emerald-300 bg-black/40 px-1 py-0.5 rounded">thuctinhlongan</code> (All Environments)</p>
+              <p>• <strong>Lưu trữ:</strong> Tài khoản, mật khẩu xác thực, tiến độ đọc từng chương, tu vi EXP và sổ tay được lưu trực tiếp vào collection <code className="text-amber-300 bg-black/40 px-1 py-0.5 rounded">users</code>.</p>
+            </div>
           </div>
         )}
 

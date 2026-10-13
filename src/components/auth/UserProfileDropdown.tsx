@@ -132,8 +132,8 @@ export const UserProfileDropdown: React.FC<UserProfileDropdownProps> = ({
                 @{currentUser.username} • {currentUser.streakDays || 1} ngày liên tiếp
               </p>
               <div className="flex items-center gap-1 mt-1 text-[9px] text-emerald-400 font-mono">
-                <Cloud className="w-2.5 h-2.5 text-emerald-400" />
-                <span>Đồng bộ Vercel Database</span>
+                <span className="text-[10px]">🍃</span>
+                <span>MongoDB Atlas • atlas-cerise-battery</span>
               </div>
             </div>
           </div>

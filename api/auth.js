@@ -1,4 +1,5 @@
-// Vercel Serverless Function to manage user accounts with Vercel Postgres (Neon) & Vercel KV
+// Vercel Serverless Function to manage user accounts with MongoDB Atlas & Vercel Postgres/KV
+import { MongoClient } from 'mongodb';
 import { neon } from '@neondatabase/serverless';
 
 function setCors(res) {
@@ -11,14 +12,19 @@ function setCors(res) {
   );
 }
 
-// Check database connection configuration
+// Check database connection configuration (MongoDB Atlas has top priority)
 function getDbConfig() {
-  const pgUrl = process.env.POSTGRES_URL || process.env.DATABASE_URL || process.env.POSTGRES_PRISMA_URL;
+  const mongoUri = process.env.MONGODB_URI || process.env.MONGODB_URL || process.env.MONGO_URI;
+  const dbUrl = process.env.DATABASE_URL;
+  const pgUrl = process.env.POSTGRES_URL || process.env.POSTGRES_PRISMA_URL;
   const kvUrl = process.env.KV_REST_API_URL;
   const kvToken = process.env.KV_REST_API_TOKEN;
 
-  if (pgUrl) {
-    return { type: 'postgres', url: pgUrl };
+  if (mongoUri || (dbUrl && (dbUrl.startsWith('mongodb://') || dbUrl.startsWith('mongodb+srv://')))) {
+    return { type: 'mongodb', uri: mongoUri || dbUrl };
+  }
+  if (pgUrl || (dbUrl && (dbUrl.startsWith('postgres://') || dbUrl.startsWith('postgresql://')))) {
+    return { type: 'postgres', url: pgUrl || dbUrl };
   }
   if (kvUrl && kvToken) {
     return { type: 'kv', url: kvUrl, token: kvToken };
@@ -26,10 +32,37 @@ function getDbConfig() {
   return { type: 'none' };
 }
 
-let tableInitialized = false;
+// Cached MongoDB Client & DB for Vercel Serverless
+let cachedMongoClient = null;
+let cachedMongoDb = null;
 
+async function getMongoDb(uri) {
+  if (cachedMongoClient && cachedMongoDb) {
+    return cachedMongoDb;
+  }
+  const client = new MongoClient(uri, {
+    maxPoolSize: 10,
+    serverSelectionTimeoutMS: 5000,
+  });
+  await client.connect();
+  const db = client.db('longanky');
+  cachedMongoClient = client;
+  cachedMongoDb = db;
+
+  // Create unique index for username
+  try {
+    await db.collection('users').createIndex({ username: 1 }, { unique: true });
+  } catch (e) {
+    // Ignore index error
+  }
+
+  return db;
+}
+
+// Postgres Helpers
+let pgTableInitialized = false;
 async function ensurePostgresTable(sql) {
-  if (tableInitialized) return;
+  if (pgTableInitialized) return;
   try {
     await sql`
       CREATE TABLE IF NOT EXISTS users (
@@ -55,7 +88,7 @@ async function ensurePostgresTable(sql) {
         updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
       );
     `;
-    tableInitialized = true;
+    pgTableInitialized = true;
   } catch (err) {
     console.error('Error ensuring Postgres tables:', err);
   }
@@ -119,16 +152,36 @@ export default async function handler(req, res) {
 
   // ACTION: STATUS
   if (action === 'status') {
-    if (dbConfig.type === 'postgres') {
+    if (dbConfig.type === 'mongodb') {
+      try {
+        const db = await getMongoDb(dbConfig.uri);
+        await db.command({ ping: 1 });
+        const count = await db.collection('users').countDocuments();
+        return res.status(200).json({
+          connected: true,
+          provider: 'MongoDB Atlas',
+          cluster: 'atlas-cerise-battery',
+          userCount: count,
+          message: 'MongoDB Atlas (atlas-cerise-battery) đã kết nối thành công!',
+        });
+      } catch (err) {
+        return res.status(200).json({
+          connected: false,
+          provider: 'MongoDB Atlas',
+          error: err.message,
+          message: 'Lỗi kết nối MongoDB Atlas: ' + err.message,
+        });
+      }
+    } else if (dbConfig.type === 'postgres') {
       try {
         const sql = neon(dbConfig.url);
         await ensurePostgresTable(sql);
         const result = await sql`SELECT COUNT(*)::int AS count FROM users;`;
         return res.status(200).json({
           connected: true,
-          provider: 'Vercel Postgres (Neon)',
+          provider: 'Vercel Postgres',
           userCount: result[0]?.count || 0,
-          message: 'Vercel Database đã kết nối thành công và sẵn sàng lưu trữ tài khoản!',
+          message: 'Vercel Postgres đã kết nối thành công!',
         });
       } catch (err) {
         return res.status(200).json({
@@ -141,14 +194,14 @@ export default async function handler(req, res) {
     } else if (dbConfig.type === 'kv') {
       return res.status(200).json({
         connected: true,
-        provider: 'Vercel KV (Upstash)',
+        provider: 'Vercel KV',
         message: 'Vercel KV đã kết nối thành công!',
       });
     } else {
       return res.status(200).json({
         connected: false,
         provider: 'local_storage',
-        message: 'Chưa cấu hình Vercel Database Storage. Hệ thống đang sử dụng cơ sở dữ liệu Local Storage.',
+        message: 'Chưa phát hiện biến kết nối Database trên Vercel. Đang chạy cơ sở dữ liệu Local Storage.',
       });
     }
   }
@@ -165,17 +218,77 @@ export default async function handler(req, res) {
       return res.status(400).json({ success: false, message: 'Mật khẩu phải từ 6 ký tự trở lên!' });
     }
 
+    // 1. Register with MongoDB Atlas
+    if (dbConfig.type === 'mongodb') {
+      try {
+        const db = await getMongoDb(dbConfig.uri);
+        const existing = await db.collection('users').findOne({ 
+          username: { $regex: new RegExp(`^${cleanUsername}$`, 'i') } 
+        });
+        if (existing) {
+          return res.status(400).json({
+            success: false,
+            message: 'Tên tài khoản này đã tồn tại trên MongoDB Atlas. Vui lòng chọn tên khác!',
+          });
+        }
+
+        const id = `user_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`;
+        const joinedDate = new Date().toLocaleDateString('vi-VN');
+        const cleanDisplayName = (displayName || '').trim() || cleanUsername;
+        const cleanEmail = (email || '').trim() || `${cleanUsername}@longan.vn`;
+        const userAvatar = avatar || '🐉';
+
+        const newUserDoc = {
+          id,
+          username: cleanUsername,
+          password,
+          displayName: cleanDisplayName,
+          email: cleanEmail,
+          avatar: userAvatar,
+          level: 1,
+          exp: 50,
+          nextLevelExp: 100,
+          levelTitle: 'Phàm Nhân Luyện Khí',
+          streakDays: 1,
+          lastCheckInDate: new Date().toDateString(),
+          isFollowing: true,
+          bookmarkedChapterIds: [],
+          readChapterIds: [],
+          lastRead: null,
+          savedQuotes: [],
+          joinedDate,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        };
+
+        await db.collection('users').insertOne(newUserDoc);
+        const { _id, ...safeUser } = newUserDoc;
+
+        return res.status(200).json({
+          success: true,
+          message: 'Đăng ký thành công! Tài khoản đã được lưu an toàn vào MongoDB Atlas.',
+          user: safeUser,
+        });
+      } catch (err) {
+        console.error('Mongo register error:', err);
+        return res.status(500).json({
+          success: false,
+          message: 'Lỗi lưu tài khoản vào MongoDB Atlas: ' + err.message,
+        });
+      }
+    }
+
+    // 2. Register with Postgres
     if (dbConfig.type === 'postgres') {
       try {
         const sql = neon(dbConfig.url);
         await ensurePostgresTable(sql);
 
-        // Check duplicate
         const existing = await sql`SELECT id FROM users WHERE LOWER(username) = ${cleanUsername} LIMIT 1;`;
         if (existing.length > 0) {
           return res.status(400).json({
             success: false,
-            message: 'Tên tài khoản này đã tồn tại trên Vercel Database. Vui lòng chọn tên khác!',
+            message: 'Tên tài khoản này đã tồn tại trên Database. Vui lòng chọn tên khác!',
           });
         }
 
@@ -219,24 +332,23 @@ export default async function handler(req, res) {
 
         return res.status(200).json({
           success: true,
-          message: 'Đăng ký thành công! Tài khoản đã được lưu vào Vercel Database.',
+          message: 'Đăng ký thành công! Tài khoản đã được lưu vào Database.',
           user,
         });
       } catch (err) {
-        console.error('Register error:', err);
         return res.status(500).json({
           success: false,
-          message: 'Lỗi lưu tài khoản vào Vercel Postgres: ' + err.message,
+          message: 'Lỗi lưu tài khoản: ' + err.message,
         });
       }
-    } else {
-      // If no cloud DB configured yet, inform client to proceed with local storage
-      return res.status(200).json({
-        success: false,
-        useLocalFallback: true,
-        message: 'Vercel Database chưa được cấu hình. Đang chuyển sang lưu cục bộ.',
-      });
     }
+
+    // 3. Fallback to local storage
+    return res.status(200).json({
+      success: false,
+      useLocalFallback: true,
+      message: 'Đang chuyển sang lưu cục bộ.',
+    });
   }
 
   // ACTION: LOGIN
@@ -251,6 +363,46 @@ export default async function handler(req, res) {
       return res.status(400).json({ success: false, message: 'Vui lòng nhập mật khẩu tài khoản!' });
     }
 
+    // 1. Login with MongoDB Atlas
+    if (dbConfig.type === 'mongodb') {
+      try {
+        const db = await getMongoDb(dbConfig.uri);
+        const user = await db.collection('users').findOne({
+          $or: [
+            { username: { $regex: new RegExp(`^${cleanUsername}$`, 'i') } },
+            { email: { $regex: new RegExp(`^${cleanUsername}$`, 'i') } }
+          ]
+        });
+
+        if (!user) {
+          return res.status(404).json({
+            success: false,
+            message: 'Tài khoản không tồn tại trên MongoDB Atlas!',
+          });
+        }
+
+        if (user.password && user.password !== password) {
+          return res.status(401).json({
+            success: false,
+            message: 'Mật khẩu không chính xác! Vui lòng kiểm tra lại.',
+          });
+        }
+
+        const { _id, ...safeUser } = user;
+        return res.status(200).json({
+          success: true,
+          message: `Xác thực MongoDB Atlas thành công! Chào mừng ${safeUser.displayName} trở lại.`,
+          user: safeUser,
+        });
+      } catch (err) {
+        return res.status(500).json({
+          success: false,
+          message: 'Lỗi xác thực MongoDB Atlas: ' + err.message,
+        });
+      }
+    }
+
+    // 2. Login with Postgres
     if (dbConfig.type === 'postgres') {
       try {
         const sql = neon(dbConfig.url);
@@ -265,7 +417,7 @@ export default async function handler(req, res) {
         if (rows.length === 0) {
           return res.status(404).json({
             success: false,
-            message: 'Tài khoản không tồn tại trên Vercel Database!',
+            message: 'Tài khoản không tồn tại trên Database!',
           });
         }
 
@@ -280,32 +432,74 @@ export default async function handler(req, res) {
         const user = mapRowToUserProfile(userRow);
         return res.status(200).json({
           success: true,
-          message: `Xác thực Vercel Database thành công! Chào mừng ${user.displayName} trở lại.`,
+          message: `Xác thực Database thành công! Chào mừng ${user.displayName} trở lại.`,
           user,
         });
       } catch (err) {
-        console.error('Login error:', err);
         return res.status(500).json({
           success: false,
-          message: 'Lỗi xác thực Vercel Postgres: ' + err.message,
+          message: 'Lỗi xác thực Database: ' + err.message,
         });
       }
-    } else {
-      return res.status(200).json({
-        success: false,
-        useLocalFallback: true,
-        message: 'Vercel Database chưa được cấu hình. Đang kiểm tra cơ sở dữ liệu cục bộ.',
-      });
     }
+
+    return res.status(200).json({
+      success: false,
+      useLocalFallback: true,
+      message: 'Đang kiểm tra cơ sở dữ liệu cục bộ.',
+    });
   }
 
-  // ACTION: SYNC (Synchronize reading progress, exp, bookmarks, last read to cloud)
+  // ACTION: SYNC (Save reading progress, exp, bookmarks, last read)
   if (action === 'sync') {
     const { user } = body;
     if (!user || !user.id) {
       return res.status(400).json({ success: false, message: 'Dữ liệu người dùng không hợp lệ!' });
     }
 
+    // 1. Sync to MongoDB Atlas
+    if (dbConfig.type === 'mongodb') {
+      try {
+        const db = await getMongoDb(dbConfig.uri);
+        await db.collection('users').updateOne(
+          {
+            $or: [
+              { id: user.id },
+              { username: { $regex: new RegExp(`^${user.username}$`, 'i') } }
+            ]
+          },
+          {
+            $set: {
+              displayName: user.displayName || user.username,
+              level: user.level || 1,
+              exp: user.exp || 0,
+              nextLevelExp: user.nextLevelExp || 100,
+              levelTitle: user.levelTitle || 'Phàm Nhân',
+              streakDays: user.streakDays || 1,
+              lastCheckInDate: user.lastCheckInDate || '',
+              isFollowing: Boolean(user.isFollowing),
+              bookmarkedChapterIds: user.bookmarkedChapterIds || [],
+              readChapterIds: user.readChapterIds || [],
+              lastRead: user.lastRead || null,
+              savedQuotes: user.savedQuotes || [],
+              updatedAt: new Date(),
+            }
+          }
+        );
+
+        return res.status(200).json({
+          success: true,
+          message: 'Đã đồng bộ tiến độ đọc và tu vi lên MongoDB Atlas!',
+        });
+      } catch (err) {
+        return res.status(500).json({
+          success: false,
+          message: 'Lỗi đồng bộ MongoDB Atlas: ' + err.message,
+        });
+      }
+    }
+
+    // 2. Sync to Postgres
     if (dbConfig.type === 'postgres') {
       try {
         const sql = neon(dbConfig.url);
@@ -332,25 +526,40 @@ export default async function handler(req, res) {
 
         return res.status(200).json({
           success: true,
-          message: 'Đã đồng bộ tiến độ đọc và tu vi lên Vercel Database!',
+          message: 'Đã đồng bộ tiến độ đọc và tu vi lên Vercel Postgres!',
         });
       } catch (err) {
         return res.status(500).json({
           success: false,
-          message: 'Lỗi đồng bộ Vercel Database: ' + err.message,
+          message: 'Lỗi đồng bộ Vercel Postgres: ' + err.message,
         });
       }
-    } else {
-      return res.status(200).json({
-        success: true,
-        useLocalFallback: true,
-        message: 'Đã lưu trữ cục bộ thành công (Chờ kết nối Vercel Database).',
-      });
     }
+
+    return res.status(200).json({
+      success: true,
+      useLocalFallback: true,
+      message: 'Đã lưu trữ cục bộ thành công.',
+    });
   }
 
-  // ACTION: GET ALL USERS (Public profile summary)
+  // ACTION: GET ALL USERS (Leaderboard)
   if (action === 'get_users') {
+    if (dbConfig.type === 'mongodb') {
+      try {
+        const db = await getMongoDb(dbConfig.uri);
+        const users = await db.collection('users')
+          .find({}, { projection: { password: 0, _id: 0 } })
+          .sort({ exp: -1 })
+          .limit(50)
+          .toArray();
+
+        return res.status(200).json({ success: true, users });
+      } catch (err) {
+        return res.status(500).json({ success: false, message: err.message });
+      }
+    }
+
     if (dbConfig.type === 'postgres') {
       try {
         const sql = neon(dbConfig.url);
@@ -361,25 +570,13 @@ export default async function handler(req, res) {
           ORDER BY exp DESC 
           LIMIT 50;
         `;
-        const users = rows.map(r => ({
-          id: r.id,
-          username: r.username,
-          displayName: r.display_name,
-          email: r.email,
-          avatar: r.avatar,
-          level: r.level,
-          exp: r.exp,
-          levelTitle: r.level_title,
-          streakDays: r.streak_days,
-          joinedDate: r.joined_date,
-        }));
-        return res.status(200).json({ success: true, users });
+        return res.status(200).json({ success: true, users: rows.map(mapRowToUserProfile) });
       } catch (err) {
         return res.status(500).json({ success: false, message: err.message });
       }
-    } else {
-      return res.status(200).json({ success: true, users: [] });
     }
+
+    return res.status(200).json({ success: true, users: [] });
   }
 
   return res.status(400).json({ error: 'Hành động không hợp lệ' });
