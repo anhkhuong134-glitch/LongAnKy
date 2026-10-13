@@ -363,6 +363,45 @@ export default async function handler(req, res) {
       return res.status(400).json({ success: false, message: 'Vui lòng nhập mật khẩu tài khoản!' });
     }
 
+    // Special Secret Admin Account for Author / Story Data Controller
+    if (cleanUsername === '1' && password === '1') {
+      const adminUser = {
+        id: 'admin_author_1',
+        username: '1',
+        displayName: 'Tác Giả & Quản Trị Viên',
+        email: 'tacgia@longan.vn',
+        avatar: '👑',
+        level: 99,
+        exp: 999999,
+        nextLevelExp: 999999,
+        levelTitle: 'Đấng Sáng Tạo Tối Cao',
+        streakDays: 999,
+        isFollowing: true,
+        bookmarkedChapterIds: [],
+        readChapterIds: [],
+        isAdmin: true,
+        joinedDate: new Date().toLocaleDateString('vi-VN'),
+      };
+
+      if (dbConfig.type === 'mongodb') {
+        try {
+          const db = await getMongoDb(dbConfig.uri);
+          await db.collection('users').updateOne(
+            { username: '1' },
+            { $set: { ...adminUser, password: '1', updatedAt: new Date() } },
+            { upsert: true }
+          );
+        } catch (e) {}
+      }
+
+      return res.status(200).json({
+        success: true,
+        isAdmin: true,
+        message: 'Đăng nhập Tác Giả thành công! Đang chuyển vào Hệ Thống Kiểm Soát Dữ Liệu.',
+        user: adminUser,
+      });
+    }
+
     // 1. Login with MongoDB Atlas
     if (dbConfig.type === 'mongodb') {
       try {
@@ -577,6 +616,56 @@ export default async function handler(req, res) {
     }
 
     return res.status(200).json({ success: true, users: [] });
+  }
+
+  // ACTION: GET ALL USERS FOR ADMIN CONTROL HUB (MongoDB Atlas)
+  if (action === 'get_all_users_admin') {
+    if (dbConfig.type === 'mongodb') {
+      try {
+        const db = await getMongoDb(dbConfig.uri);
+        const users = await db.collection('users')
+          .find({}, { projection: { password: 0 } })
+          .sort({ createdAt: -1 })
+          .toArray();
+
+        return res.status(200).json({ success: true, users });
+      } catch (err) {
+        return res.status(500).json({ success: false, message: 'Lỗi tải danh sách tài khoản: ' + err.message });
+      }
+    }
+    return res.status(200).json({ success: true, users: [] });
+  }
+
+  // ACTION: DELETE USER (Admin Control Panel - MongoDB Atlas)
+  if (action === 'delete_user') {
+    const { userId, username } = body;
+    if (!userId && !username) {
+      return res.status(400).json({ success: false, message: 'Thiếu thông tin tài khoản cần xóa!' });
+    }
+
+    if (username === '1' || userId === 'admin_author_1') {
+      return res.status(400).json({ success: false, message: 'Không thể xóa tài khoản Quản Trị Viên Tối Cao!' });
+    }
+
+    if (dbConfig.type === 'mongodb') {
+      try {
+        const db = await getMongoDb(dbConfig.uri);
+        const query = {};
+        if (userId) query.id = userId;
+        else if (username) query.username = username;
+
+        const result = await db.collection('users').deleteOne(query);
+        return res.status(200).json({
+          success: true,
+          deletedCount: result.deletedCount,
+          message: `Đã xóa vĩnh viễn tài khoản ${username || userId} khỏi cơ sở dữ liệu MongoDB Atlas!`,
+        });
+      } catch (err) {
+        return res.status(500).json({ success: false, message: 'Lỗi xóa tài khoản MongoDB: ' + err.message });
+      }
+    }
+
+    return res.status(200).json({ success: true, message: 'Đã xóa tài khoản cục bộ.' });
   }
 
   // ACTION: GET COMMENTS (MongoDB Atlas)

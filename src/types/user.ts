@@ -38,6 +38,7 @@ export interface UserProfile {
   savedQuotes?: SavedQuote[];
   readingTheme?: string;
   readingFontSize?: number;
+  isAdmin?: boolean; // Quyền quản trị viên / Tác giả tối cao
 }
 
 export interface ReadingHistoryItem {

@@ -23,12 +23,14 @@ interface UserAuthModalProps {
   isOpen: boolean;
   onClose: () => void;
   onLoginSuccess: (user: UserProfile) => void;
+  onAdminAuthorized?: () => void;
 }
 
 export const UserAuthModal: React.FC<UserAuthModalProps> = ({
   isOpen,
   onClose,
   onLoginSuccess,
+  onAdminAuthorized,
 }) => {
   const [tab, setTab] = useState<'login' | 'register'>('login');
   
@@ -83,6 +85,9 @@ export const UserAuthModal: React.FC<UserAuthModalProps> = ({
         setSuccessMsg(res.message);
         setTimeout(() => {
           onLoginSuccess(res.user!);
+          if ((res.user!.isAdmin || res.user!.username === '1') && onAdminAuthorized) {
+            onAdminAuthorized();
+          }
           onClose();
         }, 600);
       } else {

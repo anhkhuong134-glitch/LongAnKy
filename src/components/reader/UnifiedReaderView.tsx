@@ -72,6 +72,7 @@ interface UnifiedReaderViewProps {
   characters?: Character[];
   onOpenAuthorLogin?: () => void;
   onExitAuthorMode?: () => void;
+  onAdminAuthorized?: () => void;
 }
 
 type ReaderType = 'novel' | 'comic';
@@ -208,14 +209,12 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
   isSyncingDoc = false,
   characters: propsCharacters,
   onOpenAuthorLogin,
-  onExitAuthorMode
+  onExitAuthorMode,
+  onAdminAuthorized
 }) => {
   // Mode selection: Novel (Truyện chữ - Đang sáng tác) vs Comic (Truyện tranh - Sắp ra mắt)
   const [readerType, setReaderType] = useState<ReaderType>('novel');
   const [authorPreviewComic, setAuthorPreviewComic] = useState<boolean>(false);
-
-  // Logo click counter to secret author prompt
-  const [logoClicks, setLogoClicks] = useState<number>(0);
 
   // Reading Preferences state (Loaded & persisted in localStorage)
   const [readingPrefs, setReadingPrefs] = useState<ReadingPreferences>(() => {
@@ -922,15 +921,7 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
 
             {/* Brand Logo & Title */}
             <div 
-              onClick={() => {
-                const next = logoClicks + 1;
-                setLogoClicks(next);
-                if (next >= 5 && onOpenAuthorLogin) {
-                  setLogoClicks(0);
-                  onOpenAuthorLogin();
-                }
-              }}
-              className="flex items-center space-x-2 cursor-pointer select-none"
+              className="flex items-center space-x-2 select-none"
               title="Long Ấn Thức Tỉnh"
             >
               <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-amber-500 via-rose-600 to-purple-600 flex items-center justify-center text-white font-serif font-bold text-sm shadow-md shadow-amber-500/20">
@@ -1112,6 +1103,7 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
               onOpenAuthModal={() => setIsAuthModalOpen(true)}
               onOpenHistoryModal={() => setIsHistoryModalOpen(true)}
               onOpenLeaderboard={() => setIsLeaderboardOpen(true)}
+              onOpenAdminHub={onAdminAuthorized}
               onNavigateChapter={handleNavigateFromHistory}
               onUserUpdated={(u) => setCurrentUser(u)}
             />
@@ -2731,7 +2723,13 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
       <UserAuthModal
         isOpen={isAuthModalOpen}
         onClose={() => setIsAuthModalOpen(false)}
-        onLoginSuccess={(user) => setCurrentUser(user)}
+        onLoginSuccess={(user) => {
+          setCurrentUser(user);
+          if ((user.isAdmin || user.username === '1') && onAdminAuthorized) {
+            onAdminAuthorized();
+          }
+        }}
+        onAdminAuthorized={onAdminAuthorized}
       />
 
       {/* 9. NetTruyen Reading History & Bookmarks Modal */}

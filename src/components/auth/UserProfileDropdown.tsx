@@ -8,6 +8,7 @@ interface UserProfileDropdownProps {
   onOpenAuthModal: () => void;
   onOpenHistoryModal: () => void;
   onOpenLeaderboard?: () => void;
+  onOpenAdminHub?: () => void;
   onUserUpdated: (user: UserProfile | null) => void;
   onNavigateChapter?: (type: 'novel' | 'comic', chapterId: string, partId?: string, chapterIndex?: number) => void;
 }
@@ -17,6 +18,7 @@ export const UserProfileDropdown: React.FC<UserProfileDropdownProps> = ({
   onOpenAuthModal,
   onOpenHistoryModal,
   onOpenLeaderboard,
+  onOpenAdminHub,
   onUserUpdated,
   onNavigateChapter,
 }) => {
@@ -244,6 +246,23 @@ export const UserProfileDropdown: React.FC<UserProfileDropdownProps> = ({
                 {currentUser.isFollowing ? 'Đã bật' : 'Tắt'}
               </span>
             </button>
+
+            {/* Hệ Thống Kiểm Soát Dữ Liệu (Dành Riêng Cho Tác Giả / Admin '1') */}
+            {(currentUser.isAdmin || currentUser.username === '1') && onOpenAdminHub && (
+              <button
+                onClick={() => {
+                  setIsOpen(false);
+                  onOpenAdminHub();
+                }}
+                className="w-full px-3 py-2 rounded-xl bg-gradient-to-r from-amber-500/20 to-rose-500/20 hover:from-amber-500/30 hover:to-rose-500/30 border border-amber-500/35 text-amber-300 text-xs font-bold flex items-center justify-between transition-all cursor-pointer shadow-sm mt-1"
+              >
+                <div className="flex items-center gap-2.5">
+                  <span className="text-sm">👑</span>
+                  <span>Kiểm Soát Dữ Liệu &amp; Studio</span>
+                </div>
+                <span className="text-[10px] text-amber-400 font-mono">&rarr; Vào</span>
+              </button>
+            )}
           </div>
 
           {/* Member Privileges Notice */}

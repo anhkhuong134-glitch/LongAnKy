@@ -16,14 +16,15 @@ import {
   Flame,
   CheckCircle2,
   KeyRound,
-  Lock
+  Lock,
+  Database
 } from 'lucide-react';
 import { Project } from '../../types';
 
 interface AppHeaderProps {
   project: Project;
-  activeTab: 'editor' | 'bible' | 'characters' | 'timeline' | 'foreshadowing' | 'reader' | 'google_sync';
-  setActiveTab: (tab: 'editor' | 'bible' | 'characters' | 'timeline' | 'foreshadowing' | 'reader' | 'google_sync') => void;
+  activeTab: 'editor' | 'bible' | 'characters' | 'timeline' | 'foreshadowing' | 'reader' | 'google_sync' | 'users';
+  setActiveTab: (tab: 'editor' | 'bible' | 'characters' | 'timeline' | 'foreshadowing' | 'reader' | 'google_sync' | 'users') => void;
   isWarmTheme: boolean;
   setIsWarmTheme: (warm: boolean) => void;
   onOpenImport: () => void;
@@ -32,7 +33,7 @@ interface AppHeaderProps {
   onResetSample: () => void;
   stagedSyncCount?: number;
   isAuthorMode: boolean;
-  onOpenAuthorLogin: () => void;
+  onOpenAuthorLogin?: () => void;
   onExitAuthorMode: () => void;
   isAutoSyncLive?: boolean;
   onToggleAutoSync?: () => void;
@@ -59,17 +60,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
   onTriggerLiveCheck,
   lastLiveCheckTime
 }) => {
-  const [logoClicks, setLogoClicks] = React.useState(0);
   const wordsProgressPercent = Math.min(100, Math.round((project.stats.wordsToday / project.stats.dailyGoal) * 100));
-
-  const handleLogoClick = () => {
-    const next = logoClicks + 1;
-    setLogoClicks(next);
-    if (next >= 5) {
-      setLogoClicks(0);
-      onOpenAuthorLogin();
-    }
-  };
 
   return (
     <header className={`border-b transition-colors duration-200 select-none ${
@@ -82,9 +73,8 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
         {/* Brand Logo & Project Title */}
         <div className="flex items-center space-x-3">
           <div 
-            onClick={handleLogoClick}
             title={isAuthorMode ? "Chế độ Tác Giả đang mở" : "Long Ấn Thức Tỉnh"}
-            className="relative flex items-center justify-center w-9 h-9 rounded-xl bg-gradient-to-br from-amber-500 via-rose-600 to-purple-600 shadow-md shadow-amber-500/20 text-white font-serif font-bold text-lg cursor-pointer transition-transform active:scale-95 select-none"
+            className="relative flex items-center justify-center w-9 h-9 rounded-xl bg-gradient-to-br from-amber-500 via-rose-600 to-purple-600 shadow-md shadow-amber-500/20 text-white font-serif font-bold text-lg select-none"
           >
             M
             <span className="absolute -bottom-1 -right-1 flex h-3 w-3">
@@ -219,38 +209,36 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
               <GitBranch className="w-3.5 h-3.5 text-rose-400" />
               <span>Phục Bút</span>
             </button>
+
+            {/* TAB KIỂM SOÁT TÀI KHOẢN MONGODB ATLAS */}
+            <button
+              onClick={() => setActiveTab('users')}
+              className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg transition-all ${
+                activeTab === 'users'
+                  ? 'bg-rose-500/25 text-rose-300 border border-rose-500/40 shadow-sm font-bold'
+                  : 'hover:bg-white/5 opacity-75 hover:opacity-100 text-rose-300/90'
+              }`}
+            >
+              <Database className="w-3.5 h-3.5 text-rose-400" />
+              <span>Kiểm Soát Tài Khoản</span>
+            </button>
           </nav>
         )}
 
         {/* Right Toolbar Actions */}
         <div className="flex items-center space-x-2">
-          {!isAuthorMode ? (
-            <>
-              {/* Nút Độc Giả (Bấm vào để mở bảng nhập mã PIN 332004 chuyển sang trang soạn thảo & up truyện tranh) */}
-              <button
-                onClick={onOpenAuthorLogin}
-                title="Nhập mã PIN để mở trang soạn thảo truyện chữ và up truyện tranh lên"
-                className="px-3 py-1.5 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/35 text-amber-300 font-semibold text-xs flex items-center gap-1.5 transition-all shadow-sm hover:scale-105 active:scale-95 cursor-pointer"
-              >
-                <KeyRound className="w-3.5 h-3.5 text-amber-400" />
-                <span>Độc giả</span>
-              </button>
-            </>
-          ) : (
-            /* Chế độ Tác Giả (Sau khi đã xác thực PIN hoặc vào bằng ?author=1) */
-            <>
-              {/* Huy hiệu Tác Giả với nút Khóa / Xem thử như Độc giả */}
-              <div className="flex items-center space-x-1.5 px-2.5 py-1 rounded-xl bg-gradient-to-r from-amber-500/20 via-rose-500/15 to-purple-500/20 border border-amber-500/40 text-amber-300 text-xs shadow-sm">
-                <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
-                <span className="font-bold">👑 Tác Giả</span>
-                <button
-                  onClick={onExitAuthorMode}
-                  title="Khóa lại để xem chính xác giao diện mà Độc Giả nhìn thấy trên Vercel"
-                  className="ml-1 text-[11px] text-amber-200/80 hover:text-white underline cursor-pointer"
-                >
-                  (Xem như Độc giả)
-                </button>
-              </div>
+          {/* Huy hiệu Tác Giả với nút Khóa / Xem thử như Độc giả */}
+          <div className="flex items-center space-x-1.5 px-2.5 py-1 rounded-xl bg-gradient-to-r from-amber-500/20 via-rose-500/15 to-purple-500/20 border border-amber-500/40 text-amber-300 text-xs shadow-sm">
+            <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+            <span className="font-bold">👑 Tác Giả</span>
+            <button
+              onClick={onExitAuthorMode}
+              title="Khóa lại để xem chính xác giao diện mà Độc Giả nhìn thấy trên Vercel"
+              className="ml-1 text-[11px] text-amber-200/80 hover:text-white underline cursor-pointer"
+            >
+              (Xem như Độc giả)
+            </button>
+          </div>
 
               {/* Daily Word Target Badge */}
               <div className="hidden xl:flex items-center space-x-2 px-3 py-1.5 rounded-lg bg-slate-900/60 border border-white/10 text-xs">
@@ -301,8 +289,6 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
               >
                 <RotateCcw className="w-3.5 h-3.5" />
               </button>
-            </>
-          )}
         </div>
       </div>
 
@@ -312,6 +298,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
           {[
             { id: 'reader', label: 'Đọc Sách (Chữ & Tranh)', icon: BookOpen },
             { id: 'editor', label: 'Soạn Thảo (3 Cột)', icon: BookOpen },
+            { id: 'users', label: 'Kiểm Soát Tài Khoản', icon: Database },
             { id: 'google_sync', label: 'Google Docs & Sheets', icon: CheckCircle2 },
             { id: 'bible', label: 'Story Bible', icon: ShieldCheck },
             { id: 'characters', label: 'Nhân Vật', icon: Users },

@@ -15,6 +15,7 @@ import { GoogleSyncView } from './components/googleSync/GoogleSyncView';
 import { ImportExportModal } from './components/importExport/ImportExportModal';
 import { SettingsModal } from './components/settings/SettingsModal';
 import { AuthorLoginModal } from './components/author/AuthorLoginModal';
+import { UserManagementView } from './components/admin/UserManagementView';
 
 import { StorageService } from './services/storageService';
 import { AIService, AISuggestionResult } from './services/aiService';
@@ -31,7 +32,7 @@ import {
 
 import './styles/index.css';
 
-type ActiveTab = 'editor' | 'bible' | 'characters' | 'timeline' | 'foreshadowing' | 'reader' | 'google_sync';
+type ActiveTab = 'editor' | 'bible' | 'characters' | 'timeline' | 'foreshadowing' | 'reader' | 'google_sync' | 'users';
 
 export default function App() {
   // Author mode authorization: Khách vào link Vercel hoặc link thường mặc định 100% chỉ thấy Đọc Sách
@@ -644,6 +645,16 @@ export default function App() {
           </div>
         )}
 
+        {/* TAB: User Account Control (MongoDB Atlas) - Chỉ Tác Giả */}
+        {isAuthorMode && activeTab === 'users' && (
+          <div className="flex-1 overflow-hidden">
+            <UserManagementView
+              onBackToReader={() => setActiveTab('reader')}
+              isWarmTheme={isWarmTheme}
+            />
+          </div>
+        )}
+
         {/* TAB: Unified Reader (Novel & Comic Preview + Audio TTS) - MẶC ĐỊNH VÀ DUY NHẤT CHO ĐỘC GIẢ */}
         {activeTab === 'reader' && (
           <div className="flex-1 overflow-hidden">
@@ -666,6 +677,12 @@ export default function App() {
                 StorageService.setAuthorAuthenticated(false);
                 setIsAuthorMode(false);
                 setActiveTab('reader');
+              }}
+              onAdminAuthorized={() => {
+                sessionStorage.setItem('mach_author_session', 'true');
+                StorageService.setAuthorAuthenticated(true);
+                setIsAuthorMode(true);
+                setActiveTab('editor');
               }}
             />
           </div>
