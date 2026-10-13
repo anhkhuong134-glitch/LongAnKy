@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { X, Clock, BookOpen, Trash2, ChevronRight, Bookmark, Sparkles, BookMarked } from 'lucide-react';
-import { ReadingHistoryItem, UserProfile } from '../../types/user';
+import { X, Clock, BookOpen, Trash2, ChevronRight, Bookmark, Sparkles, BookMarked, Quote, Copy, Check } from 'lucide-react';
+import { ReadingHistoryItem, UserProfile, SavedQuote } from '../../types/user';
 import { UserService } from '../../services/userService';
 
 interface UserHistoryModalProps {
@@ -16,8 +16,10 @@ export const UserHistoryModal: React.FC<UserHistoryModalProps> = ({
   currentUser,
   onNavigateChapter,
 }) => {
-  const [activeTab, setActiveTab] = useState<'history' | 'bookmarks'>('history');
+  const [activeTab, setActiveTab] = useState<'history' | 'bookmarks' | 'quotes'>('history');
   const [history, setHistory] = useState<ReadingHistoryItem[]>(() => UserService.getReadingHistory());
+  const [copiedQuoteId, setCopiedQuoteId] = useState<string | null>(null);
+  const [quotes, setQuotes] = useState<SavedQuote[]>(() => currentUser?.savedQuotes || UserService.getSavedQuotes());
 
   if (!isOpen) return null;
 
@@ -26,6 +28,17 @@ export const UserHistoryModal: React.FC<UserHistoryModalProps> = ({
       UserService.clearReadingHistory();
       setHistory([]);
     }
+  };
+
+  const handleDeleteQuote = (id: string) => {
+    const updated = UserService.deleteQuote(id);
+    setQuotes(updated);
+  };
+
+  const handleCopyQuote = (quote: SavedQuote) => {
+    navigator.clipboard.writeText(`"${quote.text}" — Trích từ Long Ấn Thức Tỉnh (${quote.chapterTitle})`);
+    setCopiedQuoteId(quote.id);
+    setTimeout(() => setCopiedQuoteId(null), 2000);
   };
 
   const formatTimeAgo = (isoString: string) => {
@@ -63,7 +76,7 @@ export const UserHistoryModal: React.FC<UserHistoryModalProps> = ({
                 </span>
               </h3>
               <p className="text-[11px] text-slate-400">
-                Lưu vết chính xác từng chương truyện chữ và truyện tranh bạn đã đọc
+                Ghi nhớ vị trí đọc dở dang • Tự động tiếp tục đọc • Sổ tay trích đoạn
               </p>
             </div>
           </div>
@@ -77,11 +90,11 @@ export const UserHistoryModal: React.FC<UserHistoryModalProps> = ({
         </div>
 
         {/* Tab Selection */}
-        <div className="flex border-b border-white/10 bg-black/40 px-4 justify-between items-center">
+        <div className="flex border-b border-white/10 bg-black/40 px-4 justify-between items-center overflow-x-auto">
           <div className="flex space-x-2">
             <button
               onClick={() => setActiveTab('history')}
-              className={`py-3 px-4 text-xs font-serif font-bold flex items-center gap-1.5 transition-all cursor-pointer border-b-2 ${
+              className={`py-3 px-3 sm:px-4 text-xs font-serif font-bold flex items-center gap-1.5 transition-all cursor-pointer border-b-2 whitespace-nowrap ${
                 activeTab === 'history'
                   ? 'text-rose-300 border-rose-500 bg-white/5'
                   : 'text-slate-400 border-transparent hover:text-slate-200'
@@ -92,7 +105,7 @@ export const UserHistoryModal: React.FC<UserHistoryModalProps> = ({
             </button>
             <button
               onClick={() => setActiveTab('bookmarks')}
-              className={`py-3 px-4 text-xs font-serif font-bold flex items-center gap-1.5 transition-all cursor-pointer border-b-2 ${
+              className={`py-3 px-3 sm:px-4 text-xs font-serif font-bold flex items-center gap-1.5 transition-all cursor-pointer border-b-2 whitespace-nowrap ${
                 activeTab === 'bookmarks'
                   ? 'text-amber-300 border-amber-500 bg-white/5'
                   : 'text-slate-400 border-transparent hover:text-slate-200'
@@ -101,16 +114,27 @@ export const UserHistoryModal: React.FC<UserHistoryModalProps> = ({
               <Bookmark className="w-3.5 h-3.5" />
               <span>Đã Lưu Yêu Thích ({currentUser?.bookmarkedChapterIds.length || 0})</span>
             </button>
+            <button
+              onClick={() => setActiveTab('quotes')}
+              className={`py-3 px-3 sm:px-4 text-xs font-serif font-bold flex items-center gap-1.5 transition-all cursor-pointer border-b-2 whitespace-nowrap ${
+                activeTab === 'quotes'
+                  ? 'text-pink-300 border-pink-500 bg-white/5'
+                  : 'text-slate-400 border-transparent hover:text-slate-200'
+              }`}
+            >
+              <Quote className="w-3.5 h-3.5" />
+              <span>Sổ Tay Trích Đoạn ({quotes.length})</span>
+            </button>
           </div>
 
           {activeTab === 'history' && history.length > 0 && (
             <button
               onClick={handleClearHistory}
-              className="text-[11px] text-slate-400 hover:text-rose-400 flex items-center gap-1 px-2.5 py-1 rounded-lg hover:bg-rose-500/10 transition-colors cursor-pointer"
+              className="text-[11px] text-slate-400 hover:text-rose-400 flex items-center gap-1 px-2.5 py-1 rounded-lg hover:bg-rose-500/10 transition-colors cursor-pointer shrink-0"
               title="Xóa toàn bộ lịch sử đọc"
             >
               <Trash2 className="w-3 h-3" />
-              <span>Xóa lịch sử</span>
+              <span className="hidden sm:inline">Xóa lịch sử</span>
             </button>
           )}
         </div>
@@ -141,7 +165,7 @@ export const UserHistoryModal: React.FC<UserHistoryModalProps> = ({
                       {item.type === 'novel' ? '📖' : '🎨'}
                     </div>
 
-                    <div className="min-w-0 flex-1">
+                    <div className="min-w-0 flex-1 space-y-1">
                       <div className="flex items-center gap-2">
                         <span className={`text-[9px] font-mono font-bold px-1.5 py-0.2 rounded uppercase ${
                           item.type === 'novel' ? 'bg-amber-500/20 text-amber-300' : 'bg-rose-500/20 text-rose-300'
@@ -151,15 +175,20 @@ export const UserHistoryModal: React.FC<UserHistoryModalProps> = ({
                         <span className="text-[10px] text-slate-400">
                           {formatTimeAgo(item.readAt)}
                         </span>
+                        <span className="text-[10px] font-mono text-amber-300/80">
+                          • Tiến độ: {Math.round(item.progressPercent)}%
+                        </span>
                       </div>
-                      <h4 className="font-serif font-bold text-xs text-slate-100 group-hover:text-rose-300 transition-colors truncate mt-0.5">
+                      <h4 className="font-serif font-bold text-xs text-slate-100 group-hover:text-rose-300 transition-colors truncate">
                         {item.chapterTitle}
                       </h4>
-                      {item.partTitle && (
-                        <p className="text-[10px] text-slate-400 truncate">
-                          {item.partTitle}
-                        </p>
-                      )}
+                      {/* Mini progress bar */}
+                      <div className="w-full max-w-xs h-1 rounded-full bg-slate-800 overflow-hidden">
+                        <div 
+                          className="h-full bg-gradient-to-r from-amber-500 to-rose-500 rounded-full" 
+                          style={{ width: `${Math.max(5, Math.min(100, item.progressPercent))}%` }} 
+                        />
+                      </div>
                     </div>
                   </div>
 
@@ -176,7 +205,7 @@ export const UserHistoryModal: React.FC<UserHistoryModalProps> = ({
                 </div>
               ))
             )
-          ) : (
+          ) : activeTab === 'bookmarks' ? (
             // Bookmarks tab
             (!currentUser || currentUser.bookmarkedChapterIds.length === 0) ? (
               <div className="py-16 text-center space-y-3">
@@ -204,10 +233,56 @@ export const UserHistoryModal: React.FC<UserHistoryModalProps> = ({
                         onNavigateChapter('novel', chapId);
                         onClose();
                       }}
-                      className="text-xs text-amber-300 hover:underline cursor-pointer"
+                      className="px-3 py-1.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 text-xs font-serif font-medium cursor-pointer transition-all"
                     >
                       Mở chương →
                     </button>
+                  </div>
+                ))}
+              </div>
+            )
+          ) : (
+            // Quotes tab (Sổ Tay Trích Đoạn)
+            quotes.length === 0 ? (
+              <div className="py-16 text-center space-y-3">
+                <div className="text-4xl">✒️</div>
+                <h4 className="font-serif text-sm text-slate-300">Sổ tay trích đoạn đang trống</h4>
+                <p className="text-xs text-slate-500 max-w-sm mx-auto">
+                  Đặc quyền thành viên: Bạn có thể lưu lại những câu văn triết lý hay câu thoại nhân vật yêu thích vào sổ tay để chiêm nghiệm lại bất cứ lúc nào!
+                </p>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {quotes.map(quote => (
+                  <div
+                    key={quote.id}
+                    className="p-4 rounded-2xl bg-slate-900/85 border border-pink-500/20 space-y-2"
+                  >
+                    <p className="font-serif text-xs text-amber-100 italic leading-relaxed border-l-2 border-pink-400/60 pl-3">
+                      “{quote.text}”
+                    </p>
+                    <div className="flex items-center justify-between text-[10px] text-slate-400 pt-1 border-t border-white/5">
+                      <span className="font-mono text-pink-300">
+                        {quote.chapterTitle} • {quote.savedAt}
+                      </span>
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() => handleCopyQuote(quote)}
+                          className="px-2 py-1 rounded-lg bg-white/5 hover:bg-white/15 text-slate-300 flex items-center gap-1 cursor-pointer transition-colors"
+                          title="Sao chép câu trích đoạn"
+                        >
+                          {copiedQuoteId === quote.id ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3" />}
+                          <span>{copiedQuoteId === quote.id ? 'Đã chép' : 'Sao chép'}</span>
+                        </button>
+                        <button
+                          onClick={() => handleDeleteQuote(quote.id)}
+                          className="p-1 rounded-lg hover:bg-rose-500/20 text-slate-400 hover:text-rose-400 cursor-pointer transition-colors"
+                          title="Xóa trích đoạn"
+                        >
+                          <Trash2 className="w-3 h-3" />
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 ))}
               </div>

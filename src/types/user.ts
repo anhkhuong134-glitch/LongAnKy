@@ -1,3 +1,22 @@
+export interface SavedQuote {
+  id: string;
+  chapterId: string;
+  chapterTitle: string;
+  text: string;
+  savedAt: string;
+}
+
+export interface UserLastRead {
+  type: 'novel' | 'comic';
+  chapterId: string;
+  chapterTitle: string;
+  partId?: string;
+  partTitle?: string;
+  chapterIndex: number;
+  progressPercent: number;
+  updatedAt: string;
+}
+
 export interface UserProfile {
   id: string;
   username: string;
@@ -14,6 +33,10 @@ export interface UserProfile {
   isFollowing: boolean;
   bookmarkedChapterIds: string[];
   readChapterIds: string[];
+  lastRead?: UserLastRead;
+  savedQuotes?: SavedQuote[];
+  readingTheme?: string;
+  readingFontSize?: number;
 }
 
 export interface ReadingHistoryItem {

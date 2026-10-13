@@ -1,4 +1,4 @@
-import { UserProfile, ReadingHistoryItem, USER_LEVEL_TITLES } from '../types/user';
+import { UserProfile, ReadingHistoryItem, USER_LEVEL_TITLES, SavedQuote, UserLastRead } from '../types/user';
 
 const STORAGE_KEYS = {
   CURRENT_USER: 'longanky_current_user',
@@ -267,6 +267,65 @@ export class UserService {
 
     // Also mark chapter as read for current user
     this.markChapterAsRead(item.chapterId);
+
+    // Save exact last read progress to current user profile for NetTruyen auto-resume
+    const user = this.getCurrentUser();
+    if (user) {
+      user.lastRead = {
+        type: item.type,
+        chapterId: item.chapterId,
+        chapterTitle: item.chapterTitle,
+        partId: item.partId,
+        partTitle: item.partTitle,
+        chapterIndex: item.chapterIndex,
+        progressPercent: Math.round(item.progressPercent || 0),
+        updatedAt: new Date().toISOString(),
+      };
+      this.saveCurrentUser(user);
+    }
+  }
+
+  static getLastRead(): UserLastRead | null {
+    const user = this.getCurrentUser();
+    return user?.lastRead || null;
+  }
+
+  // Sổ tay trích đoạn tâm đắc (Chỉ người dùng có)
+  static saveQuote(chapterId: string, chapterTitle: string, text: string): { success: boolean; quotes: SavedQuote[]; message: string } {
+    const user = this.getCurrentUser();
+    if (!user) return { success: false, quotes: [], message: 'Vui lòng đăng nhập để lưu trích đoạn vào Sổ Tay!' };
+
+    if (!user.savedQuotes) user.savedQuotes = [];
+    const newQuote: SavedQuote = {
+      id: `quote_${Date.now()}`,
+      chapterId,
+      chapterTitle,
+      text: text.trim(),
+      savedAt: new Date().toLocaleDateString('vi-VN'),
+    };
+    user.savedQuotes.unshift(newQuote);
+    this.awardExp(15, 'Lưu trích đoạn tâm đắc');
+    this.saveCurrentUser(user);
+
+    return {
+      success: true,
+      quotes: user.savedQuotes,
+      message: 'Đã lưu câu văn vào Sổ Tay Đạo Hữu (+15 Tu Vi)!',
+    };
+  }
+
+  static deleteQuote(quoteId: string): SavedQuote[] {
+    const user = this.getCurrentUser();
+    if (!user || !user.savedQuotes) return [];
+
+    user.savedQuotes = user.savedQuotes.filter(q => q.id !== quoteId);
+    this.saveCurrentUser(user);
+    return user.savedQuotes;
+  }
+
+  static getSavedQuotes(): SavedQuote[] {
+    const user = this.getCurrentUser();
+    return user?.savedQuotes || [];
   }
 
   static clearReadingHistory(): void {

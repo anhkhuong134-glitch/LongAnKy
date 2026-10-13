@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Heart, Flame, Sparkles, MessageSquare, Send, User } from 'lucide-react';
+import { Heart, Flame, Sparkles, MessageSquare, Send, User, Zap, Lock } from 'lucide-react';
+import { UserProfile } from '../../types/user';
+import { UserService } from '../../services/userService';
 
 interface Comment {
   id: string;
@@ -7,16 +9,25 @@ interface Comment {
   text: string;
   createdAt: string;
   chapterId: string;
+  avatar?: string;
+  level?: number;
+  levelTitle?: string;
 }
 
 interface ChapterCommentsSectionProps {
   chapterId: string;
   chapterTitle: string;
+  currentUser?: UserProfile | null;
+  onOpenAuthModal?: () => void;
+  onUserUpdated?: (user: UserProfile | null) => void;
 }
 
 export const ChapterCommentsSection: React.FC<ChapterCommentsSectionProps> = ({
   chapterId,
-  chapterTitle
+  chapterTitle,
+  currentUser,
+  onOpenAuthModal,
+  onUserUpdated,
 }) => {
   // Reactions state
   const [reactions, setReactions] = useState<{ love: number; dragon: number; fire: number; flower: number }>({
@@ -32,6 +43,7 @@ export const ChapterCommentsSection: React.FC<ChapterCommentsSectionProps> = ({
   const [authorName, setAuthorName] = useState<string>('');
   const [commentText, setCommentText] = useState<string>('');
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [commentToast, setCommentToast] = useState<string | null>(null);
 
   // Load from localStorage for this chapter
   useEffect(() => {
@@ -40,7 +52,6 @@ export const ChapterCommentsSection: React.FC<ChapterCommentsSectionProps> = ({
       if (storedReactions) {
         setReactions(JSON.parse(storedReactions));
       } else {
-        // default seed
         setReactions({ love: 14, dragon: 28, fire: 19, flower: 22 });
       }
 
@@ -53,29 +64,38 @@ export const ChapterCommentsSection: React.FC<ChapterCommentsSectionProps> = ({
       if (storedComments) {
         setComments(JSON.parse(storedComments));
       } else {
-        // default starter thoughts for immersion
         setComments([
           {
             id: 'c1',
             name: 'Độc giả Asera',
             text: 'Đoạn miêu tả tiếng nước dâng ở bến Arumo và chiếc tàu đến sớm đọc cuốn dã man, ngóng tiếp chương sau!',
             createdAt: 'Hôm qua lúc 21:14',
-            chapterId
+            chapterId,
+            avatar: '🐉',
+            level: 3,
+            levelTitle: 'Ngưng Ấn Chân Nhân'
           },
           {
             id: 'c2',
             name: 'Ngọc Long',
             text: 'Không khí bến tàu đêm lạnh lẽo của Rento và Nari rất có chiều sâu huyền huyễn Á Đông!',
             createdAt: 'Hôm nay lúc 08:30',
-            chapterId
+            chapterId,
+            avatar: '🌸',
+            level: 2,
+            levelTitle: 'Khởi Linh Sơ Kỳ'
           }
         ]);
       }
 
-      const savedName = localStorage.getItem('longanky_reader_name');
-      if (savedName) setAuthorName(savedName);
+      if (currentUser) {
+        setAuthorName(currentUser.displayName);
+      } else {
+        const savedName = localStorage.getItem('longanky_reader_name');
+        if (savedName) setAuthorName(savedName);
+      }
     } catch (e) {}
-  }, [chapterId]);
+  }, [chapterId, currentUser]);
 
   const handleReact = (type: 'love' | 'dragon' | 'fire' | 'flower') => {
     if (userReacted === type) return;
@@ -93,13 +113,16 @@ export const ChapterCommentsSection: React.FC<ChapterCommentsSectionProps> = ({
     if (!commentText.trim()) return;
 
     setIsSubmitting(true);
-    const finalName = authorName.trim() || 'Bạn Đọc Giấu Tên';
+    const finalName = currentUser?.displayName || authorName.trim() || 'Bạn Đọc Giấu Tên';
     const newComment: Comment = {
       id: `comment_${Date.now()}`,
       name: finalName,
       text: commentText.trim(),
       createdAt: 'Vừa xong',
-      chapterId
+      chapterId,
+      avatar: currentUser?.avatar || '🐉',
+      level: currentUser?.level || 1,
+      levelTitle: currentUser?.levelTitle || 'Phàm Nhân Luyện Khí',
     };
 
     const nextComments = [newComment, ...comments];
@@ -108,14 +131,33 @@ export const ChapterCommentsSection: React.FC<ChapterCommentsSectionProps> = ({
 
     try {
       localStorage.setItem(`longanky_comments_${chapterId}`, JSON.stringify(nextComments));
-      localStorage.setItem('longanky_reader_name', finalName);
+      if (!currentUser) {
+        localStorage.setItem('longanky_reader_name', finalName);
+      }
     } catch (e) {}
 
+    // Award EXP to logged-in user
+    if (currentUser) {
+      UserService.awardExp(15, 'Bình luận chương truyện');
+      if (onUserUpdated) onUserUpdated(UserService.getCurrentUser());
+      setCommentToast('✨ Đã gửi bình luận (+15 Tu Vi)!');
+    } else {
+      setCommentToast('Đã gửi bình luận thành công!');
+    }
+
+    setTimeout(() => setCommentToast(null), 3000);
     setIsSubmitting(false);
   };
 
   return (
     <div className="mt-12 pt-8 border-t border-indigo-500/20 space-y-8">
+      {/* Toast alert */}
+      {commentToast && (
+        <div className="p-3 rounded-xl bg-rose-500/20 border border-rose-500/40 text-rose-200 text-xs font-semibold text-center animate-bounce">
+          {commentToast}
+        </div>
+      )}
+
       {/* 1. Reader Reactions Banner */}
       <div className="p-6 rounded-3xl bg-slate-900/60 border border-indigo-500/20 text-center space-y-4 shadow-xl backdrop-blur-md">
         <div className="space-y-1">
@@ -159,7 +201,7 @@ export const ChapterCommentsSection: React.FC<ChapterCommentsSectionProps> = ({
             }`}
           >
             <Flame className={`w-4 h-4 ${userReacted === 'fire' ? 'fill-orange-400 text-orange-400' : 'text-orange-400'}`} />
-            <span>Đỉnh cao ({reactions.fire})</span>
+            <span>Sôi sục hào khí ({reactions.fire})</span>
           </button>
 
           <button
@@ -170,13 +212,13 @@ export const ChapterCommentsSection: React.FC<ChapterCommentsSectionProps> = ({
                 : 'bg-white/5 hover:bg-pink-500/10 border-white/10 hover:border-pink-500/30 text-slate-300 hover:text-pink-200'
             }`}
           >
-            <Sparkles className="w-4 h-4 text-pink-400" />
-            <span>Thơ mộng ({reactions.flower})</span>
+            <Sparkles className={`w-4 h-4 ${userReacted === 'flower' ? 'fill-pink-400 text-pink-400' : 'text-pink-400'}`} />
+            <span>Tặng hoa linh thạch ({reactions.flower})</span>
           </button>
         </div>
       </div>
 
-      {/* 2. Reader Comments / Discussion Box */}
+      {/* 2. Reader Community Reactions & Comments Section */}
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
@@ -188,19 +230,60 @@ export const ChapterCommentsSection: React.FC<ChapterCommentsSectionProps> = ({
           <span className="text-[10px] text-slate-400 italic">Thảo luận cùng cộng đồng đọc Long Ấn</span>
         </div>
 
+        {/* Member Perk Prompt for Guests */}
+        {!currentUser && onOpenAuthModal && (
+          <div className="p-3 rounded-2xl bg-gradient-to-r from-rose-950/40 via-purple-950/30 to-slate-900 border border-rose-500/30 flex items-center justify-between gap-3 text-xs">
+            <div className="flex items-center gap-2 text-rose-200">
+              <Zap className="w-4 h-4 text-amber-400 shrink-0 animate-bounce" />
+              <span><strong>Đăng nhập thành viên:</strong> Nhận huy hiệu cấp bậc Tu Vi NetTruyen và +15 EXP khi bình luận!</span>
+            </div>
+            <button
+              onClick={onOpenAuthModal}
+              className="px-3 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs shrink-0 transition-all cursor-pointer shadow-md shadow-rose-600/30"
+            >
+              Đăng Nhập
+            </button>
+          </div>
+        )}
+
         {/* Comment Input Form */}
         <form onSubmit={handlePostComment} className="p-4 rounded-2xl bg-slate-900/50 border border-white/10 space-y-3">
-          <div className="flex items-center space-x-2">
-            <div className="w-7 h-7 rounded-full bg-amber-500/20 border border-amber-400/30 flex items-center justify-center text-amber-300 text-xs font-bold">
-              <User className="w-3.5 h-3.5" />
-            </div>
-            <input
-              type="text"
-              value={authorName}
-              onChange={e => setAuthorName(e.target.value)}
-              placeholder="Biệt danh của bạn (ví dụ: Bé Mèo Đọc Sách)"
-              className="flex-1 bg-black/30 border border-white/10 rounded-xl px-3 py-1.5 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-amber-400"
-            />
+          <div className="flex items-center justify-between">
+            {currentUser ? (
+              <div className="flex items-center space-x-2.5">
+                <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-rose-500 to-amber-500 flex items-center justify-center text-sm shadow-sm">
+                  {currentUser.avatar || '🐉'}
+                </div>
+                <div>
+                  <div className="flex items-center gap-1.5">
+                    <span className="font-serif font-bold text-xs text-white">{currentUser.displayName}</span>
+                    <span className="text-[9px] font-mono font-bold px-1.5 py-0.2 rounded bg-rose-600 text-white">
+                      Lv.{currentUser.level}
+                    </span>
+                  </div>
+                  <span className="text-[10px] text-amber-300 font-serif">✦ {currentUser.levelTitle}</span>
+                </div>
+              </div>
+            ) : (
+              <div className="flex items-center space-x-2 flex-1 mr-2">
+                <div className="w-7 h-7 rounded-full bg-amber-500/20 border border-amber-400/30 flex items-center justify-center text-amber-300 text-xs font-bold shrink-0">
+                  <User className="w-3.5 h-3.5" />
+                </div>
+                <input
+                  type="text"
+                  value={authorName}
+                  onChange={e => setAuthorName(e.target.value)}
+                  placeholder="Biệt danh của bạn (ví dụ: Bé Mèo Đọc Sách)"
+                  className="flex-1 bg-black/30 border border-white/10 rounded-xl px-3 py-1.5 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-amber-400"
+                />
+              </div>
+            )}
+
+            {currentUser && (
+              <span className="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
+                +15 Tu Vi
+              </span>
+            )}
           </div>
 
           <textarea
@@ -223,24 +306,35 @@ export const ChapterCommentsSection: React.FC<ChapterCommentsSectionProps> = ({
           </div>
         </form>
 
-        {/* Comments List */}
+        {/* Comments List (NetTruyen Style) */}
         <div className="space-y-2.5">
           {comments.map(c => (
             <div 
               key={c.id}
-              className="p-3.5 rounded-2xl bg-slate-900/40 border border-white/5 space-y-1.5"
+              className="p-3.5 rounded-2xl bg-slate-900/40 border border-white/5 space-y-2 hover:border-white/10 transition-colors"
             >
               <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                  <div className="w-6 h-6 rounded-full bg-gradient-to-br from-amber-500/20 to-purple-500/20 border border-white/15 flex items-center justify-center text-[10px] font-bold text-amber-300 font-serif">
-                    {c.name.slice(0, 1).toUpperCase()}
+                <div className="flex items-center space-x-2.5">
+                  <div className="w-7 h-7 rounded-xl bg-gradient-to-tr from-rose-500/30 to-amber-500/30 border border-rose-500/40 flex items-center justify-center text-xs shadow-sm">
+                    {c.avatar || c.name.slice(0, 1).toUpperCase()}
                   </div>
-                  <span className="font-serif font-bold text-xs text-slate-200">{c.name}</span>
-                  <span className="text-[9px] px-1.5 py-0.2 rounded bg-pink-500/15 text-pink-300 font-mono">Độc giả</span>
+                  <div>
+                    <div className="flex items-center gap-1.5">
+                      <span className="font-serif font-bold text-xs text-slate-200">{c.name}</span>
+                      <span className="text-[9px] px-1.5 py-0.2 rounded bg-rose-600/90 text-white font-mono font-bold">
+                        Lv.{c.level || 1}
+                      </span>
+                    </div>
+                    {c.levelTitle && (
+                      <span className="text-[10px] text-amber-300/80 font-serif block leading-none">
+                        ✦ {c.levelTitle}
+                      </span>
+                    )}
+                  </div>
                 </div>
                 <span className="text-[10px] text-slate-500 font-mono">{c.createdAt}</span>
               </div>
-              <p className="text-xs text-slate-300 leading-relaxed pl-8 font-serif">
+              <p className="text-xs text-slate-300 leading-relaxed pl-9 font-serif">
                 {c.text}
               </p>
             </div>

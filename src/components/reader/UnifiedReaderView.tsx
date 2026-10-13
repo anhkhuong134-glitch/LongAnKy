@@ -332,6 +332,13 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
     setTimeout(() => setIsChibiBouncing(false), 500);
   };
   const [isBookmarked, setIsBookmarked] = useState<boolean>(false);
+  const [isDismissedLastRead, setIsDismissedLastRead] = useState<boolean>(false);
+  const [quoteToast, setQuoteToast] = useState<string | null>(null);
+
+  const showToast = (msg: string) => {
+    setQuoteToast(msg);
+    setTimeout(() => setQuoteToast(null), 3000);
+  };
 
   // Audio Drama & Karaoke states
   const [isPlayingAudio, setIsPlayingAudio] = useState<boolean>(false);
@@ -486,6 +493,30 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const handleSaveQuote = (quoteText: string) => {
+    if (!currentUser) {
+      setIsAuthModalOpen(true);
+      return;
+    }
+    const cleanText = quoteText.replace(/^“|^”|“$|”$/g, '').trim();
+    UserService.saveQuote(
+      currentChapter?.id || 'chapter',
+      currentChapter?.title || 'Chương hiện tại',
+      cleanText
+    );
+    setCurrentUser(UserService.getCurrentUser());
+    showToast('Đã lưu trích đoạn vào Sổ Tay Đạo Hữu! ✒️');
+  };
+
+  // Đồng bộ trạng thái bookmark của chương hiện tại
+  useEffect(() => {
+    if (currentChapter && currentUser) {
+      setIsBookmarked(currentUser.bookmarkedChapterIds?.includes(currentChapter.id) || false);
+    } else {
+      setIsBookmarked(false);
+    }
+  }, [currentChapter?.id, currentUser]);
+
   // Điều hướng từ Lịch Sử Đọc (NetTruyen)
   const handleNavigateFromHistory = (type: 'novel' | 'comic', chapterId: string, partId?: string, chapterIndex?: number) => {
     if (type === 'novel') {
@@ -527,12 +558,32 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
         partTitle: activePart.title,
         partId: selectedPartId,
         chapterIndex: activeChapterIndex,
-        progressPercent: readingProgress,
+        progressPercent: Math.round(readingProgress),
         wordCount: currentChapter.wordCount,
       });
       setCurrentUser(UserService.getCurrentUser());
     }
   }, [selectedPartId, activeChapterIndex, currentChapter?.id, readerType]);
+
+  // Tự động lưu cập nhật tiến độ cuộn (scroll) vào Lịch Sử Đọc
+  useEffect(() => {
+    if (readingProgress > 0 && currentChapter && activePart && readerType === 'novel') {
+      const timer = setTimeout(() => {
+        UserService.recordReadingHistory({
+          type: 'novel',
+          chapterId: currentChapter.id,
+          chapterTitle: currentChapter.title,
+          partTitle: activePart.title,
+          partId: selectedPartId,
+          chapterIndex: activeChapterIndex,
+          progressPercent: Math.round(readingProgress),
+          wordCount: currentChapter.wordCount,
+        });
+        setCurrentUser(UserService.getCurrentUser());
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [readingProgress]);
 
   // Tự động lưu Lịch Sử Đọc Truyện Tranh (NetTruyen style)
   useEffect(() => {
@@ -994,6 +1045,7 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
               currentUser={currentUser}
               onOpenAuthModal={() => setIsAuthModalOpen(true)}
               onOpenHistoryModal={() => setIsHistoryModalOpen(true)}
+              onNavigateChapter={handleNavigateFromHistory}
               onUserUpdated={(u) => setCurrentUser(u)}
             />
 
@@ -1046,13 +1098,26 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
 
             {/* Bookmark */}
             <button
-              onClick={() => setIsBookmarked(!isBookmarked)}
+              onClick={() => {
+                if (!currentUser) {
+                  setIsAuthModalOpen(true);
+                  return;
+                }
+                if (currentChapter) {
+                  UserService.toggleChapterBookmark(currentChapter.id);
+                  const updated = UserService.getCurrentUser();
+                  setCurrentUser(updated);
+                  const isSaved = updated?.bookmarkedChapterIds?.includes(currentChapter.id) || false;
+                  setIsBookmarked(isSaved);
+                  showToast(isSaved ? 'Đã lưu chương vào danh sách Đã Lưu! ⭐' : 'Đã bỏ lưu chương khỏi danh sách!');
+                }
+              }}
               className={`p-2 rounded-xl border transition-all cursor-pointer ${
                 isBookmarked 
-                  ? 'text-amber-400 border-amber-400/50 bg-amber-400/10' 
+                  ? 'text-amber-400 border-amber-400/50 bg-amber-400/10 shadow-[0_0_10px_rgba(251,191,36,0.3)]' 
                   : 'text-slate-400 hover:text-white border-white/10 bg-black/25 hover:bg-black/35'
               }`}
-              title={isBookmarked ? "Đã đánh dấu chương" : "Đánh dấu chương"}
+              title={isBookmarked ? "Đã đánh dấu chương (Đạo hữu thành viên)" : "Đánh dấu lưu chương"}
             >
               <BookMarked className="w-3.5 h-3.5" />
             </button>
@@ -1179,6 +1244,11 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
                       </div>
                     </div>
                     <div className="flex items-center space-x-1.5 flex-shrink-0">
+                      {currentUser?.lastRead?.chapterId === prologueChap.id && (
+                        <span className="text-[9px] px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-300 font-sans flex items-center gap-0.5 border border-amber-500/30 animate-pulse">
+                          📍 Vừa đọc {currentUser.lastRead.progressPercent}%
+                        </span>
+                      )}
                       {currentUser?.readChapterIds?.includes(prologueChap.id) && (
                         <span className="text-[9px] px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-300 font-sans flex items-center gap-0.5 border border-emerald-500/30">
                           <CheckCircle2 className="w-2.5 h-2.5" /> Đã đọc
@@ -1290,6 +1360,11 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
                                   </div>
 
                                   <div className="flex items-center space-x-1.5 flex-shrink-0 text-[10px] font-mono opacity-80 group-hover:opacity-100">
+                                    {currentUser?.lastRead?.chapterId === chap.id && (
+                                      <span className="text-[9px] px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-300 font-sans flex items-center gap-0.5 border border-amber-500/30 animate-pulse">
+                                        📍 Vừa đọc {currentUser.lastRead.progressPercent}%
+                                      </span>
+                                    )}
                                     {currentUser?.readChapterIds?.includes(chap.id) && (
                                       <span className="text-[9px] px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-300 font-sans flex items-center gap-0.5 border border-emerald-500/30">
                                         <CheckCircle2 className="w-2.5 h-2.5" /> Đã đọc
@@ -1376,6 +1451,11 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
                               Coming Soon
                             </span>
                           )}
+                          {currentUser?.lastRead?.chapterId === chap.id && (
+                            <span className="text-[9px] px-1.5 py-0.2 rounded bg-rose-500/20 text-rose-300 font-sans flex items-center gap-0.5 border border-rose-500/30 animate-pulse">
+                              📍 Vừa đọc {currentUser.lastRead.progressPercent}%
+                            </span>
+                          )}
                           {currentUser?.readChapterIds?.includes(chap.id) && (
                             <span className="text-[9px] px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-300 font-sans flex items-center gap-0.5 border border-emerald-500/30">
                               <CheckCircle2 className="w-2.5 h-2.5" /> Đã đọc
@@ -1431,6 +1511,58 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
 
               return (
                 <div className={`${containerWidthClass} mx-auto relative z-10`}>
+                  {/* NetTruyen Quick Resume Reading Alert Banner */}
+                  {currentUser?.lastRead && !isDismissedLastRead && currentUser.lastRead.chapterId !== currentChapter?.id && (
+                    <div className="mb-6 p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-amber-950/70 via-purple-950/60 to-slate-900/80 border border-amber-500/40 shadow-xl backdrop-blur-md flex items-center justify-between gap-3 animate-in fade-in slide-in-from-top-2">
+                      <div className="flex items-center gap-3 min-w-0">
+                        <div className="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-400/40 flex items-center justify-center text-amber-300 text-lg shrink-0">
+                          📍
+                        </div>
+                        <div className="min-w-0">
+                          <div className="flex items-center gap-2">
+                            <span className="text-[11px] font-bold uppercase tracking-wider text-amber-300 font-mono">Tiếp Tục Đọc Dở</span>
+                            <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-amber-500/20 text-amber-200 border border-amber-400/30">
+                              {currentUser.lastRead.progressPercent}%
+                            </span>
+                            {currentUser.lastRead.type === 'comic' && (
+                              <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-rose-500/20 text-rose-200 border border-rose-400/30">
+                                Truyện Tranh
+                              </span>
+                            )}
+                          </div>
+                          <p className="text-xs text-slate-200 truncate mt-0.5">
+                            Bạn vừa đọc: <strong className="text-amber-200 font-medium">{currentUser.lastRead.chapterTitle}</strong>
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2 shrink-0">
+                        <button
+                          onClick={() => {
+                            if (currentUser.lastRead) {
+                              handleNavigateFromHistory(
+                                currentUser.lastRead.type,
+                                currentUser.lastRead.chapterId,
+                                currentUser.lastRead.partId,
+                                currentUser.lastRead.chapterIndex
+                              );
+                            }
+                          }}
+                          className="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold text-xs flex items-center gap-1.5 shadow-md shadow-amber-500/20 cursor-pointer transition-all active:scale-95"
+                        >
+                          <span>Đọc Tiếp</span>
+                          <ChevronRight className="w-3.5 h-3.5" />
+                        </button>
+                        <button
+                          onClick={() => setIsDismissedLastRead(true)}
+                          className="p-1.5 rounded-lg hover:bg-white/10 text-slate-400 hover:text-slate-200 text-xs transition-colors cursor-pointer"
+                          title="Đóng thông báo"
+                        >
+                          ✕
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
                   {/* Breadcrumbs & Chapter Header (Dreamy & Poetic Style) */}
                   <div className="mb-8 pb-5 border-b border-indigo-500/20">
                     <nav className="flex items-center space-x-2 text-xs text-amber-300/80 mb-3 font-serif overflow-x-auto whitespace-nowrap">
@@ -1515,9 +1647,19 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
 
                         if (isQuote) {
                           return (
-                            <p key={pIdx} className="italic text-amber-200 font-medium pl-5 pr-4 py-3.5 border-l-2 border-amber-400/80 bg-gradient-to-r from-amber-500/10 via-pink-500/5 to-transparent rounded-r-2xl my-6 shadow-sm">
-                              {paragraphInner}
-                            </p>
+                            <div key={pIdx} className="relative group my-6">
+                              <p className="italic text-amber-200 font-medium pl-5 pr-14 py-3.5 border-l-2 border-amber-400/80 bg-gradient-to-r from-amber-500/10 via-pink-500/5 to-transparent rounded-r-2xl shadow-sm">
+                                {paragraphInner}
+                              </p>
+                              {/* Quick Save Quote button for logged-in members */}
+                              <button
+                                onClick={() => handleSaveQuote(paragraph)}
+                                className="absolute right-2 top-2.5 opacity-0 group-hover:opacity-100 transition-opacity px-2.5 py-1 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/40 text-amber-300 text-[10px] font-sans flex items-center gap-1 shadow-sm cursor-pointer"
+                                title="Lưu câu danh ngôn này vào Sổ Tay Đạo Hữu"
+                              >
+                                <span>✒️ Lưu trích đoạn</span>
+                              </button>
+                            </div>
                           );
                         }
                         if (isDialogueDash) {
@@ -1582,6 +1724,9 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
                   <ChapterCommentsSection 
                     chapterId={currentChapter?.id || 'doc_chap_prologue'} 
                     chapterTitle={currentChapter?.title || 'Chương hiện tại'} 
+                    currentUser={currentUser}
+                    onOpenAuthModal={() => setIsAuthModalOpen(true)}
+                    onUserUpdated={(u) => setCurrentUser(u)}
                   />
                 </div>
               );
@@ -1949,6 +2094,17 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
                   <ArrowUp className="w-4 h-4" />
                   <span>Đầu trang</span>
                 </button>
+              </div>
+
+              {/* Reader Community Reactions & Comments for Comic */}
+              <div className="max-w-4xl mx-auto px-4 mt-8 pb-12">
+                <ChapterCommentsSection 
+                  chapterId={activeComic?.id || 'comic_chap_01'} 
+                  chapterTitle={activeComic?.title || 'Hồi truyện tranh'} 
+                  currentUser={currentUser}
+                  onOpenAuthModal={() => setIsAuthModalOpen(true)}
+                  onUserUpdated={(u) => setCurrentUser(u)}
+                />
               </div>
 
               {/* 5. FLOATING QUICK SWITCH BAR */}
@@ -2352,6 +2508,14 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
         currentUser={currentUser}
         onNavigateChapter={handleNavigateFromHistory}
       />
+
+      {/* Floating Toast Notification */}
+      {quoteToast && (
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 px-4 py-2.5 rounded-2xl bg-slate-900/95 border border-amber-500/50 text-amber-200 text-xs shadow-2xl backdrop-blur-xl flex items-center gap-2 animate-in fade-in slide-in-from-bottom-3">
+          <span>✨</span>
+          <span>{quoteToast}</span>
+        </div>
+      )}
     </div>
   );
 };
