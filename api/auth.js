@@ -349,6 +349,8 @@ export default async function handler(req, res) {
           displayName: cleanDisplayName,
           email: cleanEmail,
           avatar: userAvatar,
+          role: 'reader',
+          status: 'active',
           level: 1,
           exp: 50,
           nextLevelExp: 100,
@@ -366,7 +368,8 @@ export default async function handler(req, res) {
         };
 
         await db.collection('users').insertOne(newUserDoc);
-        const { _id, ...safeUser } = newUserDoc;
+        memoryUsers.unshift(newUserDoc);
+        const { _id, password: _, ...safeUser } = newUserDoc;
 
         return res.status(200).json({
           success: true,
@@ -404,11 +407,11 @@ export default async function handler(req, res) {
 
         await sql`
           INSERT INTO users (
-            id, username, password, display_name, email, avatar, level, exp, next_level_exp, 
+            id, username, password, display_name, email, avatar, role, status, level, exp, next_level_exp, 
             level_title, streak_days, last_check_in_date, is_following, bookmarked_chapters, 
             read_chapters, last_read, saved_quotes, joined_date
           ) VALUES (
-            ${id}, ${cleanUsername}, ${password}, ${cleanDisplayName}, ${cleanEmail}, ${userAvatar}, 
+            ${id}, ${cleanUsername}, ${password}, ${cleanDisplayName}, ${cleanEmail}, ${userAvatar}, 'reader', 'active',
             1, 50, 100, 'Phàm Nhân Luyện Khí', 1, ${new Date().toDateString()}, true, 
             '[]', '[]', '{}', '[]', ${joinedDate}
           );
@@ -420,6 +423,8 @@ export default async function handler(req, res) {
           displayName: cleanDisplayName,
           email: cleanEmail,
           avatar: userAvatar,
+          role: 'reader',
+          status: 'active',
           level: 1,
           exp: 50,
           nextLevelExp: 100,
@@ -434,6 +439,8 @@ export default async function handler(req, res) {
           savedQuotes: [],
         };
 
+        memoryUsers.unshift({ ...user, password });
+
         return res.status(200).json({
           success: true,
           message: 'Đăng ký thành công! Tài khoản đã được lưu vào Database.',
@@ -447,11 +454,52 @@ export default async function handler(req, res) {
       }
     }
 
-    // 3. Fallback to local storage
+    // 3. Fallback to memory store
+    if (memoryUsers.some(u => u.username.toLowerCase() === cleanUsername)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Tên tài khoản này đã tồn tại trong cơ sở dữ liệu. Vui lòng chọn tên khác!',
+      });
+    }
+
+    const id = `user_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`;
+    const joinedDate = new Date().toLocaleDateString('vi-VN');
+    const cleanDisplayName = (displayName || '').trim() || cleanUsername;
+    const cleanEmail = (email || '').trim() || `${cleanUsername}@longan.vn`;
+    const userAvatar = avatar || '🐉';
+
+    const newUserDoc = {
+      id,
+      username: cleanUsername,
+      password,
+      displayName: cleanDisplayName,
+      email: cleanEmail,
+      avatar: userAvatar,
+      role: 'reader',
+      status: 'active',
+      level: 1,
+      exp: 50,
+      nextLevelExp: 100,
+      levelTitle: 'Phàm Nhân Luyện Khí',
+      streakDays: 1,
+      lastCheckInDate: new Date().toDateString(),
+      isFollowing: true,
+      bookmarkedChapterIds: [],
+      readChapterIds: [],
+      lastRead: null,
+      savedQuotes: [],
+      joinedDate,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+
+    memoryUsers.unshift(newUserDoc);
+    const { password: _, ...safeUser } = newUserDoc;
+
     return res.status(200).json({
-      success: false,
-      useLocalFallback: true,
-      message: 'Đang chuyển sang lưu cục bộ.',
+      success: true,
+      message: 'Đăng ký tài khoản thành công! Thông tin đã được lưu an toàn.',
+      user: safeUser,
     });
   }
 

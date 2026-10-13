@@ -226,9 +226,20 @@ export class UserService {
         if (data.success && data.user) {
           const userWithPass: UserProfile = { ...data.user, password: params.password };
           this.saveCurrentUser(userWithPass);
+
+          // Add to all users list in local cache so admin sees it immediately
+          const all = this.getAllUsers();
+          const existingIdx = all.findIndex(u => u.id === userWithPass.id || u.username === userWithPass.username);
+          if (existingIdx >= 0) {
+            all[existingIdx] = userWithPass;
+          } else {
+            all.unshift(userWithPass);
+          }
+          localStorage.setItem(STORAGE_KEYS.ALL_USERS, JSON.stringify(all));
+
           return {
             success: true,
-            message: data.message || 'Đăng ký thành công và đã lưu vào Vercel Database!',
+            message: data.message || 'Đăng ký thành công và đã lưu vào Database!',
             user: userWithPass,
           };
         } else if (!data.useLocalFallback && data.message) {
