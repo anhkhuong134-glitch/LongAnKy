@@ -94,7 +94,17 @@ export class StorageService {
 
   static loadBible(): BibleFact[] {
     const data = localStorage.getItem(STORAGE_KEYS.BIBLE);
-    return data ? JSON.parse(data) : sampleBibleFacts;
+    if (!data) return sampleBibleFacts;
+    try {
+      const facts: BibleFact[] = JSON.parse(data);
+      if (facts.some(f => f.content?.includes('Aesvorn') || f.title?.includes('Aesvorn'))) {
+        localStorage.setItem(STORAGE_KEYS.BIBLE, JSON.stringify(sampleBibleFacts));
+        return sampleBibleFacts;
+      }
+      return facts;
+    } catch {
+      return sampleBibleFacts;
+    }
   }
 
   static saveBible(facts: BibleFact[]): void {
@@ -124,7 +134,17 @@ export class StorageService {
 
   static loadTimeline(): TimelineEvent[] {
     const data = localStorage.getItem(STORAGE_KEYS.TIMELINE);
-    return data ? JSON.parse(data) : sampleTimeline;
+    if (!data) return sampleTimeline;
+    try {
+      const events: TimelineEvent[] = JSON.parse(data);
+      if (events.some(e => e.description?.includes('Aesvorn') || e.title?.includes('Aesvorn') || e.location?.includes('Aesvorn'))) {
+        localStorage.setItem(STORAGE_KEYS.TIMELINE, JSON.stringify(sampleTimeline));
+        return sampleTimeline;
+      }
+      return events;
+    } catch {
+      return sampleTimeline;
+    }
   }
 
   static saveTimeline(timeline: TimelineEvent[]): void {
@@ -133,7 +153,17 @@ export class StorageService {
 
   static loadForeshadowing(): ForeshadowingHook[] {
     const data = localStorage.getItem(STORAGE_KEYS.FORESHADOWING);
-    return data ? JSON.parse(data) : sampleForeshadowingHooks;
+    if (!data) return sampleForeshadowingHooks;
+    try {
+      const hooks: ForeshadowingHook[] = JSON.parse(data);
+      if (hooks.some(h => h.description?.includes('Aesvorn') || h.title?.includes('Ba Tiếng Gõ') || h.title?.includes('cuốn sổ da'))) {
+        localStorage.setItem(STORAGE_KEYS.FORESHADOWING, JSON.stringify(sampleForeshadowingHooks));
+        return sampleForeshadowingHooks;
+      }
+      return hooks;
+    } catch {
+      return sampleForeshadowingHooks;
+    }
   }
 
   static saveForeshadowing(hooks: ForeshadowingHook[]): void {

@@ -19,14 +19,23 @@ import {
   ExternalLink,
   Menu,
   X,
-  Users
+  Users,
+  Compass,
+  Music,
+  Clock,
+  Palette
 } from 'lucide-react';
 import { Project, Part, Chapter, ComicChapter, ComicPanel, ComicReadingMode, AISettings, Character } from '../../types';
 import { sampleComicChapters, GOOGLE_DOCS_URL } from '../../data/googleData';
 import { googleCharacters } from '../../data/googleCharacters';
-import { sampleCharacters } from '../../data/sampleLongAnKy';
+import { sampleCharacters, sampleBibleFacts, sampleTimeline } from '../../data/sampleLongAnKy';
 import { AIStudioService, ComicScriptResult } from '../../services/aiStudioService';
+import { soundscapeEngine } from '../../services/soundscapeService';
 import { CharacterDossierDrawer } from './CharacterDossierDrawer';
+import { WorldAtlasModal } from './WorldAtlasModal';
+import { AmbientSoundPlayer } from './AmbientSoundPlayer';
+import { LoreCodexDrawer } from './LoreCodexDrawer';
+import { ChronicleTimelineModal } from './ChronicleTimelineModal';
 
 interface UnifiedReaderViewProps {
   project: Project;
@@ -183,7 +192,15 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
   const [isCharacterDrawerOpen, setIsCharacterDrawerOpen] = useState<boolean>(false);
   const [selectedCharacterId, setSelectedCharacterId] = useState<string | undefined>(undefined);
 
-  // Combine characters (Google doc characters + Lore characters Sena, Koto, Ryou)
+  // New Features: Atlas, Soundscape, Codex, Timeline, and Reading Themes
+  const [isAtlasOpen, setIsAtlasOpen] = useState<boolean>(false);
+  const [isSoundPlayerOpen, setIsSoundPlayerOpen] = useState<boolean>(false);
+  const [isCodexOpen, setIsCodexOpen] = useState<boolean>(false);
+  const [isTimelineOpen, setIsTimelineOpen] = useState<boolean>(false);
+  const [readingTheme, setReadingTheme] = useState<'obsidian' | 'parchment' | 'abyss' | 'amber'>('obsidian');
+  const [showThemePicker, setShowThemePicker] = useState<boolean>(false);
+
+  // Combine characters (Google doc characters + Lore characters)
   const allCharacters = useMemo(() => {
     const list: Character[] = [...(propsCharacters && propsCharacters.length > 0 ? propsCharacters : googleCharacters)];
     sampleCharacters.forEach(sc => {
@@ -461,15 +478,51 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
     }
   };
 
-  // Single locked Dreamy & Poetic Theme ("Dạ Nguyệt Mộng Cảnh")
-  const novelThemeClasses = {
-    bg: 'bg-[#060a14] relative text-slate-100',
-    container: 'bg-[#0b1022]/85 border-indigo-500/25 shadow-[0_15px_50px_rgba(0,0,0,0.6)] backdrop-blur-xl',
-    text: 'text-slate-100',
-    prose: 'text-slate-200 selection:bg-pink-500/30 selection:text-pink-100',
-    meta: 'text-slate-400',
-    toolbar: 'bg-slate-950/85 border-indigo-500/20 text-slate-200 backdrop-blur-2xl'
+  // 4 Artistic Reading Themes for "Long Ấn Thức Tỉnh"
+  const THEME_OPTIONS: { id: 'obsidian' | 'parchment' | 'abyss' | 'amber'; name: string; icon: string }[] = [
+    { id: 'obsidian', name: 'Huyền Long Dạ Cảnh', icon: '🌌' },
+    { id: 'parchment', name: 'Giấy Dó Hoàng Gia', icon: '📜' },
+    { id: 'abyss', name: 'Vực Thẳm Asera', icon: '🌊' },
+    { id: 'amber', name: 'Đèn Dầu Bến Tàu', icon: '🕯️' }
+  ];
+
+  const THEME_STYLES = {
+    obsidian: {
+      bg: 'bg-[#060a14] relative text-slate-100',
+      container: 'bg-[#0b1022]/85 border-indigo-500/25 shadow-[0_15px_50px_rgba(0,0,0,0.6)] backdrop-blur-xl',
+      text: 'text-slate-100',
+      prose: 'text-slate-200 selection:bg-pink-500/30 selection:text-pink-100',
+      meta: 'text-slate-400',
+      toolbar: 'bg-slate-950/85 border-indigo-500/20 text-slate-200 backdrop-blur-2xl'
+    },
+    parchment: {
+      bg: 'bg-[#f4ebe1] relative text-[#2a1e14]',
+      container: 'bg-[#fcf7ee]/95 border-amber-900/20 shadow-[0_15px_50px_rgba(70,40,10,0.15)] backdrop-blur-xl',
+      text: 'text-[#2a1e14]',
+      prose: 'text-[#382a1d] selection:bg-amber-300/40 selection:text-amber-950',
+      meta: 'text-amber-800/70',
+      toolbar: 'bg-[#eae0cf]/95 border-amber-900/20 text-[#2a1e14] backdrop-blur-2xl'
+    },
+    abyss: {
+      bg: 'bg-[#030d17] relative text-[#bfe3f7]',
+      container: 'bg-[#05172b]/90 border-cyan-500/30 shadow-[0_15px_50px_rgba(0,40,80,0.5)] backdrop-blur-xl',
+      text: 'text-[#e0f2fe]',
+      prose: 'text-[#bae6fd] selection:bg-cyan-500/30 selection:text-cyan-100',
+      meta: 'text-cyan-400/70',
+      toolbar: 'bg-[#020a13]/90 border-cyan-500/20 text-cyan-200 backdrop-blur-2xl'
+    },
+    amber: {
+      bg: 'bg-[#130b05] relative text-[#f5e2d0]',
+      container: 'bg-[#1d120a]/90 border-amber-600/25 shadow-[0_15px_50px_rgba(40,20,0,0.6)] backdrop-blur-xl',
+      text: 'text-[#fff1e5]',
+      prose: 'text-[#ecd2bd] selection:bg-amber-600/30 selection:text-amber-100',
+      meta: 'text-amber-400/70',
+      toolbar: 'bg-[#0e0703]/90 border-amber-700/20 text-amber-200 backdrop-blur-2xl'
+    }
   };
+
+  const novelThemeClasses = THEME_STYLES[readingTheme];
+  const currentTheme = THEME_OPTIONS.find(t => t.id === readingTheme) || THEME_OPTIONS[0];
 
   return (
     <div className={`flex-1 flex flex-col h-full overflow-hidden transition-colors duration-200 ${novelThemeClasses.bg}`}>
@@ -622,12 +675,46 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
           </div>
         )}
 
-        {/* Right: Character Dossier & Typography Settings */}
-        <div className="flex items-center space-x-2 text-xs">
-          {/* Character Dossier Quick Trigger Button */}
+        {/* Right: Tools & Reading Settings */}
+        <div className="flex items-center space-x-1 sm:space-x-1.5 text-xs">
+          {/* 1. World Atlas Button */}
+          <button
+            onClick={() => setIsAtlasOpen(true)}
+            className="flex items-center space-x-1 px-2 sm:px-2.5 py-1.5 rounded-xl text-xs font-medium bg-cyan-950/40 hover:bg-cyan-900/60 text-cyan-300 border border-cyan-500/30 transition-all cursor-pointer shadow-sm active:scale-95"
+            title="Mở Bản Đồ Thế Giới Sông Asera & Bến Arumo"
+          >
+            <Compass className="w-3.5 h-3.5 text-cyan-400" />
+            <span className="hidden md:inline">Bản Đồ</span>
+          </button>
+
+          {/* 2. Ambient Sound Button */}
+          <button
+            onClick={() => setIsSoundPlayerOpen(true)}
+            className={`flex items-center space-x-1 px-2 sm:px-2.5 py-1.5 rounded-xl text-xs font-medium border transition-all cursor-pointer shadow-sm active:scale-95 ${
+              soundscapeEngine.isPlaying()
+                ? 'bg-indigo-500/25 text-indigo-200 border-indigo-400/50 shadow-indigo-500/20 animate-pulse'
+                : 'bg-indigo-950/40 hover:bg-indigo-900/60 text-indigo-300 border-indigo-500/30'
+            }`}
+            title="Mở trình phát Âm Thanh Nền Không Gian (Sóng nước, Mưa đêm)"
+          >
+            <Music className="w-3.5 h-3.5 text-indigo-400" />
+            <span className="hidden md:inline">Âm Thanh</span>
+          </button>
+
+          {/* 3. World Codex Button */}
+          <button
+            onClick={() => setIsCodexOpen(true)}
+            className="flex items-center space-x-1 px-2 sm:px-2.5 py-1.5 rounded-xl text-xs font-medium bg-amber-950/40 hover:bg-amber-900/60 text-amber-300 border border-amber-500/30 transition-all cursor-pointer shadow-sm active:scale-95"
+            title="Mở Từ Điển Bách Khoa Lore & Quy luật thế giới"
+          >
+            <BookMarked className="w-3.5 h-3.5 text-amber-400" />
+            <span className="hidden md:inline">Codex</span>
+          </button>
+
+          {/* 4. Character Dossier Quick Trigger Button */}
           <button
             onClick={() => setIsCharacterDrawerOpen(prev => !prev)}
-            className={`flex items-center space-x-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-semibold border transition-all cursor-pointer ${
+            className={`flex items-center space-x-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-semibold border transition-all cursor-pointer shadow-sm active:scale-95 ${
               isCharacterDrawerOpen
                 ? 'bg-cyan-500/25 text-cyan-200 border-cyan-400/50 shadow-md shadow-cyan-500/20'
                 : 'bg-gradient-to-r from-cyan-950/40 via-indigo-950/40 to-purple-950/40 hover:from-cyan-900/40 hover:to-purple-900/40 text-cyan-200 border-cyan-500/30'
@@ -635,12 +722,45 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
             title="Tra cứu hồ sơ nhân vật (Tên tuổi, xuất xứ, quá khứ, hình ảnh)"
           >
             <Users className="w-3.5 h-3.5 text-cyan-400" />
-            <span className="hidden sm:inline">Hồ Sơ Nhân Vật</span>
-            <span className="sm:hidden">Nhân Vật</span>
+            <span className="hidden sm:inline">Nhân Vật</span>
             <span className="text-[10px] bg-cyan-500/30 text-cyan-200 font-mono font-bold px-1.5 py-0.2 rounded-full">
               {allCharacters.length}
             </span>
           </button>
+
+          {/* 5. Theme Switcher */}
+          <div className="relative">
+            <button
+              onClick={() => setShowThemePicker(prev => !prev)}
+              className="flex items-center space-x-1 px-2 py-1.5 rounded-xl bg-black/25 hover:bg-black/35 border border-white/10 text-xs text-slate-300 hover:text-white transition-all cursor-pointer"
+              title="Đổi phong cách giao diện đọc"
+            >
+              <span>{currentTheme.icon}</span>
+              <Palette className="w-3 h-3 text-slate-400" />
+            </button>
+
+            {showThemePicker && (
+              <div className="absolute right-0 top-full mt-2 w-48 p-2 rounded-2xl bg-slate-950/95 border border-white/15 shadow-2xl backdrop-blur-xl z-50 space-y-1">
+                {THEME_OPTIONS.map(th => (
+                  <button
+                    key={th.id}
+                    onClick={() => {
+                      setReadingTheme(th.id);
+                      setShowThemePicker(false);
+                    }}
+                    className={`w-full flex items-center space-x-2 px-2.5 py-1.5 rounded-xl text-xs text-left transition-all cursor-pointer ${
+                      readingTheme === th.id
+                        ? 'bg-amber-500/20 text-amber-300 font-bold border border-amber-500/30'
+                        : 'text-slate-300 hover:bg-white/5 hover:text-white'
+                    }`}
+                  >
+                    <span>{th.icon}</span>
+                    <span>{th.name}</span>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
 
           {readerType === 'novel' && (
             <>
@@ -776,6 +896,34 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
                     {CHIBI_QUOTES[chibiQuoteIndex]}
                   </p>
                 </div>
+              </div>
+
+              {/* 4. Quick Explorer Links (Bản đồ, Dòng thời gian, Codex) */}
+              <div className="grid grid-cols-3 gap-1.5 pt-1">
+                <button
+                  onClick={() => setIsAtlasOpen(true)}
+                  className="p-1.5 rounded-lg bg-cyan-950/40 hover:bg-cyan-900/60 border border-cyan-500/30 text-cyan-200 text-[10px] font-medium flex flex-col items-center gap-1 transition-all cursor-pointer"
+                  title="Mở Bản Đồ Thế Giới Sông Asera"
+                >
+                  <Compass className="w-3.5 h-3.5 text-cyan-400" />
+                  <span>Bản Đồ</span>
+                </button>
+                <button
+                  onClick={() => setIsTimelineOpen(true)}
+                  className="p-1.5 rounded-lg bg-indigo-950/40 hover:bg-indigo-900/60 border border-indigo-500/30 text-indigo-200 text-[10px] font-medium flex flex-col items-center gap-1 transition-all cursor-pointer"
+                  title="Mở Biên Niên Sử Dòng Thời Gian"
+                >
+                  <Clock className="w-3.5 h-3.5 text-indigo-400" />
+                  <span>Thời Gian</span>
+                </button>
+                <button
+                  onClick={() => setIsCodexOpen(true)}
+                  className="p-1.5 rounded-lg bg-amber-950/40 hover:bg-amber-900/60 border border-amber-500/30 text-amber-200 text-[10px] font-medium flex flex-col items-center gap-1 transition-all cursor-pointer"
+                  title="Mở Bách Khoa Toàn Thư (Codex)"
+                >
+                  <BookMarked className="w-3.5 h-3.5 text-amber-400" />
+                  <span>Codex</span>
+                </button>
               </div>
             </div>
 
@@ -1584,32 +1732,85 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
         </div>
       )}
 
-      {/* ================= RIGHT EDGE FLOATING TAB: TRA CỨU NHÂN VẬT ================= */}
-      <div className="fixed right-0 top-1/2 -translate-y-1/2 z-40 flex items-center">
+      {/* ================= RIGHT EDGE FLOATING ACTION DOCK ================= */}
+      <div className="fixed right-0 top-1/2 -translate-y-1/2 z-40 flex flex-col items-end space-y-2 pointer-events-auto">
+        {/* Tab 1: Hồ Sơ Nhân Vật */}
         <button
           onClick={() => setIsCharacterDrawerOpen(prev => !prev)}
-          className="group flex items-center gap-1.5 py-4 px-2 sm:px-2.5 bg-gradient-to-b from-slate-900/95 via-cyan-950/95 to-slate-900/95 border-l-2 border-y border-cyan-400/60 hover:border-cyan-300 text-cyan-300 rounded-l-2xl shadow-[-6px_0_30px_rgba(0,0,0,0.7)] backdrop-blur-xl hover:translate-x-[-6px] hover:text-cyan-100 transition-all cursor-pointer ring-1 ring-cyan-500/20"
-          title="Nhấn để mở danh sách & hồ sơ nhân vật (Xuất xứ, quá khứ, hình ảnh)"
+          className="group flex items-center gap-1.5 py-3.5 px-2 bg-gradient-to-b from-slate-900/95 via-cyan-950/95 to-slate-900/95 border-l-2 border-y border-cyan-400/60 hover:border-cyan-300 text-cyan-300 rounded-l-2xl shadow-[-6px_0_30px_rgba(0,0,0,0.7)] backdrop-blur-xl hover:translate-x-[-6px] hover:text-cyan-100 transition-all cursor-pointer ring-1 ring-cyan-500/20"
+          title="Mở hồ sơ toàn bộ nhân vật"
         >
-          <div className="flex flex-col items-center gap-2 sm:gap-2.5">
+          <div className="flex flex-col items-center gap-1.5">
             <Users className="w-4 h-4 text-cyan-400 group-hover:scale-125 transition-transform" />
-            <span className="[writing-mode:vertical-rl] text-[10px] sm:text-[11px] font-bold tracking-widest text-slate-200 group-hover:text-cyan-200 font-serif uppercase">
-              HỒ SƠ NHÂN VẬT
+            <span className="[writing-mode:vertical-rl] text-[10px] font-bold tracking-widest text-slate-200 group-hover:text-cyan-200 font-serif uppercase">
+              NHÂN VẬT
             </span>
-            <span className="w-5 h-5 rounded-full bg-cyan-500/25 border border-cyan-400/50 text-[10px] font-mono font-bold flex items-center justify-center text-cyan-300 group-hover:bg-cyan-400 group-hover:text-slate-950 transition-colors shadow-sm">
+            <span className="w-4 h-4 rounded-full bg-cyan-500/25 border border-cyan-400/50 text-[9px] font-mono font-bold flex items-center justify-center text-cyan-300">
               {allCharacters.length}
             </span>
           </div>
         </button>
+
+        {/* Tab 2: Bản Đồ Thế Giới */}
+        <button
+          onClick={() => setIsAtlasOpen(true)}
+          className="group flex items-center gap-1 py-2.5 px-2 bg-slate-900/95 border-l-2 border-y border-cyan-500/40 hover:border-cyan-300 text-cyan-300 rounded-l-xl shadow-lg backdrop-blur-xl hover:translate-x-[-4px] transition-all cursor-pointer"
+          title="Mở bản đồ thế giới sông Asera & Bến Arumo"
+        >
+          <Compass className="w-4 h-4 text-cyan-400 group-hover:scale-125 transition-transform" />
+        </button>
+
+        {/* Tab 3: Âm Thanh Nền */}
+        <button
+          onClick={() => setIsSoundPlayerOpen(true)}
+          className="group flex items-center gap-1 py-2.5 px-2 bg-slate-900/95 border-l-2 border-y border-indigo-500/40 hover:border-indigo-300 text-indigo-300 rounded-l-xl shadow-lg backdrop-blur-xl hover:translate-x-[-4px] transition-all cursor-pointer"
+          title="Mở âm thanh môi trường thư giãn khi đọc"
+        >
+          <Music className="w-4 h-4 text-indigo-400 group-hover:scale-125 transition-transform" />
+        </button>
+
+        {/* Tab 4: Từ Điển Lore */}
+        <button
+          onClick={() => setIsCodexOpen(true)}
+          className="group flex items-center gap-1 py-2.5 px-2 bg-slate-900/95 border-l-2 border-y border-amber-500/40 hover:border-amber-300 text-amber-300 rounded-l-xl shadow-lg backdrop-blur-xl hover:translate-x-[-4px] transition-all cursor-pointer"
+          title="Mở Từ Điển Bách Khoa Thế Giới (Codex)"
+        >
+          <BookMarked className="w-4 h-4 text-amber-400 group-hover:scale-125 transition-transform" />
+        </button>
       </div>
 
-      {/* ================= CHARACTER DOSSIER DRAWER (TOÀN BỘ THÔNG TIN NHÂN VẬT) ================= */}
+      {/* ================= ALL 5 POWERHOUSE MODALS & DRAWERS ================= */}
+      {/* 1. Character Dossier Drawer */}
       <CharacterDossierDrawer
         isOpen={isCharacterDrawerOpen}
         onClose={() => setIsCharacterDrawerOpen(false)}
         characters={allCharacters}
         selectedCharId={selectedCharacterId}
         onSelectCharacter={(id) => setSelectedCharacterId(id)}
+      />
+
+      {/* 2. World Atlas Modal */}
+      <WorldAtlasModal
+        isOpen={isAtlasOpen}
+        onClose={() => setIsAtlasOpen(false)}
+      />
+
+      {/* 3. Ambient Soundscape Player */}
+      <AmbientSoundPlayer
+        isOpen={isSoundPlayerOpen}
+        onClose={() => setIsSoundPlayerOpen(false)}
+      />
+
+      {/* 4. Lore Codex Drawer */}
+      <LoreCodexDrawer
+        isOpen={isCodexOpen}
+        onClose={() => setIsCodexOpen(false)}
+      />
+
+      {/* 5. Chronicle Timeline Modal */}
+      <ChronicleTimelineModal
+        isOpen={isTimelineOpen}
+        onClose={() => setIsTimelineOpen(false)}
       />
     </div>
   );
