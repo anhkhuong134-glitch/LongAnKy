@@ -9,6 +9,7 @@ import { WorldGuidePage } from './components/public/WorldGuidePage';
 import { ComicLandingPage } from './components/public/ComicLandingPage';
 import { BookshelfPage } from './components/public/BookshelfPage';
 import { NovelReaderPage } from './components/reader/NovelReaderPage';
+import { ReaderAuthGate } from './components/auth/ReaderAuthGate';
 import { LoginPage } from './components/auth/LoginPage';
 import { UserAuthModal } from './components/auth/UserAuthModal';
 
@@ -301,10 +302,25 @@ export default function App() {
   }
 
   // =========================================================================
-  // NOVEL READER ROUTE (Has dedicated 56px reading header & footer)
+  // NOVEL READER ROUTE — yêu cầu đăng nhập
   // =========================================================================
   if (isReaderRoute) {
     const chapterId = route.params.chapterId || 'doc_chap_prologue';
+
+    // ── Chưa đăng nhập: hiện màn hình xác thực ──
+    if (!currentUser) {
+      return (
+        <ReaderAuthGate
+          chapterId={chapterId}
+          onLoginSuccess={(user) => {
+            handleLoginSuccess(user);
+          }}
+          onNavigate={navigateTo}
+        />
+      );
+    }
+
+    // ── Đã đăng nhập: hiện trang đọc đầy đủ ──
     return (
       <NovelReaderPage
         chapterId={chapterId}
