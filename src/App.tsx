@@ -648,6 +648,7 @@ export default function App() {
             <UnifiedReaderView
               project={project}
               parts={parts}
+              characters={characters}
               isWarmTheme={isWarmTheme}
               aiSettings={aiSettings}
               comicChapters={comicChapters}

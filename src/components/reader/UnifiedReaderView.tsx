@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { 
   BookOpen, 
   ChevronLeft, 
@@ -18,11 +18,15 @@ import {
   ChevronDown,
   ExternalLink,
   Menu,
-  X
+  X,
+  Users
 } from 'lucide-react';
-import { Project, Part, Chapter, ComicChapter, ComicPanel, ComicReadingMode, AISettings } from '../../types';
+import { Project, Part, Chapter, ComicChapter, ComicPanel, ComicReadingMode, AISettings, Character } from '../../types';
 import { sampleComicChapters, GOOGLE_DOCS_URL } from '../../data/googleData';
+import { googleCharacters } from '../../data/googleCharacters';
+import { sampleCharacters } from '../../data/sampleLongAnKy';
 import { AIStudioService, ComicScriptResult } from '../../services/aiStudioService';
+import { CharacterDossierDrawer } from './CharacterDossierDrawer';
 
 interface UnifiedReaderViewProps {
   project: Project;
@@ -34,6 +38,7 @@ interface UnifiedReaderViewProps {
   onOpenComicUploader?: () => void;
   onSyncGoogleDocs?: () => Promise<void> | void;
   isSyncingDoc?: boolean;
+  characters?: Character[];
 }
 
 type ReaderType = 'novel' | 'comic';
@@ -167,11 +172,27 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
   isAuthorMode = false,
   onOpenComicUploader,
   onSyncGoogleDocs,
-  isSyncingDoc = false
+  isSyncingDoc = false,
+  characters: propsCharacters
 }) => {
   // Mode selection: Novel (Truyện chữ - Đang sáng tác) vs Comic (Truyện tranh - Sắp ra mắt)
   const [readerType, setReaderType] = useState<ReaderType>('novel');
   const [authorPreviewComic, setAuthorPreviewComic] = useState<boolean>(false);
+
+  // Character Dossier Drawer state (Tra cứu hồ sơ nhân vật bên phải)
+  const [isCharacterDrawerOpen, setIsCharacterDrawerOpen] = useState<boolean>(false);
+  const [selectedCharacterId, setSelectedCharacterId] = useState<string | undefined>(undefined);
+
+  // Combine characters (Google doc characters + Lore characters Sena, Koto, Ryou)
+  const allCharacters = useMemo(() => {
+    const list: Character[] = [...(propsCharacters && propsCharacters.length > 0 ? propsCharacters : googleCharacters)];
+    sampleCharacters.forEach(sc => {
+      if (!list.some(c => c.id === sc.id || c.name.toLowerCase() === sc.name.toLowerCase())) {
+        list.push(sc);
+      }
+    });
+    return list;
+  }, [propsCharacters]);
   
   // Novel reader states
   const [selectedPartId, setSelectedPartId] = useState<string>(parts[0]?.id || '');
@@ -601,8 +622,26 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
           </div>
         )}
 
-        {/* Right: Typography Settings */}
+        {/* Right: Character Dossier & Typography Settings */}
         <div className="flex items-center space-x-2 text-xs">
+          {/* Character Dossier Quick Trigger Button */}
+          <button
+            onClick={() => setIsCharacterDrawerOpen(prev => !prev)}
+            className={`flex items-center space-x-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-semibold border transition-all cursor-pointer ${
+              isCharacterDrawerOpen
+                ? 'bg-cyan-500/25 text-cyan-200 border-cyan-400/50 shadow-md shadow-cyan-500/20'
+                : 'bg-gradient-to-r from-cyan-950/40 via-indigo-950/40 to-purple-950/40 hover:from-cyan-900/40 hover:to-purple-900/40 text-cyan-200 border-cyan-500/30'
+            }`}
+            title="Tra cứu hồ sơ nhân vật (Tên tuổi, xuất xứ, quá khứ, hình ảnh)"
+          >
+            <Users className="w-3.5 h-3.5 text-cyan-400" />
+            <span className="hidden sm:inline">Hồ Sơ Nhân Vật</span>
+            <span className="sm:hidden">Nhân Vật</span>
+            <span className="text-[10px] bg-cyan-500/30 text-cyan-200 font-mono font-bold px-1.5 py-0.2 rounded-full">
+              {allCharacters.length}
+            </span>
+          </button>
+
           {readerType === 'novel' && (
             <>
               {/* Font Size Adjuster */}
@@ -1544,6 +1583,34 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
           </div>
         </div>
       )}
+
+      {/* ================= RIGHT EDGE FLOATING TAB: TRA CỨU NHÂN VẬT ================= */}
+      <div className="fixed right-0 top-1/2 -translate-y-1/2 z-40 flex items-center">
+        <button
+          onClick={() => setIsCharacterDrawerOpen(prev => !prev)}
+          className="group flex items-center gap-1.5 py-4 px-2 sm:px-2.5 bg-gradient-to-b from-slate-900/95 via-cyan-950/95 to-slate-900/95 border-l-2 border-y border-cyan-400/60 hover:border-cyan-300 text-cyan-300 rounded-l-2xl shadow-[-6px_0_30px_rgba(0,0,0,0.7)] backdrop-blur-xl hover:translate-x-[-6px] hover:text-cyan-100 transition-all cursor-pointer ring-1 ring-cyan-500/20"
+          title="Nhấn để mở danh sách & hồ sơ nhân vật (Xuất xứ, quá khứ, hình ảnh)"
+        >
+          <div className="flex flex-col items-center gap-2 sm:gap-2.5">
+            <Users className="w-4 h-4 text-cyan-400 group-hover:scale-125 transition-transform" />
+            <span className="[writing-mode:vertical-rl] text-[10px] sm:text-[11px] font-bold tracking-widest text-slate-200 group-hover:text-cyan-200 font-serif uppercase">
+              HỒ SƠ NHÂN VẬT
+            </span>
+            <span className="w-5 h-5 rounded-full bg-cyan-500/25 border border-cyan-400/50 text-[10px] font-mono font-bold flex items-center justify-center text-cyan-300 group-hover:bg-cyan-400 group-hover:text-slate-950 transition-colors shadow-sm">
+              {allCharacters.length}
+            </span>
+          </div>
+        </button>
+      </div>
+
+      {/* ================= CHARACTER DOSSIER DRAWER (TOÀN BỘ THÔNG TIN NHÂN VẬT) ================= */}
+      <CharacterDossierDrawer
+        isOpen={isCharacterDrawerOpen}
+        onClose={() => setIsCharacterDrawerOpen(false)}
+        characters={allCharacters}
+        selectedCharId={selectedCharacterId}
+        onSelectCharacter={(id) => setSelectedCharacterId(id)}
+      />
     </div>
   );
 };
