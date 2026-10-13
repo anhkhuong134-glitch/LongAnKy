@@ -22,6 +22,7 @@ export interface UserProfile {
   username: string;
   displayName: string;
   email: string;
+  password?: string; // Mật khẩu xác thực tài khoản lưu trong cơ sở dữ liệu
   avatar: string;
   level: number;
   exp: number;

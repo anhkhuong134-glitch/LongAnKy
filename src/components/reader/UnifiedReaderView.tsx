@@ -50,7 +50,7 @@ import { UserProfile } from '../../types/user';
 import { UserAuthModal } from '../auth/UserAuthModal';
 import { UserProfileDropdown } from '../auth/UserProfileDropdown';
 import { UserHistoryModal } from '../auth/UserHistoryModal';
-import { AudioDramaService, AudioDramaSentence, VoiceMode } from '../../services/audioDramaService';
+import { AudioDramaService, AudioDramaSentence, VoiceThemeId, VOICE_THEMES, SPEAKER_METADATA } from '../../services/audioDramaService';
 import { AudioDramaPlayerBar } from '../audio/AudioDramaPlayerBar';
 import { ComicComingSoonView } from '../comic/ComicComingSoonView';
 
@@ -344,11 +344,13 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
   const [isPlayingAudio, setIsPlayingAudio] = useState<boolean>(false);
   const [speechRate, setSpeechRate] = useState<number>(1.0);
   const [currentSentenceIndex, setCurrentSentenceIndex] = useState<number>(0);
-  const [voiceMode, setVoiceMode] = useState<VoiceMode>('multi_voice');
+  const [currentWordIndex, setCurrentWordIndex] = useState<number>(0);
+  const [voiceTheme, setVoiceTheme] = useState<VoiceThemeId>('mythic_drama');
   const [isAutoScrollEnabled, setIsAutoScrollEnabled] = useState<boolean>(true);
   const [isAudioPlayerVisible, setIsAudioPlayerVisible] = useState<boolean>(false);
   const synthRef = useRef<SpeechSynthesis | null>(null);
   const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
+  const wordTimerRef = useRef<any>(null);
 
   // Comic reader & Publishing states (NetTruyen / Webtoon)
   const [comicChapters, setComicChapters] = useState<ComicChapter[]>(() => {
@@ -666,6 +668,11 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
   const playSentence = useCallback((index: number) => {
     if (!synthRef.current || !audioDramaSentences[index]) return;
 
+    if (wordTimerRef.current) {
+      clearInterval(wordTimerRef.current);
+      wordTimerRef.current = null;
+    }
+
     synthRef.current.cancel();
 
     const sentence = audioDramaSentences[index];
@@ -677,11 +684,37 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
       utterance.voice = viVoice;
     }
 
-    const { pitch, rate } = AudioDramaService.getVoiceParameters(sentence, voiceMode, speechRate);
+    const { pitch, rate } = AudioDramaService.getVoiceParameters(sentence, voiceTheme, speechRate);
     utterance.pitch = pitch;
     utterance.rate = rate;
 
+    setCurrentSentenceIndex(index);
+    setCurrentWordIndex(0);
+
+    // Web Speech API boundary event for real-time word synchronization
+    utterance.onboundary = (event) => {
+      if (event.name === 'word' || (event as any).charIndex !== undefined) {
+        const wordIdx = AudioDramaService.getWordIndexFromCharIndex(sentence.text, event.charIndex);
+        setCurrentWordIndex(wordIdx);
+      }
+    };
+
+    // Smooth fallback timer to ensure words light up continuously across all platforms
+    const words = sentence.words || sentence.text.split(/\s+/).filter(Boolean);
+    const msPerWord = AudioDramaService.getAverageWordDurationMs(sentence.text, rate);
+    let simIdx = 0;
+    wordTimerRef.current = setInterval(() => {
+      simIdx++;
+      if (simIdx < words.length) {
+        setCurrentWordIndex(prev => Math.max(prev, simIdx));
+      } else {
+        if (wordTimerRef.current) clearInterval(wordTimerRef.current);
+      }
+    }, msPerWord);
+
     utterance.onend = () => {
+      if (wordTimerRef.current) clearInterval(wordTimerRef.current);
+      setCurrentWordIndex(words.length);
       if (index < audioDramaSentences.length - 1) {
         setCurrentSentenceIndex(index + 1);
         playSentence(index + 1);
@@ -691,25 +724,43 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
     };
 
     utterance.onerror = () => {
+      if (wordTimerRef.current) clearInterval(wordTimerRef.current);
       setIsPlayingAudio(false);
     };
 
     utteranceRef.current = utterance;
     synthRef.current.speak(utterance);
-    setCurrentSentenceIndex(index);
     setIsPlayingAudio(true);
     setIsAudioPlayerVisible(true);
+  }, [audioDramaSentences, voiceTheme, speechRate]);
 
-    // Tự động cuộn trang tới đúng câu thoại đang phát (Karaoke Auto-scroll)
-    if (isAutoScrollEnabled) {
-      setTimeout(() => {
-        const el = document.getElementById(sentence.id);
-        if (el) {
-          el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  // Tự động cuộn trang theo thời gian thực khi hết dòng / sang câu mới
+  useEffect(() => {
+    if (!isPlayingAudio || !isAutoScrollEnabled || !scrollContainerRef.current) return;
+
+    const timer = setTimeout(() => {
+      const container = scrollContainerRef.current;
+      if (!container) return;
+
+      const activeWord = document.getElementById('active_karaoke_word');
+      const activeSent = document.getElementById(audioDramaSentences[currentSentenceIndex]?.id);
+      const target = activeWord || activeSent;
+
+      if (target) {
+        const containerRect = container.getBoundingClientRect();
+        const targetRect = target.getBoundingClientRect();
+        const relativeY = targetRect.top - containerRect.top;
+
+        if (relativeY < containerRect.height * 0.18 || relativeY > containerRect.height * 0.48) {
+          const currentScroll = container.scrollTop;
+          const targetScroll = currentScroll + relativeY - (containerRect.height * 0.32);
+          container.scrollTo({ top: Math.max(0, targetScroll), behavior: 'smooth' });
         }
-      }, 50);
-    }
-  }, [audioDramaSentences, voiceMode, speechRate, isAutoScrollEnabled]);
+      }
+    }, 60);
+
+    return () => clearTimeout(timer);
+  }, [currentSentenceIndex, currentWordIndex, isPlayingAudio, isAutoScrollEnabled]);
 
   const handleToggleAudio = () => {
     if (!synthRef.current || audioDramaSentences.length === 0) return;
@@ -976,6 +1027,11 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
                   })}
                 </div>
               )}
+            </div>
+          ) : publishedComicChapterIds.length === 0 && !isAuthorPreviewingDraft ? (
+            <div className="flex items-center space-x-2 px-3 py-1.5 rounded-xl bg-rose-950/40 border border-rose-500/30 text-xs">
+              <span className="w-2 h-2 rounded-full bg-rose-400 animate-pulse" />
+              <span className="text-rose-300 font-serif font-semibold">Webtoon: Sắp Ra Mắt (Coming Soon)</span>
             </div>
           ) : (
             <div className="relative">
@@ -1404,74 +1460,85 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
                 </div>
                 <div className="text-right">
                   <span className="text-xs font-mono font-bold text-rose-300 px-2 py-0.5 rounded-full bg-rose-500/15 border border-rose-500/30 shadow-sm">
-                    {comicChapters.length} Hồi
+                    {publishedComicChapterIds.length > 0 ? `${publishedComicChapterIds.length} Hồi` : 'Sắp Ra Mắt'}
                   </span>
                 </div>
               </div>
             </div>
 
-            {/* Comic Chapters List */}
+            {/* Comic Sidebar Content: Nếu chưa xuất bản hồi nào, chỉ hiển thị 1 tab duy nhất là Coming Soon */}
             <div className="flex-1 overflow-y-auto custom-scrollbar p-3 space-y-2.5">
-              {comicChapters.map((chap, idx) => {
-                const isActive = idx === activeComicIndex;
-                const panelCount = chap.pages?.reduce((acc, p) => acc + (p.panels?.length || 0), 0) || 0;
-                return (
-                  <div
-                    key={chap.id}
-                    onClick={() => {
-                      setActiveComicIndex(idx);
-                      scrollToTop();
-                      if (window.innerWidth < 1024) setIsSidebarOpen(false);
-                    }}
-                    className={`group p-3 rounded-2xl cursor-pointer transition-all flex items-center justify-between border ${
-                      isActive
-                        ? 'bg-gradient-to-r from-rose-500/25 via-pink-500/15 to-purple-500/15 border-rose-400/50 text-rose-100 shadow-md shadow-rose-500/15 ring-1 ring-rose-400/30'
-                        : 'bg-slate-900/40 border-white/5 hover:border-rose-400/30 hover:bg-white/5 text-slate-300'
-                    }`}
-                  >
-                    <div className="flex items-center space-x-2.5 min-w-0 flex-1">
-                      <div className="w-10 h-10 rounded-xl overflow-hidden bg-slate-800 shrink-0 border border-white/10 shadow-sm">
-                        {chap.coverUrl ? (
-                          <img src={chap.coverUrl} alt={chap.title} className="w-full h-full object-cover" />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center text-xs">🎨</div>
+              {publishedComicChapterIds.length === 0 && !isAuthorPreviewingDraft ? (
+                <div className="p-3.5 rounded-2xl bg-gradient-to-br from-rose-950/40 via-purple-950/30 to-slate-900/60 border border-rose-400/40 shadow-lg text-left space-y-2.5">
+                  <div className="flex items-center gap-2">
+                    <div className="w-9 h-9 rounded-xl bg-rose-500/20 border border-rose-400/30 flex items-center justify-center text-rose-300 text-base shrink-0">
+                      🎨
+                    </div>
+                    <div>
+                      <h4 className="font-serif font-bold text-xs text-rose-200">
+                        Webtoon Sắp Ra Mắt
+                      </h4>
+                      <span className="text-[9px] px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 font-mono border border-rose-400/30">
+                        Coming Soon
+                      </span>
+                    </div>
+                  </div>
+                  <p className="text-[11px] text-slate-300/80 leading-relaxed font-sans">
+                    Dự án truyện tranh đang được tác giả chau chuốt kịch bản & phân cảnh mỹ thuật. Hiện chưa xuất bản hồi nào.
+                  </p>
+                  <div className="pt-2 border-t border-white/10 flex items-center justify-between text-[10px] text-rose-300">
+                    <span>Trạng thái: Đang chế tác</span>
+                    <span className="w-2 h-2 rounded-full bg-rose-400 animate-ping" />
+                  </div>
+                </div>
+              ) : (
+                comicChapters
+                  .filter(chap => isAuthorMode || isAuthorPreviewingDraft || publishedComicChapterIds.includes(chap.id))
+                  .map((chap, idx) => {
+                    const isActive = idx === activeComicIndex;
+                    const panelCount = chap.pages?.reduce((acc, p) => acc + (p.panels?.length || 0), 0) || 0;
+                    return (
+                      <div
+                        key={chap.id}
+                        onClick={() => {
+                          setActiveComicIndex(idx);
+                          scrollToTop();
+                          if (window.innerWidth < 1024) setIsSidebarOpen(false);
+                        }}
+                        className={`group p-3 rounded-2xl cursor-pointer transition-all flex items-center justify-between border ${
+                          isActive
+                            ? 'bg-gradient-to-r from-rose-500/25 via-pink-500/15 to-purple-500/15 border-rose-400/50 text-rose-100 shadow-md shadow-rose-500/15 ring-1 ring-rose-400/30'
+                            : 'bg-slate-900/40 border-white/5 hover:border-rose-400/30 hover:bg-white/5 text-slate-300'
+                        }`}
+                      >
+                        <div className="flex items-center space-x-2.5 min-w-0 flex-1">
+                          <div className="w-10 h-10 rounded-xl overflow-hidden bg-slate-800 shrink-0 border border-white/10 shadow-sm">
+                            {chap.coverUrl ? (
+                              <img src={chap.coverUrl} alt={chap.title} className="w-full h-full object-cover" />
+                            ) : (
+                              <div className="w-full h-full flex items-center justify-center text-xs">🎨</div>
+                            )}
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <h4 className={`font-serif font-bold text-xs truncate ${isActive ? 'text-rose-200' : 'text-slate-100 group-hover:text-rose-300'}`}>
+                              {chap.title}
+                            </h4>
+                            <div className="text-[10px] text-slate-400 flex flex-wrap items-center gap-1.5 mt-0.5 truncate">
+                              <span className="text-[9px] px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-300 font-mono border border-emerald-500/30">
+                                Đã Xuất Bản
+                              </span>
+                              <span>•</span>
+                              <span>{panelCount} khung tranh</span>
+                            </div>
+                          </div>
+                        </div>
+                        {isActive && (
+                          <span className="w-2.5 h-2.5 rounded-full bg-rose-400 animate-pulse shadow-[0_0_8px_rgba(244,63,94,0.9)] shrink-0 ml-2" />
                         )}
                       </div>
-                      <div className="min-w-0 flex-1">
-                        <h4 className={`font-serif font-bold text-xs truncate ${isActive ? 'text-rose-200' : 'text-slate-100 group-hover:text-rose-300'}`}>
-                          {chap.title}
-                        </h4>
-                        <div className="text-[10px] text-slate-400 flex flex-wrap items-center gap-1.5 mt-0.5 truncate">
-                          {publishedComicChapterIds.includes(chap.id) ? (
-                            <span className="text-[9px] px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-300 font-mono border border-emerald-500/30">
-                              Đã Xuất Bản
-                            </span>
-                          ) : (
-                            <span className="text-[9px] px-1.5 py-0.2 rounded bg-amber-500/15 text-amber-300 font-mono border border-amber-500/25">
-                              Coming Soon
-                            </span>
-                          )}
-                          {currentUser?.lastRead?.chapterId === chap.id && (
-                            <span className="text-[9px] px-1.5 py-0.2 rounded bg-rose-500/20 text-rose-300 font-sans flex items-center gap-0.5 border border-rose-500/30 animate-pulse">
-                              📍 Vừa đọc {currentUser.lastRead.progressPercent}%
-                            </span>
-                          )}
-                          {currentUser?.readChapterIds?.includes(chap.id) && (
-                            <span className="text-[9px] px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-300 font-sans flex items-center gap-0.5 border border-emerald-500/30">
-                              <CheckCircle2 className="w-2.5 h-2.5" /> Đã đọc
-                            </span>
-                          )}
-                          <span>•</span>
-                          <span>{panelCount} khung tranh</span>
-                        </div>
-                      </div>
-                    </div>
-                    {isActive && (
-                      <span className="w-2.5 h-2.5 rounded-full bg-rose-400 animate-pulse shadow-[0_0_8px_rgba(244,63,94,0.9)] shrink-0 ml-2" />
-                    )}
-                  </div>
-                );
-              })}
+                    );
+                  })
+              )}
             </div>
           </>
         )}
@@ -1625,17 +1692,60 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
                             const sentGlobalIdx = audioDramaSentences.findIndex(s => s.id === sent.id);
                             const isCurrentlySpoken = isPlayingAudio && currentSentenceIndex === sentGlobalIdx;
 
+                            if (isCurrentlySpoken) {
+                              const words = sent.text.split(/(\s+)/);
+                              let tokenWordCount = 0;
+
+                              return (
+                                <span
+                                  key={sent.id}
+                                  id={sent.id}
+                                  onClick={() => playSentence(sentGlobalIdx)}
+                                  className="transition-all duration-200 rounded-xl bg-amber-500/15 border-b-2 border-amber-400/80 px-2 py-1 shadow-[0_0_15px_rgba(251,191,36,0.3)] inline cursor-pointer select-text"
+                                  title={`Đang đọc: ${sent.isDialogue ? sent.speakerLabel : 'Người Dẫn Chuyện'}`}
+                                >
+                                  {sent.isDialogue && (
+                                    <span className="inline-flex items-center gap-1 mr-2 px-2 py-0.5 rounded-full bg-gradient-to-r from-amber-500/30 to-rose-500/30 border border-amber-400/60 text-amber-200 font-sans text-[10px] font-bold shadow-sm not-italic align-middle animate-pulse select-none">
+                                      <span>{sent.speakerIcon}</span>
+                                      <span>{sent.speakerLabel}</span>
+                                    </span>
+                                  )}
+                                  {words.map((token, wIdx) => {
+                                    if (/^\s+$/.test(token)) {
+                                      return <span key={wIdx}>{token}</span>;
+                                    }
+                                    const thisWordIdx = tokenWordCount++;
+                                    const isSpokenWord = thisWordIdx === currentWordIndex;
+                                    const isPastWord = thisWordIdx < currentWordIndex;
+
+                                    return (
+                                      <span
+                                        key={wIdx}
+                                        id={isSpokenWord ? 'active_karaoke_word' : undefined}
+                                        className={`transition-all duration-100 rounded inline-block ${
+                                          isSpokenWord
+                                            ? 'text-amber-300 font-black bg-amber-400/40 px-1 py-0.2 shadow-[0_0_16px_rgba(251,191,36,1)] scale-110 ring-2 ring-amber-400/80 -translate-y-0.5'
+                                            : isPastWord
+                                            ? 'text-amber-200 font-semibold opacity-95'
+                                            : 'text-slate-300 opacity-80'
+                                        }`}
+                                      >
+                                        {token}
+                                      </span>
+                                    );
+                                  })}
+                                  {' '}
+                                </span>
+                              );
+                            }
+
                             return (
                               <span
                                 key={sent.id}
                                 id={sent.id}
                                 onClick={() => playSentence(sentGlobalIdx)}
-                                className={`transition-all duration-200 rounded cursor-pointer ${
-                                  isCurrentlySpoken
-                                    ? 'bg-amber-400/30 text-amber-100 font-semibold shadow-[0_0_14px_rgba(251,191,36,0.55)] border-b-2 border-amber-400 px-1 py-0.5 ring-2 ring-amber-400/40 inline'
-                                    : 'hover:bg-amber-500/10'
-                                }`}
-                                title="Nhấn để nghe audio từ câu này"
+                                className="transition-all duration-150 rounded cursor-pointer hover:bg-amber-500/10"
+                                title={`Nhấn để nghe audio từ câu này (${sent.isDialogue ? sent.speakerLabel : 'Người dẫn'})`}
                               >
                                 {sent.text}{' '}
                               </span>
@@ -2464,8 +2574,9 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
           currentSentence={audioDramaSentences[currentSentenceIndex] || null}
           currentIndex={currentSentenceIndex}
           totalSentences={audioDramaSentences.length}
+          currentWordIndex={currentWordIndex}
           isPlaying={isPlayingAudio}
-          voiceMode={voiceMode}
+          voiceTheme={voiceTheme}
           speed={speechRate}
           isAutoScrollEnabled={isAutoScrollEnabled}
           onTogglePlay={handleToggleAudio}
@@ -2477,8 +2588,8 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
             const nextIdx = Math.min(audioDramaSentences.length - 1, currentSentenceIndex + 1);
             playSentence(nextIdx);
           }}
-          onChangeVoiceMode={(mode) => {
-            setVoiceMode(mode);
+          onChangeVoiceTheme={(theme) => {
+            setVoiceTheme(theme);
             if (isPlayingAudio) playSentence(currentSentenceIndex);
           }}
           onChangeSpeed={(s) => {
@@ -2488,6 +2599,7 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
           onToggleAutoScroll={() => setIsAutoScrollEnabled(prev => !prev)}
           onClose={() => {
             if (synthRef.current) synthRef.current.cancel();
+            if (wordTimerRef.current) clearInterval(wordTimerRef.current);
             setIsPlayingAudio(false);
             setIsAudioPlayerVisible(false);
           }}

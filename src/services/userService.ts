@@ -75,24 +75,35 @@ export class UserService {
     }
   }
 
-  // 4. Register new user
-  static register(username: string, displayName: string, email: string, avatar: string): { success: boolean; message: string; user?: UserProfile } {
-    const cleanUsername = username.trim().toLowerCase();
+  // 4. Register new user with password validation and database storage
+  static register(params: {
+    username: string;
+    password: string;
+    displayName: string;
+    email?: string;
+    avatar?: string;
+  }): { success: boolean; message: string; user?: UserProfile } {
+    const cleanUsername = params.username.trim().toLowerCase();
     if (!cleanUsername || cleanUsername.length < 3) {
       return { success: false, message: 'Tên đăng nhập phải từ 3 ký tự trở lên!' };
     }
 
+    if (!params.password || params.password.length < 6) {
+      return { success: false, message: 'Mật khẩu bảo mật phải từ 6 ký tự trở lên!' };
+    }
+
     const all = this.getAllUsers();
     if (all.some(u => u.username.toLowerCase() === cleanUsername)) {
-      return { success: false, message: 'Tên tài khoản này đã tồn tại, vui lòng chọn tên khác!' };
+      return { success: false, message: 'Tên tài khoản này đã tồn tại trong cơ sở dữ liệu. Vui lòng chọn tên khác!' };
     }
 
     const newUser: UserProfile = {
       id: `user_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`,
       username: cleanUsername,
-      displayName: displayName.trim() || username,
-      email: email.trim(),
-      avatar: avatar || '🐉',
+      password: params.password, // Lưu mật khẩu xác thực vào database
+      displayName: params.displayName.trim() || params.username,
+      email: params.email?.trim() || `${cleanUsername}@longan.vn`,
+      avatar: params.avatar || '🐉',
       level: 1,
       exp: 50, // Welcome gift EXP
       nextLevelExp: 100,
@@ -100,7 +111,7 @@ export class UserService {
       joinedDate: new Date().toLocaleDateString('vi-VN'),
       streakDays: 1,
       lastCheckInDate: new Date().toDateString(),
-      isFollowing: true, // Default follow on signup
+      isFollowing: true,
       bookmarkedChapterIds: [],
       readChapterIds: [],
     };
@@ -108,23 +119,34 @@ export class UserService {
     all.push(newUser);
     localStorage.setItem(STORAGE_KEYS.ALL_USERS, JSON.stringify(all));
     this.saveCurrentUser(newUser);
-    return { success: true, message: 'Đăng ký thành công! Nhận ngay 50 EXP quà tân thủ!', user: newUser };
+    return { success: true, message: 'Đăng ký tài khoản thành công! Thông tin đã được lưu vào cơ sở dữ liệu.', user: newUser };
   }
 
-  // 5. Login
-  static login(usernameOrEmail: string): { success: boolean; message: string; user?: UserProfile } {
+  // 5. Login with credentials verification against database
+  static login(usernameOrEmail: string, password: string): { success: boolean; message: string; user?: UserProfile } {
     const clean = usernameOrEmail.trim().toLowerCase();
     if (!clean) return { success: false, message: 'Vui lòng nhập tên tài khoản hoặc email!' };
+    if (!password) return { success: false, message: 'Vui lòng nhập mật khẩu tài khoản!' };
 
     const all = this.getAllUsers();
-    const found = all.find(u => u.username.toLowerCase() === clean || u.email.toLowerCase() === clean);
+    const found = all.find(u => u.username.toLowerCase() === clean || (u.email && u.email.toLowerCase() === clean));
 
-    if (found) {
-      this.saveCurrentUser(found);
-      return { success: true, message: `Chào mừng đạo hữu ${found.displayName} trở lại!`, user: found };
+    if (!found) {
+      return { success: false, message: 'Tài khoản không tồn tại trong cơ sở dữ liệu. Vui lòng kiểm tra lại hoặc đăng ký mới!' };
     }
 
-    return { success: false, message: 'Tài khoản không tồn tại. Hãy đăng ký tài khoản mới!' };
+    // Xác nhận mật khẩu có đúng không
+    if (found.password && found.password !== password) {
+      return { success: false, message: 'Mật khẩu không chính xác! Vui lòng kiểm tra lại.' };
+    }
+
+    // Cập nhật mật khẩu nếu tài khoản cũ chưa có
+    if (!found.password) {
+      found.password = password;
+    }
+
+    this.saveCurrentUser(found);
+    return { success: true, message: `Xác thực thành công! Chào mừng đạo hữu ${found.displayName} trở lại.`, user: found };
   }
 
   // 6. Guest 1-click quick login (NetTruyen style)
