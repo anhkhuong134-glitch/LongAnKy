@@ -123,3 +123,69 @@ body {
   border: 1px solid rgba(239, 68, 68, 0.35);
   color: #f87171;
 }
+
+/* ================= DREAMY, POETIC & CHIBI ANIMATIONS ================= */
+@keyframes floatGentle {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-7px) rotate(1.2deg);
+  }
+}
+
+@keyframes chibiWingFlap {
+  0%, 100% {
+    transform: rotate(0deg) scale(1);
+  }
+  50% {
+    transform: rotate(-10deg) scale(1.08);
+  }
+}
+
+@keyframes starlightTwinkle {
+  0%, 100% {
+    opacity: 0.35;
+    transform: scale(0.9);
+  }
+  50% {
+    opacity: 0.95;
+    transform: scale(1.15);
+  }
+}
+
+@keyframes auroraBreathe {
+  0%, 100% {
+    filter: hue-rotate(0deg) brightness(1);
+  }
+  50% {
+    filter: hue-rotate(25deg) brightness(1.08);
+  }
+}
+
+.animate-float-gentle {
+  animation: floatGentle 3.6s ease-in-out infinite;
+}
+
+.animate-chibi-wing {
+  animation: chibiWingFlap 1.8s ease-in-out infinite;
+  transform-origin: bottom center;
+}
+
+.animate-starlight {
+  animation: starlightTwinkle 3s ease-in-out infinite;
+}
+
+.animate-aurora {
+  animation: auroraBreathe 8s ease-in-out infinite;
+}
+
+/* Dreamy Poetic Glow */
+.dreamy-glow {
+  box-shadow: 0 0 35px rgba(168, 85, 247, 0.15), 0 0 15px rgba(244, 114, 182, 0.1);
+}
+
+.dreamy-text-glow {
+  text-shadow: 0 0 18px rgba(251, 191, 36, 0.35);
+}
+

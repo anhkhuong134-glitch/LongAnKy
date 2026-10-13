@@ -14,7 +14,7 @@ interface WritingPrinciplesModalProps {
   onClose: () => void;
 }
 
-const PRINCIPLES_TEXT = `# NGUYÊN TẮC VIẾT TIỂU THUYẾT: LONG ẤN KÝ (MẠCH ENGINE)
+const PRINCIPLES_TEXT = `# NGUYÊN TẮC VIẾT TIỂU THUYẾT: LONG ẤN THỨC TỈNH (MẠCH ENGINE)
 
 I. TRIẾT LÝ VÀ CHỦ ĐỀ TRUNG TÂM
 1. Thứ đáng sợ hơn cái chết:
@@ -103,7 +103,7 @@ export const WritingPrinciplesModal: React.FC<WritingPrinciplesModalProps> = ({ 
             </div>
             <div>
               <h3 className="font-serif font-bold text-base text-slate-100 flex items-center gap-2">
-                Nguyên Tắc Viết Tiểu Thuyết (Long Ấn Ký)
+                Nguyên Tắc Viết Tiểu Thuyết (Long Ấn Thức Tỉnh)
                 <span className="text-xs px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 font-sans">
                   AI Context Active
                 </span>

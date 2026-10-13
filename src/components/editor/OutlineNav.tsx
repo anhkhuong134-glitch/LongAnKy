@@ -46,8 +46,8 @@ export const OutlineNav: React.FC<OutlineNavProps> = ({
 }) => {
   // Mặc định mở rộng tất cả các phần Google Docs
   const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({
-    part_mua_nuoc_dung: true,
-    part_aesvorn_arc: true
+    part_prologue: true,
+    part_mua_nuoc_dung: true
   });
 
   const [showPrinciplesModal, setShowPrinciplesModal] = useState(false);
@@ -66,6 +66,14 @@ export const OutlineNav: React.FC<OutlineNavProps> = ({
 
   const getSectionTheme = (title: string, partId: string) => {
     const t = title.toLowerCase();
+    if (t.includes('mở đầu') || partId.includes('prologue')) {
+      return {
+        icon: '📜',
+        badge: 'MỞ ĐẦU',
+        color: 'from-amber-500/20 to-orange-500/10 border-amber-500/30 text-amber-300',
+        activeGlow: 'shadow-[0_0_20px_rgba(245,158,11,0.15)]'
+      };
+    }
     if (t.includes('mùa nước đứng') || partId.includes('mua_nuoc_dung') || t.includes('phần i')) {
       return {
         icon: '🌊',
@@ -80,14 +88,6 @@ export const OutlineNav: React.FC<OutlineNavProps> = ({
         badge: 'BẢN CŨ AESVORN',
         color: 'from-purple-500/20 to-indigo-600/10 border-purple-500/30 text-purple-300',
         activeGlow: 'shadow-[0_0_20px_rgba(168,85,247,0.15)]'
-      };
-    }
-    if (t.includes('mở đầu') || partId.includes('prologue')) {
-      return {
-        icon: '📜',
-        badge: 'MỞ ĐẦU',
-        color: 'from-amber-500/20 to-orange-500/10 border-amber-500/30 text-amber-300',
-        activeGlow: 'shadow-[0_0_20px_rgba(245,158,11,0.15)]'
       };
     }
     return {

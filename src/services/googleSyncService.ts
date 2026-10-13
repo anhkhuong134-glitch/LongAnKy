@@ -34,7 +34,7 @@ export class GoogleSyncService {
       docId: '1KAF0QBoZNjey7jQGP4ogHx4qu0M8HPfymSiSnITr61Y',
       lastSyncedAt: new Date().toLocaleTimeString('vi-VN'),
       status: 'synced',
-      liveDocTitle: 'Long Ấn Ký (Bản thảo chính thức)',
+      liveDocTitle: 'Long Ấn Thức Tỉnh (Bản thảo chính thức)',
       autoSync: false,
       stagedChangesCount: 0,
       syncLogs: [

@@ -37,8 +37,126 @@ interface UnifiedReaderViewProps {
 }
 
 type ReaderType = 'novel' | 'comic';
-type NovelTheme = 'dark' | 'sepia' | 'candle' | 'paper';
 type PageLayoutMode = 'scroll' | 'paginated';
+
+// Chibi quotes from Bé Long Long
+const CHIBI_QUOTES = [
+  "Oa~ Cậu đọc chăm chỉ ghê nha! Bé Long Long cổ vũ nè! ✨🐉",
+  "Chương này bến Arumo gió lộng, đọc hồi hộp mê ly luôn á~ (๑>ᴗ<๑)",
+  "Đọc mỏi mắt thì chớp mắt vài cái rồi hớp miếng trà ấm nhé! 🍵💖",
+  "Thức Tỉnh Long Ấn rồi... sức mạnh rồng sắp bùng nổ! ⭐",
+  "Bé Long Long đang ôm ngọc rồng ngồi canh cho cậu đọc nè! (｡♥‿♥｡)",
+  "Tác giả cập nhật chương mới là Bé Long Long báo liền nha! 📜✨"
+];
+
+// Adorable Chibi Dragon SVG Mascot
+const ChibiDragonAvatar: React.FC<{ isBouncing?: boolean }> = ({ isBouncing }) => (
+  <svg
+    viewBox="0 0 120 120"
+    className={`w-16 h-16 sm:w-20 sm:h-20 drop-shadow-[0_10px_25px_rgba(244,114,182,0.45)] transition-transform duration-300 ${
+      isBouncing ? 'scale-110 -rotate-3' : 'animate-float-gentle'
+    }`}
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    {/* Cute dragon tail with fluff */}
+    <path
+      d="M30 85 C15 90, 8 80, 10 72 C12 65, 20 70, 26 76"
+      stroke="#c084fc"
+      strokeWidth="6"
+      strokeLinecap="round"
+      fill="none"
+    />
+    <circle cx="9" cy="71" r="5" fill="#f472b6" />
+
+    {/* Little Wings (flapping) */}
+    <g className="animate-chibi-wing origin-bottom">
+      <path
+        d="M26 50 C12 42, 10 28, 22 30 C28 32, 34 42, 32 52 Z"
+        fill="url(#chibiWingGradient)"
+        opacity="0.9"
+      />
+    </g>
+    <g className="animate-chibi-wing origin-bottom" style={{ animationDelay: '0.1s' }}>
+      <path
+        d="M94 50 C108 42, 110 28, 98 30 C92 32, 86 42, 88 52 Z"
+        fill="url(#chibiWingGradient)"
+        opacity="0.9"
+      />
+    </g>
+
+    {/* Baby Dragon Body */}
+    <ellipse cx="60" cy="74" rx="26" ry="24" fill="url(#chibiBodyGradient)" />
+
+    {/* Chubby Dragon Head */}
+    <ellipse cx="60" cy="46" rx="30" ry="26" fill="url(#chibiBodyGradient)" />
+
+    {/* Soft belly with gentle scales */}
+    <ellipse cx="60" cy="76" rx="16" ry="17" fill="url(#chibiBellyGradient)" />
+    <path d="M54 70 Q60 73 66 70" stroke="#fcd34d" strokeWidth="2" strokeLinecap="round" fill="none" opacity="0.7" />
+    <path d="M52 77 Q60 80 68 77" stroke="#fcd34d" strokeWidth="2" strokeLinecap="round" fill="none" opacity="0.7" />
+    <path d="M55 84 Q60 87 65 84" stroke="#fcd34d" strokeWidth="2" strokeLinecap="round" fill="none" opacity="0.7" />
+
+    {/* Tiny golden dragon horns */}
+    <path d="M42 26 C40 16, 47 12, 50 18 C51 22, 47 26, 45 28 Z" fill="url(#chibiGoldHornGradient)" />
+    <path d="M78 26 C80 16, 73 12, 70 18 C69 22, 73 26, 75 28 Z" fill="url(#chibiGoldHornGradient)" />
+
+    {/* Cute dragon ears */}
+    <ellipse cx="32" cy="42" rx="6" ry="9" transform="rotate(-25 32 42)" fill="#a855f7" />
+    <ellipse cx="33" cy="42" rx="3" ry="6" transform="rotate(-25 33 42)" fill="#f472b6" />
+    <ellipse cx="88" cy="42" rx="6" ry="9" transform="rotate(25 88 42)" fill="#a855f7" />
+    <ellipse cx="87" cy="42" rx="3" ry="6" transform="rotate(25 87 42)" fill="#f472b6" />
+
+    {/* Big Anime Eyes */}
+    <ellipse cx="48" cy="44" rx="7.5" ry="9.5" fill="#1e1b4b" />
+    <ellipse cx="72" cy="44" rx="7.5" ry="9.5" fill="#1e1b4b" />
+    {/* Sparkling highlights */}
+    <circle cx="46" cy="41" r="3.2" fill="#ffffff" />
+    <circle cx="50" cy="47" r="1.4" fill="#a5f3fc" />
+    <circle cx="70" cy="41" r="3.2" fill="#ffffff" />
+    <circle cx="74" cy="47" r="1.4" fill="#a5f3fc" />
+
+    {/* Rosy blushing cheeks */}
+    <ellipse cx="40" cy="53" rx="5" ry="3" fill="#f43f5e" opacity="0.55" />
+    <ellipse cx="80" cy="53" rx="5" ry="3" fill="#f43f5e" opacity="0.55" />
+
+    {/* Cute smile */}
+    <path d="M56 51 Q60 55 64 51" stroke="#312e81" strokeWidth="2" strokeLinecap="round" fill="none" />
+
+    {/* Little dragon paws holding a glowing mini seal gem */}
+    <circle cx="48" cy="74" r="5" fill="#c084fc" />
+    <circle cx="72" cy="74" r="5" fill="#c084fc" />
+    {/* Glowing Long Ấn Gem */}
+    <circle cx="60" cy="75" r="7" fill="url(#chibiGemGradient)" className="animate-pulse" />
+    <path d="M57 75 L60 72 L63 75 L60 78 Z" fill="#ffffff" opacity="0.85" />
+
+    {/* Gradients */}
+    <defs>
+      <linearGradient id="chibiBodyGradient" x1="30" y1="20" x2="90" y2="90" gradientUnits="userSpaceOnUse">
+        <stop stopColor="#c084fc" />
+        <stop offset="0.6" stopColor="#a855f7" />
+        <stop offset="1" stopColor="#7c3aed" />
+      </linearGradient>
+      <linearGradient id="chibiWingGradient" x1="0" y1="0" x2="30" y2="30" gradientUnits="userSpaceOnUse">
+        <stop stopColor="#38bdf8" />
+        <stop offset="1" stopColor="#ec4899" />
+      </linearGradient>
+      <linearGradient id="chibiBellyGradient" x1="60" y1="60" x2="60" y2="95" gradientUnits="userSpaceOnUse">
+        <stop stopColor="#fef08a" />
+        <stop offset="1" stopColor="#fde047" />
+      </linearGradient>
+      <linearGradient id="chibiGoldHornGradient" x1="0" y1="0" x2="1" y2="1">
+        <stop stopColor="#fde047" />
+        <stop offset="1" stopColor="#f59e0b" />
+      </linearGradient>
+      <radialGradient id="chibiGemGradient" cx="40%" cy="40%" r="60%">
+        <stop stopColor="#fed7aa" />
+        <stop offset="0.5" stopColor="#f59e0b" />
+        <stop offset="1" stopColor="#d97706" />
+      </radialGradient>
+    </defs>
+  </svg>
+);
 
 export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
   project,
@@ -53,11 +171,22 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
 }) => {
   // Mode selection: Novel (Truyện chữ - Đang sáng tác) vs Comic (Truyện tranh - Sắp ra mắt)
   const [readerType, setReaderType] = useState<ReaderType>('novel');
+  const [authorPreviewComic, setAuthorPreviewComic] = useState<boolean>(false);
   
   // Novel reader states
   const [selectedPartId, setSelectedPartId] = useState<string>(parts[0]?.id || '');
   const [activeChapterIndex, setActiveChapterIndex] = useState<number>(0);
-  const [novelTheme, setNovelTheme] = useState<NovelTheme>(isWarmTheme ? 'sepia' : 'dark');
+  
+  // Chibi Mascot State
+  const [chibiQuoteIndex, setChibiQuoteIndex] = useState<number>(0);
+  const [isChibiMinimized, setIsChibiMinimized] = useState<boolean>(false);
+  const [isChibiBouncing, setIsChibiBouncing] = useState<boolean>(false);
+
+  const handlePokeChibi = () => {
+    setIsChibiBouncing(true);
+    setChibiQuoteIndex(prev => (prev + 1) % CHIBI_QUOTES.length);
+    setTimeout(() => setIsChibiBouncing(false), 500);
+  };
   const [pageLayout, setPageLayout] = useState<PageLayoutMode>('scroll');
   const [fontSize, setFontSize] = useState<number>(18);
   const [fontFamily, setFontFamily] = useState<'serif' | 'sans' | 'mono'>('serif');
@@ -106,14 +235,14 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
 
   const getSectionTheme = (title: string, partId: string) => {
     const t = title.toLowerCase();
+    if (t.includes('mở đầu') || partId.includes('prologue')) {
+      return { icon: '📜', badge: 'MỞ ĐẦU' };
+    }
     if (t.includes('mùa nước đứng') || partId.includes('mua_nuoc_dung') || t.includes('phần i')) {
       return { icon: '🌊', badge: 'MÙA NƯỚC ĐỨNG' };
     }
     if (t.includes('bản cũ') || t.includes('aesvorn') || partId.includes('aesvorn') || t.includes('phần ii')) {
       return { icon: '🏛️', badge: 'BẢN CŨ AESVORN' };
-    }
-    if (t.includes('mở đầu') || partId.includes('prologue')) {
-      return { icon: '📜', badge: 'MỞ ĐẦU' };
     }
     return { icon: '📁', badge: 'PHẦN TRUYỆN' };
   };
@@ -311,41 +440,15 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
     }
   };
 
-  // Theme palettes
+  // Single locked Dreamy & Poetic Theme ("Dạ Nguyệt Mộng Cảnh")
   const novelThemeClasses = {
-    dark: {
-      bg: 'bg-[#080c14]',
-      container: 'bg-[#0d1322] border-slate-800/80',
-      text: 'text-slate-100',
-      prose: 'text-slate-200 selection:bg-amber-500/30 selection:text-amber-100',
-      meta: 'text-slate-400',
-      toolbar: 'bg-slate-950/80 border-slate-800/80 text-slate-200'
-    },
-    sepia: {
-      bg: 'bg-[#f4ede2]',
-      container: 'bg-[#faf6f0] border-amber-900/15 shadow-sm',
-      text: 'text-stone-900',
-      prose: 'text-stone-850 selection:bg-amber-300 selection:text-stone-950',
-      meta: 'text-amber-800/80',
-      toolbar: 'bg-[#eadecc]/90 border-amber-900/15 text-stone-900'
-    },
-    candle: {
-      bg: 'bg-[#181109]',
-      container: 'bg-[#22180e] border-amber-800/30',
-      text: 'text-amber-100',
-      prose: 'text-amber-50/90 selection:bg-amber-600/40 selection:text-amber-50',
-      meta: 'text-amber-400/70',
-      toolbar: 'bg-[#150e07]/90 border-amber-900/40 text-amber-200'
-    },
-    paper: {
-      bg: 'bg-[#f8fafc]',
-      container: 'bg-white border-slate-200 shadow-sm',
-      text: 'text-gray-900',
-      prose: 'text-gray-900 selection:bg-sky-200 selection:text-sky-950',
-      meta: 'text-gray-500',
-      toolbar: 'bg-gray-100/90 border-gray-200 text-gray-800'
-    }
-  }[novelTheme];
+    bg: 'bg-[#060a14] relative text-slate-100',
+    container: 'bg-[#0b1022]/85 border-indigo-500/25 shadow-[0_15px_50px_rgba(0,0,0,0.6)] backdrop-blur-xl',
+    text: 'text-slate-100',
+    prose: 'text-slate-200 selection:bg-pink-500/30 selection:text-pink-100',
+    meta: 'text-slate-400',
+    toolbar: 'bg-slate-950/85 border-indigo-500/20 text-slate-200 backdrop-blur-2xl'
+  };
 
   return (
     <div className={`flex-1 flex flex-col h-full overflow-hidden transition-colors duration-200 ${novelThemeClasses.bg}`}>
@@ -397,7 +500,9 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
 
           <span className="hidden md:inline text-xs opacity-50">•</span>
           <span className="hidden md:inline text-xs font-medium opacity-80 truncate max-w-xs font-serif">
-            {readerType === 'novel' ? currentChapter?.title : activeComic.title}
+            {readerType === 'novel' 
+              ? currentChapter?.title 
+              : (authorPreviewComic ? activeComic.title : 'Dự Án Webtoon (Sắp ra mắt)')}
           </span>
         </div>
 
@@ -452,26 +557,41 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
           </div>
         ) : (
           <div className="flex items-center space-x-2">
-            {/* Webtoon vs Manga Mode */}
-            <div className="flex items-center bg-black/15 p-1 rounded-xl border border-white/10 text-xs">
-              <button
-                onClick={() => setComicMode('webtoon')}
-                className={`px-2.5 py-1 rounded-lg ${comicMode === 'webtoon' ? 'bg-rose-500/20 text-rose-300 font-bold' : 'opacity-70'}`}
-              >
-                Cuộn Dọc Webtoon
-              </button>
-              <button
-                onClick={() => setComicMode('manga_pages')}
-                className={`px-2.5 py-1 rounded-lg ${comicMode === 'manga_pages' ? 'bg-rose-500/20 text-rose-300 font-bold' : 'opacity-70'}`}
-              >
-                Lật Trang Manga
-              </button>
-            </div>
+            {authorPreviewComic ? (
+              <>
+                {/* Webtoon vs Manga Mode (Chỉ hiện khi tác giả bật xem thử) */}
+                <div className="flex items-center bg-black/15 p-1 rounded-xl border border-white/10 text-xs">
+                  <button
+                    onClick={() => setComicMode('webtoon')}
+                    className={`px-2.5 py-1 rounded-lg ${comicMode === 'webtoon' ? 'bg-rose-500/20 text-rose-300 font-bold' : 'opacity-70'}`}
+                  >
+                    Cuộn Dọc Webtoon
+                  </button>
+                  <button
+                    onClick={() => setComicMode('manga_pages')}
+                    className={`px-2.5 py-1 rounded-lg ${comicMode === 'manga_pages' ? 'bg-rose-500/20 text-rose-300 font-bold' : 'opacity-70'}`}
+                  >
+                    Lật Trang Manga
+                  </button>
+                </div>
 
-            {isAuthorMode && (
+                <button
+                  onClick={() => setAuthorPreviewComic(false)}
+                  className="px-2.5 py-1 rounded-lg text-xs bg-white/10 hover:bg-white/15 text-slate-300 transition-colors"
+                >
+                  ✕ Đóng xem trước
+                </button>
+              </>
+            ) : (
+              <span className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-rose-500/15 text-rose-300 border border-rose-500/30 font-mono">
+                ⏳ Đang Chuẩn Bị Sản Xuất
+              </span>
+            )}
+
+            {isAuthorMode && !authorPreviewComic && (
               <button
                 onClick={() => setShowPanelCreator(true)}
-                className="flex items-center space-x-1 px-2.5 py-1.5 rounded-xl text-xs bg-rose-500/20 text-rose-300 border border-rose-500/30"
+                className="flex items-center space-x-1 px-2.5 py-1.5 rounded-xl text-xs bg-rose-500/20 text-rose-300 border border-rose-500/30 hover:bg-rose-500/30 transition-colors"
                 title="Dành cho tác giả: Tạo hồi truyện tranh mới"
               >
                 <Sparkles className="w-3.5 h-3.5" />
@@ -481,42 +601,24 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
           </div>
         )}
 
-        {/* Right: Theme & Typography Settings */}
+        {/* Right: Typography Settings */}
         <div className="flex items-center space-x-2 text-xs">
           {readerType === 'novel' && (
             <>
-              {/* Theme Selector */}
-              <div className="flex items-center space-x-1 bg-black/15 p-1 rounded-xl border border-white/10">
-                {(['dark', 'sepia', 'candle', 'paper'] as NovelTheme[]).map(t => (
-                  <button
-                    key={t}
-                    onClick={() => setNovelTheme(t)}
-                    className={`w-6 h-6 rounded-md flex items-center justify-center text-[10px] uppercase font-bold transition-transform ${
-                      novelTheme === t ? 'ring-2 ring-amber-400 scale-105' : 'opacity-60'
-                    }`}
-                    style={{
-                      background: t === 'dark' ? '#080c14' : t === 'sepia' ? '#f4ede2' : t === 'candle' ? '#22180e' : '#ffffff',
-                      color: t === 'paper' || t === 'sepia' ? '#000' : '#fff'
-                    }}
-                    title={`Chế độ ${t}`}
-                  >
-                    {t[0]}
-                  </button>
-                ))}
-              </div>
-
               {/* Font Size Adjuster */}
-              <div className="flex items-center space-x-1 bg-black/15 px-2 py-1 rounded-xl border border-white/10">
+              <div className="flex items-center space-x-1 bg-black/25 px-2 py-1 rounded-xl border border-white/10 shadow-sm">
                 <button
                   onClick={() => setFontSize(prev => Math.max(14, prev - 1))}
-                  className="px-1 hover:text-amber-400 font-bold"
+                  className="px-1.5 hover:text-amber-400 font-bold text-slate-300 transition-colors cursor-pointer"
+                  title="Giảm kích cỡ chữ"
                 >
                   A-
                 </button>
-                <span className="font-mono text-[11px] opacity-70 w-5 text-center">{fontSize}</span>
+                <span className="font-mono text-[11px] opacity-80 w-5 text-center text-amber-300">{fontSize}</span>
                 <button
                   onClick={() => setFontSize(prev => Math.min(26, prev + 1))}
-                  className="px-1 hover:text-amber-400 font-bold"
+                  className="px-1.5 hover:text-amber-400 font-bold text-slate-300 transition-colors cursor-pointer"
+                  title="Tăng kích cỡ chữ"
                 >
                   A+
                 </button>
@@ -552,36 +654,33 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
           <aside
             className={`w-80 sm:w-88 lg:w-96 flex-shrink-0 flex flex-col border-r select-none h-full transition-all duration-300 z-30 ${
               isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:hidden'
-            } ${
-              novelTheme === 'dark' || novelTheme === 'candle'
-                ? 'bg-slate-950/90 border-slate-800/80 text-slate-200 backdrop-blur-2xl'
-                : 'bg-parchment-100/95 border-amber-900/15 text-stone-900 backdrop-blur-xl'
-            } absolute lg:relative inset-y-0 left-0 shadow-2xl lg:shadow-none`}
+            } bg-[#080d1e]/90 border-r border-indigo-500/20 text-slate-200 backdrop-blur-2xl absolute lg:relative inset-y-0 left-0 shadow-2xl lg:shadow-none`}
           >
             {/* 1. Header Card with Word Count Badge */}
-            <div className="p-3.5 border-b border-white/5 space-y-2.5">
+            <div className="p-3.5 border-b border-indigo-500/15 space-y-2.5">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-2">
-                  <div className="w-7 h-7 rounded-lg bg-amber-500/20 border border-amber-500/30 flex items-center justify-center text-amber-400">
-                    <Layers className="w-4 h-4" />
+                  <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-amber-500/20 via-pink-500/20 to-purple-500/20 border border-pink-400/30 flex items-center justify-center text-amber-300 shadow-sm animate-float-gentle">
+                    <span className="text-base">🐉</span>
                   </div>
                   <div>
                     <h3 className="font-serif font-bold text-sm tracking-tight text-slate-100 flex items-center gap-1.5">
-                      Cấu Trúc Tác Phẩm
+                      <span>Cấu Trúc Tác Phẩm</span>
+                      <span className="text-pink-400 text-xs">✨</span>
                     </h3>
-                    <p className="text-[10px] text-slate-400">Đồng bộ từ Google Docs</p>
+                    <p className="text-[10px] text-pink-300/70">Đồng bộ từ Google Docs</p>
                   </div>
                 </div>
 
                 <div className="text-right">
-                  <span className="text-xs font-mono font-bold text-amber-400 px-2 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/20 shadow-sm">
+                  <span className="text-xs font-mono font-bold text-amber-300 px-2 py-0.5 rounded-full bg-gradient-to-r from-amber-500/15 to-pink-500/15 border border-amber-500/30 shadow-sm">
                     {totalNovelWords.toLocaleString()} từ
                   </span>
                 </div>
               </div>
 
               {/* 2. Google Docs Live Sync Card */}
-              <div className="p-2.5 rounded-xl bg-gradient-to-br from-emerald-950/40 via-sky-950/30 to-slate-900/40 border border-emerald-500/30 space-y-2 shadow-sm">
+              <div className="p-2.5 rounded-xl bg-gradient-to-br from-emerald-950/40 via-sky-950/30 to-slate-900/50 border border-emerald-500/30 space-y-2 shadow-sm">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-1.5">
                     <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
@@ -617,9 +716,31 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
                   </span>
                 </div>
               </div>
+
+              {/* 3. Cute Chibi Mascot Card in Sidebar */}
+              <div 
+                onClick={handlePokeChibi}
+                className="p-2 rounded-xl bg-gradient-to-r from-purple-950/40 via-pink-950/30 to-indigo-950/40 border border-pink-400/25 flex items-center gap-2.5 cursor-pointer hover:border-pink-400/50 transition-all group"
+                title="Bé Long Long đang đồng hành đọc truyện cùng bạn!"
+              >
+                <div className="w-7 h-7 rounded-lg bg-pink-500/20 border border-pink-400/30 flex items-center justify-center text-sm group-hover:scale-110 transition-transform">
+                  🐉
+                </div>
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[11px] font-bold text-pink-200 flex items-center gap-1 font-serif">
+                      Bé Long Long <span className="text-amber-300 text-[10px]">✨</span>
+                    </span>
+                    <span className="text-[9px] text-pink-300/80 italic">Đang đọc</span>
+                  </div>
+                  <p className="text-[10px] text-pink-100/80 truncate">
+                    {CHIBI_QUOTES[chibiQuoteIndex]}
+                  </p>
+                </div>
+              </div>
             </div>
 
-            {/* 3. Main Sections Tree (Mở đầu / Phần 1 / Phần 2 / Các chương) */}
+            {/* 4. Main Sections Tree (Mở đầu / Phần 1 / Phần 2 / Các chương) */}
             <div className="flex-1 overflow-y-auto custom-scrollbar p-3 space-y-2.5">
               {parts.map((part, pIdx) => {
                 const isExpanded = expandedSections[part.id] !== false;
@@ -630,7 +751,7 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
                     key={part.id}
                     className={`rounded-2xl border transition-all duration-200 overflow-hidden ${
                       isExpanded 
-                        ? 'bg-slate-900/60 border-slate-700/60 shadow-lg shadow-black/20' 
+                        ? 'bg-slate-900/60 border-indigo-500/30 shadow-lg shadow-black/20' 
                         : 'bg-slate-900/20 border-white/5 hover:border-white/15'
                     }`}
                   >
@@ -688,13 +809,13 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
                                 }}
                                 className={`group p-2.5 rounded-xl cursor-pointer transition-all flex items-center justify-between border ${
                                   isActive
-                                    ? 'bg-gradient-to-r from-amber-500/20 via-amber-500/10 to-transparent border-amber-500/40 text-amber-100 shadow-md shadow-amber-500/10'
+                                    ? 'bg-gradient-to-r from-amber-500/20 via-pink-500/10 to-transparent border-amber-500/40 text-amber-100 shadow-md shadow-amber-500/10'
                                     : 'bg-slate-900/40 border-transparent hover:bg-white/5 text-slate-300 hover:border-white/10'
                                 }`}
                               >
                                 <div className="flex items-center space-x-2.5 min-w-0 flex-1">
-                                  <div className={`w-2 h-2 rounded-full flex-shrink-0 transition-all ${
-                                    isActive ? 'bg-amber-400 ring-4 ring-amber-500/20' : 'bg-slate-600 group-hover:bg-slate-400'
+                                  <div className={`w-2.5 h-2.5 rounded-full flex-shrink-0 transition-all ${
+                                    isActive ? 'bg-amber-400 ring-4 ring-amber-500/30 shadow-[0_0_8px_rgba(251,191,36,0.8)]' : 'bg-slate-600 group-hover:bg-slate-400'
                                   }`} />
 
                                   <div className="min-w-0 flex-1">
@@ -733,49 +854,61 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
             ref={scrollContainerRef} 
             className="flex-1 h-full overflow-y-auto custom-scrollbar relative px-4 sm:px-8 lg:px-12 py-8 transition-all duration-300"
           >
-            <div className="max-w-3xl mx-auto">
-              {/* Breadcrumbs & Chapter Header (Clean Novel Style matching Hình 4) */}
-              <div className="mb-8 pb-4 border-b border-black/10 dark:border-white/10">
-                <nav className="flex items-center space-x-2 text-xs text-amber-500/80 mb-2 font-serif overflow-x-auto whitespace-nowrap">
-                  <span onClick={() => goToChapterByGlobalIndex(0)} className="hover:text-amber-400 cursor-pointer opacity-70">
-                    {project.title}
+            {/* Ambient Dreamy Floating Stardust */}
+            <div className="pointer-events-none absolute inset-0 overflow-hidden z-0">
+              <div className="absolute top-12 left-1/4 text-amber-300/30 animate-starlight text-lg">✦</div>
+              <div className="absolute top-1/3 right-16 text-pink-300/30 animate-starlight text-sm" style={{ animationDelay: '1.2s' }}>✧</div>
+              <div className="absolute top-2/3 left-16 text-indigo-300/30 animate-starlight text-base" style={{ animationDelay: '2.4s' }}>⋆</div>
+              <div className="absolute bottom-24 right-1/3 text-amber-200/30 animate-starlight text-xs" style={{ animationDelay: '0.8s' }}>✨</div>
+              <div className="absolute top-1/2 left-3/4 text-pink-300/25 animate-starlight text-xs" style={{ animationDelay: '1.9s' }}>🌸</div>
+            </div>
+
+            <div className="max-w-3xl mx-auto relative z-10">
+              {/* Breadcrumbs & Chapter Header (Dreamy & Poetic Style) */}
+              <div className="mb-8 pb-5 border-b border-indigo-500/20">
+                <nav className="flex items-center space-x-2 text-xs text-amber-300/80 mb-3 font-serif overflow-x-auto whitespace-nowrap">
+                  <span onClick={() => goToChapterByGlobalIndex(0)} className="hover:text-pink-300 cursor-pointer opacity-75 transition-colors">
+                    Long Ấn Thức Tỉnh
                   </span>
                   <span>›</span>
-                  <span className="opacity-80">{activePart?.title}</span>
+                  <span className="opacity-80 text-pink-200">{activePart?.title}</span>
                   <span>›</span>
-                  <span className="text-amber-400 font-semibold">{currentChapter?.title}</span>
+                  <span className="text-amber-300 font-semibold">{currentChapter?.title}</span>
                 </nav>
 
-                <div className="text-xs font-bold uppercase tracking-widest text-amber-400/90 font-serif mb-2">
-                  {activePart?.title}
+                <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-amber-300/90 font-serif mb-2">
+                  <span className="text-pink-400">✨</span>
+                  <span>LONG ẤN THỨC TỈNH • {activePart?.title}</span>
+                  <span className="text-pink-400">🌸</span>
                 </div>
 
-                <h1 className={`text-2xl sm:text-4xl font-bold font-serif tracking-tight leading-tight mb-3 ${novelThemeClasses.text}`}>
+                <h1 className="text-2xl sm:text-4xl md:text-5xl font-bold font-serif tracking-tight leading-tight mb-4 bg-gradient-to-r from-amber-200 via-rose-100 to-amber-300 bg-clip-text text-transparent drop-shadow-[0_2px_15px_rgba(245,158,11,0.25)]">
                   {currentChapter?.title || 'Chương Chưa Đặt Tên'}
                 </h1>
 
-                <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs opacity-75 font-mono text-slate-400">
-                  <span>{totalWords.toLocaleString()} từ</span>
-                  <span>•</span>
-                  <span>Thời gian đọc: ~{estimatedReadTime} phút</span>
+                <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-xs font-mono text-slate-300">
+                  <span className="px-2.5 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/25 text-amber-300">
+                    ⭐ {totalWords.toLocaleString()} chữ
+                  </span>
+                  <span className="px-2.5 py-0.5 rounded-full bg-pink-500/10 border border-pink-500/25 text-pink-300">
+                    ⏱️ ~{estimatedReadTime} phút đọc
+                  </span>
                   {currentChapter?.povCharacterName && (
-                    <>
-                      <span>•</span>
-                      <span>POV: {currentChapter.povCharacterName}</span>
-                    </>
+                    <span className="px-2.5 py-0.5 rounded-full bg-purple-500/10 border border-purple-500/25 text-purple-200">
+                      🌸 POV: {currentChapter.povCharacterName}
+                    </span>
                   )}
                   {currentChapter?.location && (
-                    <>
-                      <span>•</span>
-                      <span>{currentChapter.location}</span>
-                    </>
+                    <span className="px-2.5 py-0.5 rounded-full bg-sky-500/10 border border-sky-500/25 text-sky-200">
+                      🌊 {currentChapter.location}
+                    </span>
                   )}
                 </div>
               </div>
 
-              {/* Prose Article (Nội dung truyện chữ) */}
+              {/* Prose Article (Nội dung truyện chữ thơ mộng) */}
               <article 
-                className={`font-serif prose prose-lg max-w-none text-justify px-2 sm:px-4 py-4 rounded-2xl ${novelThemeClasses.container} ${novelThemeClasses.prose} shadow-sm`}
+                className={`font-serif prose prose-lg max-w-none text-justify px-4 sm:px-8 py-6 rounded-3xl ${novelThemeClasses.container} ${novelThemeClasses.prose}`}
                 style={{
                   fontSize: `${fontSize}px`,
                   lineHeight: lineHeight,
@@ -786,39 +919,39 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
                   currentChapter.content.split('\n\n').map((paragraph, pIdx) => {
                     if (paragraph.startsWith('“') || paragraph.startsWith('﻿“')) {
                       return (
-                        <p key={pIdx} className="italic text-amber-400 font-medium pl-4 border-l-2 border-amber-500/50 my-6">
+                        <p key={pIdx} className="italic text-amber-200 font-medium pl-5 pr-4 py-3.5 border-l-2 border-amber-400/80 bg-gradient-to-r from-amber-500/10 via-pink-500/5 to-transparent rounded-r-2xl my-6 shadow-sm">
                           {paragraph}
                         </p>
                       );
                     }
                     if (paragraph.startsWith('—')) {
                       return (
-                        <p key={pIdx} className="font-sans pl-2 my-3 text-slate-100 font-medium">
+                        <p key={pIdx} className="font-sans pl-2 my-4 text-slate-100 font-medium tracking-wide">
                           {paragraph}
                         </p>
                       );
                     }
                     return (
-                      <p key={pIdx} className="indent-8 my-4 leading-relaxed">
+                      <p key={pIdx} className="indent-8 my-5 leading-relaxed text-slate-200/95">
                         {paragraph}
                       </p>
                     );
                   })
                 ) : (
-                  <div className="text-center py-20 opacity-50">Chưa có nội dung trong chương này.</div>
+                  <div className="text-center py-20 opacity-50 font-serif">Chưa có nội dung trong chương này.</div>
                 )}
               </article>
 
-              {/* Clean Novel Navigation Footer (Previous Chapter / Next Chapter) */}
-              <div className="mt-14 pt-8 border-t border-black/10 dark:border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
+              {/* Clean Novel Navigation Footer */}
+              <div className="mt-14 pt-8 border-t border-indigo-500/20 flex flex-col sm:flex-row items-center justify-between gap-4">
                 <button
                   disabled={currentGlobalIndex <= 0}
                   onClick={() => goToChapterByGlobalIndex(currentGlobalIndex - 1)}
-                  className="w-full sm:w-auto px-5 py-3 rounded-xl border border-white/15 bg-white/5 hover:bg-white/10 disabled:opacity-30 disabled:pointer-events-none text-slate-200 font-serif text-xs flex items-center justify-center gap-2.5 transition-all cursor-pointer shadow-sm"
+                  className="w-full sm:w-auto px-5 py-3 rounded-2xl border border-white/15 bg-white/5 hover:bg-white/10 disabled:opacity-30 disabled:pointer-events-none text-slate-200 font-serif text-xs flex items-center justify-center gap-2.5 transition-all cursor-pointer shadow-sm hover:scale-[1.02] active:scale-95"
                 >
                   <ChevronLeft className="w-4 h-4 text-amber-400" />
                   <div className="text-left">
-                    <div className="text-[10px] text-slate-400 font-sans uppercase">Chương Trước</div>
+                    <div className="text-[10px] text-pink-300/80 font-sans uppercase">🐾 Chương Trước</div>
                     <div className="font-medium truncate max-w-[200px]">
                       {currentGlobalIndex > 0 ? allFlatChapters[currentGlobalIndex - 1]?.chapter.title : 'Đầu danh sách'}
                     </div>
@@ -827,20 +960,20 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
 
                 <button
                   onClick={scrollToTop}
-                  className="px-4 py-2.5 rounded-xl text-xs text-slate-400 hover:text-amber-400 border border-white/10 hover:border-amber-400/30 transition-all flex items-center gap-1.5 cursor-pointer"
+                  className="px-4 py-2.5 rounded-2xl text-xs text-slate-400 hover:text-pink-300 border border-white/10 hover:border-pink-400/30 transition-all flex items-center gap-1.5 cursor-pointer bg-white/5 hover:bg-pink-500/10 active:scale-95"
                   title="Cuộn lên đầu trang"
                 >
                   <ArrowUp className="w-3.5 h-3.5" />
-                  <span>Lên đầu trang</span>
+                  <span>🌸 Lên đầu trang</span>
                 </button>
 
                 <button
                   disabled={currentGlobalIndex >= allFlatChapters.length - 1}
                   onClick={() => goToChapterByGlobalIndex(currentGlobalIndex + 1)}
-                  className="w-full sm:w-auto px-5 py-3 rounded-xl border border-amber-500/30 bg-amber-500/10 hover:bg-amber-500/20 disabled:opacity-30 disabled:pointer-events-none text-amber-200 font-serif text-xs flex items-center justify-center gap-2.5 transition-all cursor-pointer shadow-sm shadow-amber-500/10"
+                  className="w-full sm:w-auto px-5 py-3 rounded-2xl border border-pink-400/40 bg-gradient-to-r from-pink-500/15 via-purple-500/15 to-amber-500/15 hover:from-pink-500/25 hover:to-amber-500/25 disabled:opacity-30 disabled:pointer-events-none text-pink-100 font-serif text-xs flex items-center justify-center gap-2.5 transition-all cursor-pointer shadow-lg shadow-pink-500/10 hover:scale-[1.02] active:scale-95"
                 >
                   <div className="text-right">
-                    <div className="text-[10px] text-amber-400/80 font-sans uppercase">Chương Kế Tiếp</div>
+                    <div className="text-[10px] text-amber-300 font-sans uppercase">Chương Kế Tiếp 🐾</div>
                     <div className="font-medium truncate max-w-[200px]">
                       {currentGlobalIndex < allFlatChapters.length - 1 ? allFlatChapters[currentGlobalIndex + 1]?.chapter.title : 'Cuối danh sách'}
                     </div>
@@ -849,79 +982,242 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
                 </button>
               </div>
             </div>
+
+            {/* ================= FLOATING CHIBI COMPANION (BÉ LONG LONG) ================= */}
+            {!isChibiMinimized ? (
+              <div className="fixed bottom-6 right-6 z-40 flex flex-col items-end select-none">
+                {/* Speech Bubble */}
+                <div 
+                  onClick={handlePokeChibi}
+                  className="relative mb-2 max-w-[240px] sm:max-w-[280px] p-3 rounded-2xl bg-slate-900/95 border border-pink-400/40 shadow-2xl backdrop-blur-xl text-xs text-slate-100 font-sans leading-relaxed cursor-pointer hover:border-pink-300 transition-all group"
+                >
+                  <div className="flex items-center justify-between mb-1 pb-1 border-b border-white/10 text-[10px] text-pink-300 font-semibold">
+                    <span className="flex items-center gap-1">
+                      <span>🐉</span>
+                      <span>Bé Long Long</span>
+                      <span className="text-amber-400">✨</span>
+                    </span>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setIsChibiMinimized(true);
+                      }}
+                      className="text-slate-400 hover:text-white p-0.5 rounded transition-colors text-[11px]"
+                      title="Thu nhỏ Bé Long Long"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                  <p className="font-medium text-pink-100/95 text-[11px]">
+                    {CHIBI_QUOTES[chibiQuoteIndex]}
+                  </p>
+                  <div className="text-[9px] text-pink-300/70 mt-1 italic text-right group-hover:text-pink-200">
+                    (Chạm bé để nghe lời chúc khác nha~)
+                  </div>
+                  {/* Pointer Triangle */}
+                  <div className="absolute -bottom-1.5 right-6 w-3 h-3 bg-slate-900/95 border-r border-b border-pink-400/40 transform rotate-45" />
+                </div>
+
+                {/* Mascot Avatar */}
+                <div 
+                  onClick={handlePokeChibi}
+                  className="relative cursor-pointer transition-transform hover:scale-105 active:scale-95"
+                  title="Bé Long Long - Nhấn để chơi cùng bé!"
+                >
+                  <ChibiDragonAvatar isBouncing={isChibiBouncing} />
+                </div>
+              </div>
+            ) : (
+              /* Minimized pill button */
+              <button
+                onClick={() => setIsChibiMinimized(false)}
+                className="fixed bottom-6 right-6 z-40 px-3.5 py-2 rounded-full bg-gradient-to-r from-purple-600/80 via-pink-600/80 to-amber-600/80 hover:from-purple-500 hover:to-amber-500 border border-pink-300/40 text-white text-xs font-semibold shadow-xl backdrop-blur-md flex items-center gap-1.5 cursor-pointer hover:scale-105 active:scale-95 transition-all animate-bounce"
+                title="Mở Bé Long Long"
+              >
+                <span>🐉</span>
+                <span>Bé Long Long ✨</span>
+              </button>
+            )}
           </main>
         </div>
       ) : (
-        /* ================= NETTRUYEN STYLE COMIC READER (COMING SOON) ================= */
-        <div ref={scrollContainerRef} className="flex-1 overflow-y-auto custom-scrollbar relative">
-          <div className="w-full max-w-4xl mx-auto px-2 sm:px-4 py-6">
-            {/* COMING SOON BANNER FOR COMIC */}
-            <div className="mb-6 p-6 rounded-2xl bg-gradient-to-br from-rose-950/40 via-slate-900/90 to-amber-950/30 border border-rose-500/30 text-center shadow-xl backdrop-blur-md">
-              <div className="w-12 h-12 mx-auto mb-3 rounded-2xl bg-rose-500/20 border border-rose-500/40 flex items-center justify-center text-rose-400">
-                <Sparkles className="w-6 h-6 animate-pulse" />
-              </div>
-              <span className="inline-block px-3 py-0.5 rounded-full text-[11px] font-bold bg-rose-500/20 text-rose-300 border border-rose-500/30 uppercase tracking-wider mb-2">
-                Đang Chuẩn Bị Sản Xuất • Coming Soon
-              </span>
-              <h2 className="text-lg sm:text-xl font-bold font-serif text-white mb-2">
-                Bản Truyện Tranh Webtoon Đang Trong Quá Trình Thực Hiện
-              </h2>
-              <p className="text-xs sm:text-sm text-slate-300 leading-relaxed max-w-md mx-auto mb-4">
-                Họa sĩ & tác giả đang tiến hành phân cảnh kịch bản và vẽ minh họa cho <strong className="text-amber-300">Long Ấn Ký</strong>. Mời bạn đón đọc bản Truyện Chữ đang sáng tác và phát hành trực tiếp!
-              </p>
-              <button
-                onClick={() => { setReaderType('novel'); scrollToTop(); }}
-                className="inline-flex items-center space-x-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-rose-500 text-white font-bold text-xs shadow-lg shadow-amber-500/20 hover:opacity-90 transition-all cursor-pointer"
-              >
-                <BookOpen className="w-4 h-4" />
-                <span>👉 Đọc Bản Truyện Chữ Ngay Bây Giờ</span>
-              </button>
-            </div>
-            {/* 1. TOP INFO & BREADCRUMBS (NETTRUYEN) */}
-            <div className="mb-4 pb-3 border-b border-white/10">
-              {/* Breadcrumbs */}
-              <nav className="flex items-center space-x-1.5 text-xs text-slate-400 mb-2 overflow-x-auto whitespace-nowrap">
-                <span onClick={() => { setActiveComicIndex(0); scrollToTop(); }} className="hover:text-amber-400 cursor-pointer">
-                  Trang chủ
+        /* ================= COMIC VIEW: CHẾ ĐỘ TRUYỆN TRANH ================= */
+        authorPreviewComic ? (
+          /* ================= CHẾ ĐỘ XEM THỬ PHÁC THẢO (CHỈ TÁC GIẢ KHI BẬT) ================= */
+          <div ref={scrollContainerRef} className="flex-1 overflow-y-auto custom-scrollbar relative">
+            <div className="w-full max-w-4xl mx-auto px-2 sm:px-4 py-6">
+              {/* DRAFT PREVIEW ALERT FOR AUTHOR */}
+              <div className="mb-4 p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-between text-xs text-amber-200 shadow-md">
+                <span className="flex items-center gap-2">
+                  <Sparkles className="w-4 h-4 text-amber-400 shrink-0" />
+                  <span><strong>Chế độ Tác giả:</strong> Bạn đang xem trước bản phác thảo kịch bản. Độc giả bình thường sẽ chỉ thấy màn hình Sắp ra mắt.</span>
                 </span>
-                <span>/</span>
-                <span className="hover:text-amber-400 cursor-pointer">{project.title}</span>
-                <span>/</span>
-                <span className="text-rose-400 font-semibold">{activeComic.title.split(':')[0]}</span>
-              </nav>
-
-              {/* Chapter Main Title */}
-              <h1 className="text-xl sm:text-2xl font-bold font-serif text-white tracking-tight">
-                {project.title} - <span className="text-amber-300">{activeComic.title}</span>
-              </h1>
-
-              {/* Updated timestamp */}
-              <p className="text-xs text-slate-400 italic mt-1">
-                [Ngày cập nhật: {project.updatedAt || 'Mới nhất'}]
-              </p>
-            </div>
-
-            {/* 2. READING CONTROL BOX (NETTRUYEN) */}
-            <div className="bg-slate-900/90 border border-white/10 rounded-2xl p-4 mb-6 shadow-xl backdrop-blur-md">
-              {/* Keyboard shortcut hint alert */}
-              <div className="bg-sky-500/10 border border-sky-500/25 text-sky-200 text-xs px-3.5 py-2 rounded-xl flex items-center gap-2 mb-3">
-                <Info className="w-4 h-4 text-sky-400 shrink-0" />
-                <span>Sử dụng mũi tên trái (←) hoặc phải (→) trên bàn phím để chuyển chapter</span>
+                <button
+                  onClick={() => setAuthorPreviewComic(false)}
+                  className="px-3 py-1.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-100 font-bold shrink-0 transition-colors cursor-pointer"
+                >
+                  ✕ Đóng xem trước
+                </button>
               </div>
 
-              {/* Chapter Navigation Buttons & Select */}
-              <div className="flex flex-wrap items-center justify-center gap-2 pt-1">
-                <button
-                  onClick={() => {
-                    setActiveComicIndex(0);
-                    scrollToTop();
-                  }}
-                  title="Trang chủ / Chapter đầu"
-                  className="p-2.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-white/10 transition-all cursor-pointer"
-                >
-                  <Home className="w-4 h-4" />
-                </button>
+              {/* 1. TOP INFO & BREADCRUMBS (NETTRUYEN) */}
+              <div className="mb-4 pb-3 border-b border-white/10">
+                {/* Breadcrumbs */}
+                <nav className="flex items-center space-x-1.5 text-xs text-slate-400 mb-2 overflow-x-auto whitespace-nowrap">
+                  <span onClick={() => { setActiveComicIndex(0); scrollToTop(); }} className="hover:text-amber-400 cursor-pointer">
+                    Trang chủ
+                  </span>
+                  <span>/</span>
+                  <span className="hover:text-amber-400 cursor-pointer">{project.title}</span>
+                  <span>/</span>
+                  <span className="text-rose-400 font-semibold">{activeComic.title.split(':')[0]}</span>
+                </nav>
 
+                {/* Chapter Main Title */}
+                <h1 className="text-xl sm:text-2xl font-bold font-serif text-white tracking-tight">
+                  {project.title} - <span className="text-amber-300">{activeComic.title}</span>
+                </h1>
+
+                {/* Updated timestamp */}
+                <p className="text-xs text-slate-400 italic mt-1">
+                  [Ngày cập nhật: {project.updatedAt || 'Mới nhất'}]
+                </p>
+              </div>
+
+              {/* 2. READING CONTROL BOX (NETTRUYEN) */}
+              <div className="bg-slate-900/90 border border-white/10 rounded-2xl p-4 mb-6 shadow-xl backdrop-blur-md">
+                {/* Keyboard shortcut hint alert */}
+                <div className="bg-sky-500/10 border border-sky-500/25 text-sky-200 text-xs px-3.5 py-2 rounded-xl flex items-center gap-2 mb-3">
+                  <Info className="w-4 h-4 text-sky-400 shrink-0" />
+                  <span>Sử dụng mũi tên trái (←) hoặc phải (→) trên bàn phím để chuyển chapter</span>
+                </div>
+
+                {/* Chapter Navigation Buttons & Select */}
+                <div className="flex flex-wrap items-center justify-center gap-2 pt-1">
+                  <button
+                    onClick={() => {
+                      setActiveComicIndex(0);
+                      scrollToTop();
+                    }}
+                    title="Trang chủ / Chapter đầu"
+                    className="p-2.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-white/10 transition-all cursor-pointer"
+                  >
+                    <Home className="w-4 h-4" />
+                  </button>
+
+                  <button
+                    disabled={activeComicIndex <= 0}
+                    onClick={() => {
+                      setActiveComicIndex(prev => Math.max(0, prev - 1));
+                      scrollToTop();
+                    }}
+                    className="px-4 py-2 rounded-lg bg-rose-600 hover:bg-rose-500 disabled:opacity-30 disabled:pointer-events-none text-white font-bold text-xs flex items-center gap-1.5 shadow-md shadow-rose-600/30 transition-all cursor-pointer"
+                  >
+                    <ChevronLeft className="w-4 h-4" />
+                    <span>Chap trước</span>
+                  </button>
+
+                  {/* Select Chapter Dropdown */}
+                  <select
+                    value={activeComicIndex}
+                    onChange={e => {
+                      setActiveComicIndex(Number(e.target.value));
+                      scrollToTop();
+                    }}
+                    className="px-3.5 py-2 rounded-lg bg-slate-800 hover:bg-slate-755 border border-white/20 text-white font-medium text-xs focus:ring-2 focus:ring-rose-500 outline-none max-w-[260px] sm:max-w-xs truncate cursor-pointer shadow-sm"
+                  >
+                    {comicChapters.map((c, idx) => (
+                      <option key={c.id} value={idx}>
+                        {c.title}
+                      </option>
+                    ))}
+                  </select>
+
+                  <button
+                    disabled={activeComicIndex >= comicChapters.length - 1}
+                    onClick={() => {
+                      setActiveComicIndex(prev => Math.min(comicChapters.length - 1, prev + 1));
+                      scrollToTop();
+                    }}
+                    className="px-4 py-2 rounded-lg bg-rose-600 hover:bg-rose-500 disabled:opacity-30 disabled:pointer-events-none text-white font-bold text-xs flex items-center gap-1.5 shadow-md shadow-rose-600/30 transition-all cursor-pointer"
+                  >
+                    <span>Chap sau</span>
+                    <ChevronRight className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+
+              {/* 3. READING DETAIL: SEAMLESS VERTICAL COMIC STREAM (NETTRUYEN) */}
+              <div className="reading-detail w-full flex flex-col items-center select-none space-y-1">
+                {allPanels.map((panel, idx) => {
+                  const imgUrl = panel.imageUrl || (panel.prompt ? AIStudioService.generatePanelImageUrl(panel.prompt, activeArtStyle, panel.panelNumber * 7) : null);
+                  return (
+                    <div key={panel.id || idx} className="page-chapter w-full max-w-3xl relative flex flex-col items-center">
+                      {/* Comic Image */}
+                      <div className="relative w-full bg-slate-950 overflow-hidden shadow-2xl rounded-sm">
+                        {imgUrl ? (
+                          <img
+                            src={imgUrl}
+                            alt={panel.caption || `Trang ${idx + 1}`}
+                            className="w-full h-auto block select-none pointer-events-auto object-cover"
+                            loading="lazy"
+                            onError={(e) => {
+                              (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1200&q=80';
+                            }}
+                          />
+                        ) : (
+                          <div className="p-12 text-center text-slate-500 text-xs">
+                            Đang tải trang tranh...
+                          </div>
+                        )}
+
+                        {/* SFX Graphic Badge (Sound Effect) */}
+                        {panel.sfx && (
+                          <div className="absolute top-4 right-4 bg-rose-600/90 text-white font-black italic tracking-widest text-xs px-3 py-1 rounded shadow-lg transform rotate-2 border border-rose-400 pointer-events-none">
+                            {panel.sfx}
+                          </div>
+                        )}
+
+                        {/* Page Number Indicator */}
+                        <div className="absolute bottom-2 right-2 bg-black/75 backdrop-blur-sm text-[10px] text-white/80 font-mono px-2 py-0.5 rounded pointer-events-none">
+                          Trang {idx + 1} / {allPanels.length}
+                        </div>
+                      </div>
+
+                      {/* Dialogues directly under panel */}
+                      {panel.dialogues && panel.dialogues.length > 0 && (
+                        <div className="w-full px-4 py-2.5 space-y-1.5 bg-slate-950/95 border-b border-white/5">
+                          {panel.dialogues.map(d => (
+                            <div
+                              key={d.id}
+                              className={`flex items-start gap-2.5 text-xs ${
+                                d.bubbleType === 'shout' ? 'text-rose-300 font-bold' : d.bubbleType === 'thought' ? 'italic text-sky-300' : 'text-slate-200'
+                              }`}
+                            >
+                              <span className="text-[11px] font-bold px-2 py-0.5 rounded bg-white/10 text-amber-300 shrink-0 font-serif">
+                                {d.character}
+                              </span>
+                              <div className="text-xs bg-slate-800/80 p-2 rounded-xl border border-white/10 flex-1 leading-relaxed">
+                                {d.text}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+
+                      {/* Caption */}
+                      {panel.caption && (
+                        <div className="w-full text-center text-xs text-slate-400 font-serif italic py-1.5 bg-black/40 border-b border-white/5">
+                          {panel.caption}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* 4. CHAPTER NAV BOTTOM (NETTRUYEN) */}
+              <div className="chapter-nav-bottom flex flex-wrap items-center justify-center gap-2 py-8 border-t border-white/10 mt-8">
                 <button
                   disabled={activeComicIndex <= 0}
                   onClick={() => {
@@ -934,7 +1230,6 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
                   <span>Chap trước</span>
                 </button>
 
-                {/* Select Chapter Dropdown */}
                 <select
                   value={activeComicIndex}
                   onChange={e => {
@@ -961,178 +1256,148 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
                   <span>Chap sau</span>
                   <ChevronRight className="w-4 h-4" />
                 </button>
+
+                <button
+                  onClick={scrollToTop}
+                  className="px-3.5 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-white/10 text-xs font-medium flex items-center gap-1 cursor-pointer transition-all"
+                  title="Cuộn lên đầu trang"
+                >
+                  <ArrowUp className="w-4 h-4" />
+                  <span>Đầu trang</span>
+                </button>
+              </div>
+
+              {/* 5. FLOATING QUICK SWITCH BAR */}
+              <div className="sticky bottom-4 z-40 mx-auto px-4 py-2 rounded-2xl bg-slate-900/90 backdrop-blur-xl border border-white/15 shadow-2xl flex items-center gap-2 text-xs w-fit">
+                <button
+                  disabled={activeComicIndex <= 0}
+                  onClick={() => {
+                    setActiveComicIndex(prev => Math.max(0, prev - 1));
+                    scrollToTop();
+                  }}
+                  className="px-2.5 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-500 disabled:opacity-30 text-white font-medium flex items-center gap-1"
+                >
+                  <ChevronLeft className="w-3.5 h-3.5" /> Trước
+                </button>
+
+                <select
+                  value={activeComicIndex}
+                  onChange={e => {
+                    setActiveComicIndex(Number(e.target.value));
+                    scrollToTop();
+                  }}
+                  className="px-2.5 py-1.5 rounded-lg bg-slate-800 border border-slate-700 text-white font-medium text-xs max-w-[140px] sm:max-w-[200px] truncate"
+                >
+                  {comicChapters.map((c, idx) => (
+                    <option key={c.id} value={idx}>
+                      {c.title}
+                    </option>
+                  ))}
+                </select>
+
+                <button
+                  disabled={activeComicIndex >= comicChapters.length - 1}
+                  onClick={() => {
+                    setActiveComicIndex(prev => Math.min(comicChapters.length - 1, prev + 1));
+                    scrollToTop();
+                  }}
+                  className="px-2.5 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-500 disabled:opacity-30 text-white font-medium flex items-center gap-1"
+                >
+                  Sau <ChevronRight className="w-3.5 h-3.5" />
+                </button>
+
+                <button
+                  onClick={scrollToTop}
+                  className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300"
+                  title="Lên đầu trang"
+                >
+                  <ArrowUp className="w-3.5 h-3.5" />
+                </button>
               </div>
             </div>
+          </div>
+        ) : (
+          /* ================= GIAO DIỆN CHÍNH THỨC DÀNH CHO ĐỘC GIẢ: SẮP RA MẮT (COMING SOON) ================= */
+          <div ref={scrollContainerRef} className="flex-1 overflow-y-auto custom-scrollbar relative flex flex-col items-center justify-center p-4 sm:p-8">
+            <div className="w-full max-w-3xl mx-auto py-8">
+              {/* HERO COMING SOON CARD */}
+              <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-900/95 via-slate-950/95 to-rose-950/40 border border-rose-500/30 p-8 sm:p-12 text-center shadow-2xl backdrop-blur-xl">
+                {/* Decorative background glow */}
+                <div className="absolute -top-24 -left-24 w-72 h-72 bg-rose-500/15 rounded-full blur-3xl pointer-events-none" />
+                <div className="absolute -bottom-24 -right-24 w-72 h-72 bg-amber-500/15 rounded-full blur-3xl pointer-events-none" />
 
-            {/* 3. READING DETAIL: SEAMLESS VERTICAL COMIC STREAM (NETTRUYEN) */}
-            <div className="reading-detail w-full flex flex-col items-center select-none space-y-1">
-              {allPanels.map((panel, idx) => {
-                const imgUrl = panel.imageUrl || (panel.prompt ? AIStudioService.generatePanelImageUrl(panel.prompt, activeArtStyle, panel.panelNumber * 7) : null);
-                return (
-                  <div key={panel.id || idx} className="page-chapter w-full max-w-3xl relative flex flex-col items-center">
-                    {/* Comic Image */}
-                    <div className="relative w-full bg-slate-950 overflow-hidden shadow-2xl rounded-sm">
-                      {imgUrl ? (
-                        <img
-                          src={imgUrl}
-                          alt={panel.caption || `Trang ${idx + 1}`}
-                          className="w-full h-auto block select-none pointer-events-auto object-cover"
-                          loading="lazy"
-                          onError={(e) => {
-                            (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1200&q=80';
-                          }}
-                        />
-                      ) : (
-                        <div className="p-12 text-center text-slate-500 text-xs">
-                          Đang tải trang tranh...
-                        </div>
-                      )}
+                <div className="relative z-10 space-y-6">
+                  {/* Floating Icon */}
+                  <div className="w-16 h-16 mx-auto rounded-3xl bg-gradient-to-tr from-rose-500/20 to-amber-500/20 border border-rose-500/40 flex items-center justify-center text-rose-300 shadow-lg shadow-rose-500/10">
+                    <Sparkles className="w-8 h-8 animate-pulse text-amber-300" />
+                  </div>
 
-                      {/* SFX Graphic Badge (Sound Effect) */}
-                      {panel.sfx && (
-                        <div className="absolute top-4 right-4 bg-rose-600/90 text-white font-black italic tracking-widest text-xs px-3 py-1 rounded shadow-lg transform rotate-2 border border-rose-400 pointer-events-none">
-                          {panel.sfx}
-                        </div>
-                      )}
+                  {/* Badge */}
+                  <div>
+                    <span className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-bold bg-rose-500/20 text-rose-300 border border-rose-500/30 uppercase tracking-widest font-mono shadow-sm">
+                      <span className="w-2 h-2 rounded-full bg-rose-400 animate-ping" />
+                      Đang Chế Tác • Coming Soon
+                    </span>
+                  </div>
 
-                      {/* Page Number Indicator */}
-                      <div className="absolute bottom-2 right-2 bg-black/75 backdrop-blur-sm text-[10px] text-white/80 font-mono px-2 py-0.5 rounded pointer-events-none">
-                        Trang {idx + 1} / {allPanels.length}
-                      </div>
+                  {/* Title */}
+                  <div className="space-y-2">
+                    <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold font-serif text-white tracking-tight">
+                      Bản Truyện Tranh Webtoon
+                    </h1>
+                    <p className="text-amber-300/90 font-serif text-base sm:text-lg">
+                      Chuyển thể chính thức từ tiểu thuyết <span className="font-bold underline decoration-amber-500/50">{project.title}</span>
+                    </p>
+                  </div>
+
+                  {/* Description */}
+                  <p className="text-xs sm:text-sm text-slate-300 leading-relaxed max-w-xl mx-auto">
+                    Họa sĩ & tác giả đang tiến hành phân cảnh kịch bản, thiết kế tạo hình nhân vật (Sena, Koto, Ryou, Rento, Nari...) và thực hiện những khung tranh đầu tiên theo phong cách Dark Fantasy Á Đông huyền bí. Phiên bản truyện tranh chưa được phát hành chính thức.
+                  </p>
+
+                  {/* Feature Highlights Grid */}
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2 text-left">
+                    <div className="p-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm">
+                      <div className="text-lg mb-1">📱</div>
+                      <div className="font-serif font-bold text-xs text-white">Cuộn Dọc Webtoon</div>
+                      <div className="text-[11px] text-slate-400 mt-0.5">Tối ưu trải nghiệm đọc mượt mà trên điện thoại và máy tính</div>
                     </div>
+                    <div className="p-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm">
+                      <div className="text-lg mb-1">🎨</div>
+                      <div className="font-serif font-bold text-xs text-white">Mỹ Thuật Á Đông</div>
+                      <div className="text-[11px] text-slate-400 mt-0.5">Khắc họa sông Asera, giếng cảng và ấn ký sống động</div>
+                    </div>
+                    <div className="p-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm">
+                      <div className="text-lg mb-1">📖</div>
+                      <div className="font-serif font-bold text-xs text-white">Bám Sát Cốt Truyện</div>
+                      <div className="text-[11px] text-slate-400 mt-0.5">Đồng bộ 100% với mạch truyện và hệ thống Lore Bible</div>
+                    </div>
+                  </div>
 
-                    {/* Dialogues directly under panel */}
-                    {panel.dialogues && panel.dialogues.length > 0 && (
-                      <div className="w-full px-4 py-2.5 space-y-1.5 bg-slate-950/95 border-b border-white/5">
-                        {panel.dialogues.map(d => (
-                          <div
-                            key={d.id}
-                            className={`flex items-start gap-2.5 text-xs ${
-                              d.bubbleType === 'shout' ? 'text-rose-300 font-bold' : d.bubbleType === 'thought' ? 'italic text-sky-300' : 'text-slate-200'
-                            }`}
-                          >
-                            <span className="text-[11px] font-bold px-2 py-0.5 rounded bg-white/10 text-amber-300 shrink-0 font-serif">
-                              {d.character}
-                            </span>
-                            <div className="text-xs bg-slate-800/80 p-2 rounded-xl border border-white/10 flex-1 leading-relaxed">
-                              {d.text}
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    )}
+                  {/* CTA Action */}
+                  <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-3">
+                    <button
+                      onClick={() => { setReaderType('novel'); scrollToTop(); }}
+                      className="w-full sm:w-auto inline-flex items-center justify-center space-x-2 px-6 py-3 rounded-2xl bg-gradient-to-r from-amber-500 via-rose-500 to-amber-600 hover:from-amber-400 hover:to-rose-400 text-white font-bold text-sm shadow-xl shadow-rose-500/25 active:scale-95 transition-all cursor-pointer"
+                    >
+                      <BookOpen className="w-4 h-4" />
+                      <span>👉 Đọc Bản Truyện Chữ Đang Phát Hành</span>
+                    </button>
 
-                    {/* Caption */}
-                    {panel.caption && (
-                      <div className="w-full text-center text-xs text-slate-400 font-serif italic py-1.5 bg-black/40 border-b border-white/5">
-                        {panel.caption}
-                      </div>
+                    {isAuthorMode && (
+                      <button
+                        onClick={() => setAuthorPreviewComic(true)}
+                        className="w-full sm:w-auto inline-flex items-center justify-center space-x-2 px-4 py-3 rounded-2xl bg-white/10 hover:bg-white/15 text-slate-300 hover:text-white font-medium text-xs border border-white/15 transition-all cursor-pointer"
+                      >
+                        <span>🛠️ Xem Thử Phác Thảo (Tác Giả)</span>
+                      </button>
                     )}
                   </div>
-                );
-              })}
-            </div>
-
-            {/* 4. CHAPTER NAV BOTTOM (NETTRUYEN) */}
-            <div className="chapter-nav-bottom flex flex-wrap items-center justify-center gap-2 py-8 border-t border-white/10 mt-8">
-              <button
-                disabled={activeComicIndex <= 0}
-                onClick={() => {
-                  setActiveComicIndex(prev => Math.max(0, prev - 1));
-                  scrollToTop();
-                }}
-                className="px-4 py-2 rounded-lg bg-rose-600 hover:bg-rose-500 disabled:opacity-30 disabled:pointer-events-none text-white font-bold text-xs flex items-center gap-1.5 shadow-md shadow-rose-600/30 transition-all cursor-pointer"
-              >
-                <ChevronLeft className="w-4 h-4" />
-                <span>Chap trước</span>
-              </button>
-
-              <select
-                value={activeComicIndex}
-                onChange={e => {
-                  setActiveComicIndex(Number(e.target.value));
-                  scrollToTop();
-                }}
-                className="px-3.5 py-2 rounded-lg bg-slate-800 hover:bg-slate-750 border border-white/20 text-white font-medium text-xs focus:ring-2 focus:ring-rose-500 outline-none max-w-[260px] sm:max-w-xs truncate cursor-pointer shadow-sm"
-              >
-                {comicChapters.map((c, idx) => (
-                  <option key={c.id} value={idx}>
-                    {c.title}
-                  </option>
-                ))}
-              </select>
-
-              <button
-                disabled={activeComicIndex >= comicChapters.length - 1}
-                onClick={() => {
-                  setActiveComicIndex(prev => Math.min(comicChapters.length - 1, prev + 1));
-                  scrollToTop();
-                }}
-                className="px-4 py-2 rounded-lg bg-rose-600 hover:bg-rose-500 disabled:opacity-30 disabled:pointer-events-none text-white font-bold text-xs flex items-center gap-1.5 shadow-md shadow-rose-600/30 transition-all cursor-pointer"
-              >
-                <span>Chap sau</span>
-                <ChevronRight className="w-4 h-4" />
-              </button>
-
-              <button
-                onClick={scrollToTop}
-                className="px-3.5 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-white/10 text-xs font-medium flex items-center gap-1 cursor-pointer transition-all"
-                title="Cuộn lên đầu trang"
-              >
-                <ArrowUp className="w-4 h-4" />
-                <span>Đầu trang</span>
-              </button>
-            </div>
-
-            {/* 5. FLOATING QUICK SWITCH BAR */}
-            <div className="sticky bottom-4 z-40 mx-auto px-4 py-2 rounded-2xl bg-slate-900/90 backdrop-blur-xl border border-white/15 shadow-2xl flex items-center gap-2 text-xs w-fit">
-              <button
-                disabled={activeComicIndex <= 0}
-                onClick={() => {
-                  setActiveComicIndex(prev => Math.max(0, prev - 1));
-                  scrollToTop();
-                }}
-                className="px-2.5 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-500 disabled:opacity-30 text-white font-medium flex items-center gap-1"
-              >
-                <ChevronLeft className="w-3.5 h-3.5" /> Trước
-              </button>
-
-              <select
-                value={activeComicIndex}
-                onChange={e => {
-                  setActiveComicIndex(Number(e.target.value));
-                  scrollToTop();
-                }}
-                className="px-2.5 py-1.5 rounded-lg bg-slate-800 border border-slate-700 text-white font-medium text-xs max-w-[140px] sm:max-w-[200px] truncate"
-              >
-                {comicChapters.map((c, idx) => (
-                  <option key={c.id} value={idx}>
-                    {c.title}
-                  </option>
-                ))}
-              </select>
-
-              <button
-                disabled={activeComicIndex >= comicChapters.length - 1}
-                onClick={() => {
-                  setActiveComicIndex(prev => Math.min(comicChapters.length - 1, prev + 1));
-                  scrollToTop();
-                }}
-                className="px-2.5 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-500 disabled:opacity-30 text-white font-medium flex items-center gap-1"
-              >
-                Sau <ChevronRight className="w-3.5 h-3.5" />
-              </button>
-
-              <button
-                onClick={scrollToTop}
-                className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300"
-                title="Lên đầu trang"
-              >
-                <ArrowUp className="w-3.5 h-3.5" />
-              </button>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
+        )
       )}
 
       {/* ================= PANEL LIGHTBOX MODAL ================= */}

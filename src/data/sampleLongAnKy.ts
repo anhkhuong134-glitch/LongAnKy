@@ -2,7 +2,7 @@ import { Project, Part, BibleFact, Character, TimelineEvent, ForeshadowingHook }
 
 export const sampleProject: Project = {
   id: 'proj_long_an_ky',
-  title: 'Long Ấn Ký',
+  title: 'Long Ấn Thức Tỉnh',
   subtitle: 'Ký ức bị xóa và Tiếng gõ từ Vực Thẳm',
   penName: 'Lục Hàn Phong',
   genre: 'Huyền huyễn / Kỳ ảo bí ẩn (Dark Fantasy)',
@@ -27,8 +27,8 @@ export const sampleProject: Project = {
       { date: '2026-09-03', count: 1850 }
     ]
   },
-  activePartId: 'part_mua_nuoc_dung',
-  activeChapterId: 'doc_chap_01'
+  activePartId: 'part_prologue',
+  activeChapterId: 'doc_chap_prologue'
 };
 
 export const sampleParts: Part[] = [

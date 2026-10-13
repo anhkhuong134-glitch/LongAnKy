@@ -69,7 +69,7 @@ export class AIStudioService {
     proseText: string,
     settings: AISettings
   ): Promise<ComicScriptResult> {
-    const systemPrompt = `Bạn là Đạo diễn Phân cảnh Truyện tranh (Storyboard Master & Comic Script Director) cho tiểu thuyết huyền bí Á Đông 'Long Ấn Ký'.
+    const systemPrompt = `Bạn là Đạo diễn Phân cảnh Truyện tranh (Storyboard Master & Comic Script Director) cho tiểu thuyết huyền bí Á Đông 'Long Ấn Thức Tỉnh'.
 Hãy đọc đoạn văn sau và phân tách thành 3 đến 5 ô tranh (panels) cực kỳ kịch tính, chi tiết.
 Xuất ra ĐÚNG ĐỊNH DẠNG JSON sau:
 {
@@ -204,7 +204,7 @@ Xuất ra ĐÚNG ĐỊNH DẠNG JSON sau:
     const charSummary = characters.map(c => `- ${c.name} (${c.role}): ${c.bio.personality}. Giọng điệu: ${c.bio.voiceCadence}.`).join('\n');
     const canonSummary = bibleFacts.filter(f => f.status === 'canon').map(f => `[${f.category.toUpperCase()}] ${f.title}: ${f.content}`).join('\n');
 
-    const defaultPrinciples = `NGUYÊN TẮC VIẾT TIỂU THUYẾT: LONG ẤN KÝ
+    const defaultPrinciples = `NGUYÊN TẮC VIẾT TIỂU THUYẾT: LONG ẤN THỨC TỈNH
 1. Triết lý trung tâm: Có một thứ người ta sợ hơn cái chết: bị quên khi vẫn còn đang sống.
 2. Bản chất không gian & ký ức: Ký ức nằm trong khoảng không gian giữa vật chất. Nơi ký ức bị xóa sẽ trở nên "lệch".
 3. Tông giọng văn: Điềm tĩnh, hơi lạnh, giàu suy tư triết lý, luôn neo vào giác quan cụ thể (ánh sáng, mùi hương, nhiệt độ, âm thanh).
@@ -222,7 +222,7 @@ NHIỆM VỤ CỦA BẠN:
 Hỗ trợ tác giả sáng tác, viết tiếp cảnh, biên tập đối thoại và chuyển thể truyện tranh theo đúng tinh thần và quy chuẩn tuyệt đối ở trên.`;
 
     const aiStudioConfig = {
-      project: 'Long Ấn Ký & Soul Seal Studio',
+      project: 'Long Ấn Thức Tỉnh & Soul Seal Studio',
       model: 'models/gemini-2.0-flash',
       systemInstruction: fullSystemInstruction,
       generationConfig: {

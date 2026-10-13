@@ -15,7 +15,9 @@ export function parseGoogleDocTextToParts(rawText: string): Part[] {
   const banCuIdx = lines.findIndex(l => l.trim().startsWith('BẢN CŨ'));
   const dossierIdx = lines.findIndex(l => /^[0-9]{2}\./.test(l.trim()));
   
-  // 1. Phân tích Phần Mở Đầu (Prologue)
+  const parts: Part[] = [];
+
+  // 1. Phân tích Phần Mở Đầu (Prologue) — Tách thành Phần độc lập ngoài Phần 1
   const prologueLines = lines
     .slice(0, pIdx !== -1 ? pIdx : 0)
     .map(l => l.trim())
@@ -23,29 +25,38 @@ export function parseGoogleDocTextToParts(rawText: string): Part[] {
   const prologueContent = prologueLines.join('\n\n');
   const prologueWords = prologueContent.split(/\s+/).filter(Boolean).length;
   
-  // 2. Phân tích PHẦN I — MÙA NƯỚC ĐỨNG
+  if (prologueContent) {
+    parts.push({
+      id: 'part_prologue',
+      title: 'MỞ ĐẦU',
+      order: 1,
+      description: '“Điều đáng sợ nhất đôi khi là mọi thứ vẫn trông bình thường.” Khái quát về ranh giới bình thường và sự báo hiệu hiểm nguy.',
+      wordCount: prologueWords,
+      isExpanded: true,
+      chapters: [
+        {
+          id: 'doc_chap_prologue',
+          partId: 'part_prologue',
+          title: 'Mở đầu: Ranh giới của sự bình thường',
+          order: 1,
+          content: prologueContent,
+          wordCount: prologueWords,
+          status: 'final',
+          povCharacterName: 'Người dẫn truyện',
+          location: 'Dòng sông Asera & Bến Arumo',
+          notes: 'Trích xuất tự động từ Google Docs. Khái quát về ranh giới bình thường và sự báo hiệu hiểm nguy.',
+          scenes: []
+        }
+      ]
+    });
+  }
+
+  // 2. Phân tích PHẦN I — MÙA NƯỚC ĐỨNG (Chỉ chứa các Chương 1-4 chính thức, không chứa Mở Đầu)
   const part1Title = pIdx !== -1 ? lines[pIdx].trim() : 'PHẦN I — MÙA NƯỚC ĐỨNG';
   const part1EndIdx = banCuIdx !== -1 ? banCuIdx : (dossierIdx !== -1 ? dossierIdx : lines.length);
   const part1Lines = lines.slice(pIdx !== -1 ? pIdx + 1 : 0, part1EndIdx);
   
   const part1Chapters: Chapter[] = [];
-  
-  // Thêm Mở Đầu vào đầu Phần 1
-  if (prologueContent) {
-    part1Chapters.push({
-      id: 'doc_chap_prologue',
-      partId: 'part_mua_nuoc_dung',
-      title: 'Mở đầu: Ranh giới của sự bình thường',
-      order: 1,
-      content: prologueContent,
-      wordCount: prologueWords,
-      status: 'final',
-      povCharacterName: 'Người dẫn truyện',
-      location: 'Dòng sông Asera & Bến Arumo',
-      notes: 'Trích xuất tự động từ Google Docs. Khái quát về ranh giới bình thường và sự báo hiệu hiểm nguy.',
-      scenes: []
-    });
-  }
   
   let currentChap: Chapter | null = null;
   let currentChapLines: string[] = [];
@@ -108,83 +119,14 @@ export function parseGoogleDocTextToParts(rawText: string): Part[] {
   const part1: Part = {
     id: 'part_mua_nuoc_dung',
     title: part1Title,
-    order: 1,
+    order: parts.length + 1,
     description: 'Bến Arumo, giếng cảng trên sông Asera, chiếc tời số bảy và thảm họa bí ẩn từ thượng nguồn.',
     chapters: part1Chapters,
     wordCount: part1WordCount,
     isExpanded: true
   };
-  
-  // 3. Phân tích BẢN CŨ — TƯ LIỆU AESVORN & LÕI HỒN ẤN
-  const part2Chapters: Chapter[] = [];
-  if (banCuIdx !== -1) {
-    const part2EndIdx = dossierIdx !== -1 ? dossierIdx : lines.length;
-    const part2Lines = lines.slice(banCuIdx + 1, part2EndIdx);
-    
-    let currentPart2Chap: Chapter | null = null;
-    let currentPart2Lines: string[] = [];
-    
-    for (let i = 0; i < part2Lines.length; i++) {
-      const line = part2Lines[i].trim();
-      if (/^Chương\s+[0-9]+/i.test(line)) {
-        if (currentPart2Chap) {
-          currentPart2Chap.content = currentPart2Lines.join('\n\n');
-          currentPart2Chap.wordCount = currentPart2Chap.content.split(/\s+/).filter(Boolean).length;
-          part2Chapters.push(currentPart2Chap);
-          currentPart2Lines = [];
-        }
-        
-        const chapOrder = part2Chapters.length + 1;
-        const chapNum = (line.match(/^Chương\s+([0-9]+)/i) || [])[1] || `${chapOrder}`;
-        const chapId = `aesvorn_chap_0${chapNum}`;
-        
-        let pov = 'Sena';
-        let location = 'Học viện Aesvorn';
-        if (line.includes('Những sai lệch nhỏ')) {
-          location = 'Căng tin sinh viên & Hành lang tầng 2';
-        } else if (line.includes('Nhịp tay')) {
-          location = 'Cây cổ thụ góc tây & Thư viện Aesvorn';
-        } else if (line.includes('Vết nứt')) {
-          location = 'Phòng luyện tập Hồn Ấn & Lớp học Lý thuyết';
-        }
-        
-        currentPart2Chap = {
-          id: chapId,
-          partId: 'part_aesvorn_arc',
-          title: line,
-          order: chapOrder,
-          content: '',
-          wordCount: 0,
-          status: 'draft',
-          povCharacterName: pov,
-          location,
-          notes: 'Chương thuộc tư liệu tham khảo Aesvorn Arc từ Google Doc.',
-          scenes: []
-        };
-      } else if (line && !line.startsWith('Các chương dưới đây thuộc cốt truyện trước')) {
-        if (currentPart2Chap) {
-          currentPart2Lines.push(line);
-        }
-      }
-    }
-    
-    if (currentPart2Chap) {
-      currentPart2Chap.content = currentPart2Lines.join('\n\n');
-      currentPart2Chap.wordCount = currentPart2Chap.content.split(/\s+/).filter(Boolean).length;
-      part2Chapters.push(currentPart2Chap);
-    }
-  }
-  
-  const part2WordCount = part2Chapters.reduce((sum, c) => sum + c.wordCount, 0);
-  const part2: Part = {
-    id: 'part_aesvorn_arc',
-    title: banCuIdx !== -1 ? lines[banCuIdx].trim() : 'PHẦN II — BẢN CŨ THAM KHẢO (AESVORN)',
-    order: 2,
-    description: 'Tư liệu tham khảo: Học viện Aesvorn, ký ức bị xóa, đồng hồ quả lắc và Hồn Ấn.',
-    chapters: part2Chapters,
-    wordCount: part2WordCount,
-    isExpanded: true
-  };
-  
-  return [part1, part2];
+  parts.push(part1);
+
+  // 3. Bản Cũ (Các chương Aesvorn 2-4) đã được xóa bỏ hoàn toàn theo yêu cầu của tác giả
+  return parts;
 }

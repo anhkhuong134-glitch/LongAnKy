@@ -83,7 +83,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
         <div className="flex items-center space-x-3">
           <div 
             onClick={handleLogoClick}
-            title={isAuthorMode ? "Chế độ Tác Giả đang mở" : "Long Ấn Ký"}
+            title={isAuthorMode ? "Chế độ Tác Giả đang mở" : "Long Ấn Thức Tỉnh"}
             className="relative flex items-center justify-center w-9 h-9 rounded-xl bg-gradient-to-br from-amber-500 via-rose-600 to-purple-600 shadow-md shadow-amber-500/20 text-white font-serif font-bold text-lg cursor-pointer transition-transform active:scale-95 select-none"
           >
             M
@@ -116,16 +116,16 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
                   </button>
                 </>
               ) : (
-                <span className="text-[11px] px-2.5 py-0.5 rounded-full font-bold bg-rose-500/20 text-rose-300 border border-rose-500/40 shadow-sm flex items-center gap-1">
-                  <span className="w-1.5 h-1.5 rounded-full bg-rose-400 animate-pulse"></span>
-                  Truyện Tranh Webtoon
+                <span className="text-[11px] px-2.5 py-0.5 rounded-full font-bold bg-gradient-to-r from-purple-500/20 via-pink-500/20 to-amber-500/20 text-pink-300 border border-pink-400/30 shadow-sm flex items-center gap-1.5 animate-float-gentle">
+                  <span className="w-1.5 h-1.5 rounded-full bg-pink-400 animate-pulse"></span>
+                  <span>✨ Đang Sáng Tác Live 🐉</span>
                 </span>
               )}
             </div>
-            <p className="text-xs opacity-60 truncate max-w-md hidden sm:block">
+            <p className="text-xs opacity-75 truncate max-w-md hidden sm:block font-serif text-slate-300">
               {isAuthorMode 
                 ? 'Chế độ Tác Giả • Soạn Thảo, Up Truyện Tranh & Đồng Bộ Google Docs/Sheets' 
-                : 'Cổng Đọc Truyện Tranh Webtoon • Bản Sắc Nét Cập Nhật Liên Tục'}
+                : '🌸 Không Gian Đọc Long Ấn Thức Tỉnh • Thơ Mộng & Cập Nhật Trực Tiếp'}
             </p>
           </div>
         </div>
@@ -235,14 +235,6 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
                 <KeyRound className="w-3.5 h-3.5 text-amber-400" />
                 <span>Độc giả</span>
               </button>
-
-              <button
-                onClick={() => setIsWarmTheme(!isWarmTheme)}
-                title="Chuyển đổi giao diện Đêm / Giấy Parchment thư giãn"
-                className="p-2 rounded-xl bg-slate-800/60 hover:bg-slate-700/80 border border-white/5 transition-all text-xs cursor-pointer"
-              >
-                {isWarmTheme ? <Moon className="w-3.5 h-3.5 text-amber-300" /> : <Sun className="w-3.5 h-3.5 text-amber-400" />}
-              </button>
             </>
           ) : (
             /* Chế độ Tác Giả (Sau khi đã xác thực PIN hoặc vào bằng ?author=1) */
@@ -295,14 +287,6 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
               </button>
 
               <button
-                onClick={() => setIsWarmTheme(!isWarmTheme)}
-                title="Chuyển đổi giao diện Đêm / Giấy Parchment thư giãn"
-                className="p-2 rounded-lg bg-slate-800/60 hover:bg-slate-700/80 border border-white/5 transition-all text-xs"
-              >
-                {isWarmTheme ? <Moon className="w-3.5 h-3.5 text-amber-300" /> : <Sun className="w-3.5 h-3.5 text-amber-400" />}
-              </button>
-
-              <button
                 onClick={onOpenSettings}
                 title="Cấu hình AI (Ollama Local, Gemini, OpenAI)"
                 className="p-2 rounded-lg bg-slate-800/60 hover:bg-slate-700/80 border border-white/5 transition-all text-xs"
@@ -312,7 +296,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
 
               <button
                 onClick={onResetSample}
-                title="Nạp lại dự án mẫu Long Ấn Ký"
+                title="Nạp lại dự án mẫu Long Ấn Thức Tỉnh"
                 className="p-2 rounded-lg bg-slate-800/60 hover:bg-rose-900/40 border border-rose-500/20 transition-all text-xs text-rose-300"
               >
                 <RotateCcw className="w-3.5 h-3.5" />

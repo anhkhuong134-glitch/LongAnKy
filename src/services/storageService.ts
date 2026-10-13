@@ -32,15 +32,21 @@ export class StorageService {
     if (!data) return sampleProject;
     try {
       const proj = JSON.parse(data);
-      // Clean up if pointing to old mock parts
+      // Migrate title to Long Ấn Thức Tỉnh
+      if (!proj.title || proj.title === 'Long Ấn Ký') {
+        proj.title = 'Long Ấn Thức Tỉnh';
+        localStorage.setItem(STORAGE_KEYS.PROJECT, JSON.stringify(proj));
+      }
+      // Clean up if pointing to old mock parts or deleted bản cũ
       if (
         !proj.activePartId ||
         proj.activePartId === 'part_02' ||
-        proj.activePartId === 'part_prologue' ||
-        proj.activePartId === 'part_chapters'
+        proj.activePartId === 'part_chapters' ||
+        proj.activePartId === 'part_aesvorn_arc' ||
+        (proj.activeChapterId && proj.activeChapterId.startsWith('aesvorn_'))
       ) {
-        proj.activePartId = 'part_mua_nuoc_dung';
-        proj.activeChapterId = 'doc_chap_01';
+        proj.activePartId = 'part_prologue';
+        proj.activeChapterId = 'doc_chap_prologue';
         localStorage.setItem(STORAGE_KEYS.PROJECT, JSON.stringify(proj));
       }
       return proj;
@@ -58,16 +64,21 @@ export class StorageService {
     if (!data) return googleDocsParts;
     try {
       const parts: Part[] = JSON.parse(data);
-      // Clean up old mock structure (part_prologue, part_chapters, or chapters with 'Người không tồn tại')
-      const hasOldMockData = parts.some(p => 
-        p.id === 'part_prologue' || 
+      // Dọn dẹp Bản Cũ (part_aesvorn_arc), dữ liệu mock cũ và cấu trúc cũ khi Mở Đầu chưa tách
+      const hasOldMockOrBanCu = parts.some(p => 
         p.id === 'part_chapters' || 
         p.id === 'part_epilogue' ||
+        p.id === 'part_aesvorn_arc' ||
+        p.title.toLowerCase().includes('bản cũ') ||
         p.chapters.some(c => c.title.includes('Người không tồn tại'))
       );
       const hasGoogleDocsPart = parts.some(p => p.id === 'part_mua_nuoc_dung');
+      // Kiểm tra nếu Mở Đầu vẫn còn nằm trong Phần 1 (chưa lôi ra ngoài)
+      const prologueInsidePart1 = parts.find(p => p.id === 'part_mua_nuoc_dung')?.chapters.some(c => c.id === 'doc_chap_prologue');
+      // Kiểm tra nếu thiếu phần Mở Đầu riêng biệt
+      const missingProloguePart = !parts.some(p => p.id === 'part_prologue');
 
-      if (hasOldMockData || !hasGoogleDocsPart) {
+      if (hasOldMockOrBanCu || !hasGoogleDocsPart || prologueInsidePart1 || missingProloguePart) {
         localStorage.setItem(STORAGE_KEYS.PARTS, JSON.stringify(googleDocsParts));
         return googleDocsParts;
       }

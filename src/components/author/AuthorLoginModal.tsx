@@ -146,7 +146,7 @@ export const AuthorLoginModal: React.FC<AuthorLoginModalProps> = ({
         </form>
 
         <div className="mt-4 pt-3 border-t border-white/5 text-[10px] text-slate-600 text-center">
-          Hệ thống bảo vệ nội dung và bản quyền tác phẩm Long Ấn Ký.
+          Hệ thống bảo vệ nội dung và bản quyền tác phẩm Long Ấn Thức Tỉnh.
         </div>
       </div>
     </div>

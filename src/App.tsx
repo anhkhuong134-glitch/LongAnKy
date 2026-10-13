@@ -81,11 +81,20 @@ export default function App() {
 
   // Navigation state (Phần -> Chương trực tiếp)
   const [activePartId, setActivePartId] = useState<string>(() => {
-    return project.activePartId || parts[0]?.id || 'part_mua_nuoc_dung';
+    return project.activePartId || parts[0]?.id || 'part_prologue';
   });
   const [activeChapterId, setActiveChapterId] = useState<string>(() => {
-    return project.activeChapterId || parts[0]?.chapters[0]?.id || 'doc_chap_01';
+    return project.activeChapterId || parts[0]?.chapters[0]?.id || 'doc_chap_prologue';
   });
+
+  // Tự động chuyển về chương hợp lệ nếu chương đang chọn không còn tồn tại (ví dụ Bản Cũ vừa xóa)
+  useEffect(() => {
+    const chapterExists = parts.some(p => p.chapters.some(c => c.id === activeChapterId));
+    if (!chapterExists && parts[0]?.chapters[0]) {
+      setActivePartId(parts[0].id);
+      setActiveChapterId(parts[0].chapters[0].id);
+    }
+  }, [parts, activeChapterId]);
 
   // Tự động kéo bản mới nhất từ link Google Docs
   const handleSyncGoogleDocs = useCallback(async (showNotification = true) => {
@@ -452,7 +461,7 @@ export default function App() {
 
   // Reset to sample project
   const handleResetSample = () => {
-    if (!window.confirm('Tải lại nguyên bản dự án mẫu "Long Ấn Ký" từ file docx?')) return;
+    if (!window.confirm('Tải lại nguyên bản dự án mẫu "Long Ấn Thức Tỉnh" từ file docx?')) return;
     localStorage.clear();
     window.location.reload();
   };
