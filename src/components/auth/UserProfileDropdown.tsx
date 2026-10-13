@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { User, LogIn, LogOut, Clock, Bookmark, Sparkles, Bell, Calendar, ChevronDown, Award, Play, ShieldCheck, Zap, Cloud, Database } from 'lucide-react';
+import { User, LogIn, LogOut, Clock, Bookmark, Sparkles, Bell, Calendar, ChevronDown, Award, Play, ShieldCheck, Zap, Cloud, Database, Trophy } from 'lucide-react';
 import { UserProfile } from '../../types/user';
 import { UserService } from '../../services/userService';
 
@@ -7,6 +7,7 @@ interface UserProfileDropdownProps {
   currentUser: UserProfile | null;
   onOpenAuthModal: () => void;
   onOpenHistoryModal: () => void;
+  onOpenLeaderboard?: () => void;
   onUserUpdated: (user: UserProfile | null) => void;
   onNavigateChapter?: (type: 'novel' | 'comic', chapterId: string, partId?: string, chapterIndex?: number) => void;
 }
@@ -15,6 +16,7 @@ export const UserProfileDropdown: React.FC<UserProfileDropdownProps> = ({
   currentUser,
   onOpenAuthModal,
   onOpenHistoryModal,
+  onOpenLeaderboard,
   onUserUpdated,
   onNavigateChapter,
 }) => {
@@ -210,6 +212,21 @@ export const UserProfileDropdown: React.FC<UserProfileDropdownProps> = ({
                 <span>Lịch Sử Đọc (NetTruyen)</span>
               </div>
               <span className="text-[10px] text-slate-500">Xem lại</span>
+            </button>
+
+            {/* Bảng Phong Thần Đạo Hữu */}
+            <button
+              onClick={() => {
+                setIsOpen(false);
+                if (onOpenLeaderboard) onOpenLeaderboard();
+              }}
+              className="w-full px-3 py-2 rounded-xl hover:bg-white/5 text-slate-300 hover:text-amber-300 text-xs font-medium flex items-center justify-between transition-colors cursor-pointer"
+            >
+              <div className="flex items-center gap-2.5">
+                <Trophy className="w-3.5 h-3.5 text-amber-400" />
+                <span>Bảng Phong Thần Đạo Hữu</span>
+              </div>
+              <span className="text-[9px] font-mono font-bold text-amber-400 px-1.5 py-0.2 rounded bg-amber-500/20">Top Tu Vi</span>
             </button>
 
             {/* Theo Dõi Truyện */}

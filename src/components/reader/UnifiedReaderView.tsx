@@ -30,7 +30,10 @@ import {
   Lock,
   KeyRound,
   Headphones,
-  CheckCircle2
+  CheckCircle2,
+  Trophy,
+  Volume2,
+  VolumeX
 } from 'lucide-react';
 import { Project, Part, Chapter, ComicChapter, ComicPanel, ComicReadingMode, AISettings, Character } from '../../types';
 import { sampleComicChapters, GOOGLE_DOCS_URL } from '../../data/googleData';
@@ -53,6 +56,8 @@ import { UserHistoryModal } from '../auth/UserHistoryModal';
 import { AudioDramaService, AudioDramaSentence, VoiceThemeId, VOICE_THEMES, SPEAKER_METADATA } from '../../services/audioDramaService';
 import { AudioDramaPlayerBar } from '../audio/AudioDramaPlayerBar';
 import { ComicComingSoonView } from '../comic/ComicComingSoonView';
+import { LeaderboardModal } from '../leaderboard/LeaderboardModal';
+import { ambientAudio, AMBIENT_PRESETS, AmbientSoundType } from '../../services/ambientAudioService';
 
 interface UnifiedReaderViewProps {
   project: Project;
@@ -246,6 +251,11 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
   const [currentUser, setCurrentUser] = useState<UserProfile | null>(() => UserService.getCurrentUser());
   const [isAuthModalOpen, setIsAuthModalOpen] = useState<boolean>(false);
   const [isHistoryModalOpen, setIsHistoryModalOpen] = useState<boolean>(false);
+  const [isLeaderboardOpen, setIsLeaderboardOpen] = useState<boolean>(false);
+  const [isAmbientMenuOpen, setIsAmbientMenuOpen] = useState<boolean>(false);
+  const [currentAmbient, setCurrentAmbient] = useState<AmbientSoundType>('none');
+  const [ambientVolume, setAmbientVolume] = useState<number>(0.35);
+  const [isDragonAuraActive, setIsDragonAuraActive] = useState<boolean>(false);
 
   // Character Dossier Drawer state (Tra cứu hồ sơ nhân vật bên phải)
   const [isCharacterDrawerOpen, setIsCharacterDrawerOpen] = useState<boolean>(false);
@@ -1101,9 +1111,120 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
               currentUser={currentUser}
               onOpenAuthModal={() => setIsAuthModalOpen(true)}
               onOpenHistoryModal={() => setIsHistoryModalOpen(true)}
+              onOpenLeaderboard={() => setIsLeaderboardOpen(true)}
               onNavigateChapter={handleNavigateFromHistory}
               onUserUpdated={(u) => setCurrentUser(u)}
             />
+
+            {/* Phong Thần Leaderboard Button */}
+            <button
+              onClick={() => setIsLeaderboardOpen(true)}
+              className="flex items-center space-x-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-500/20 via-purple-500/15 to-amber-500/20 hover:from-amber-500/30 hover:to-purple-500/25 border border-amber-400/40 text-amber-200 hover:text-white transition-all cursor-pointer shadow-sm group"
+              title="Bảng Phong Thần Đạo Hữu (Xếp hạng Tu Vi MongoDB Atlas)"
+            >
+              <Trophy className="w-3.5 h-3.5 text-amber-400 group-hover:scale-110 transition-transform" />
+              <span className="hidden md:inline text-xs font-serif font-bold">Phong Thần</span>
+            </button>
+
+            {/* Ambient Soundscape Dropdown */}
+            <div className="relative">
+              <button
+                onClick={() => setIsAmbientMenuOpen(prev => !prev)}
+                className={`flex items-center space-x-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl border transition-all cursor-pointer ${
+                  currentAmbient !== 'none'
+                    ? 'bg-emerald-500/25 border-emerald-400/50 text-emerald-200 shadow-md shadow-emerald-500/20 animate-pulse'
+                    : 'bg-black/25 hover:bg-black/35 border-white/10 text-slate-300'
+                }`}
+                title="Âm thanh môi trường: Mưa đêm, Lửa trại, Sóng nước, Gió rừng..."
+              >
+                <Headphones className="w-3.5 h-3.5 text-emerald-400" />
+                <span className="hidden xl:inline text-xs">
+                  {currentAmbient !== 'none' ? AMBIENT_PRESETS.find(p => p.id === currentAmbient)?.name : 'Âm Nền'}
+                </span>
+              </button>
+
+              {isAmbientMenuOpen && (
+                <div className="absolute right-0 top-full mt-2 w-72 rounded-2xl bg-slate-950/95 border border-emerald-500/30 shadow-2xl backdrop-blur-2xl z-50 p-3 space-y-2.5 animate-fade-in select-none">
+                  <div className="flex items-center justify-between pb-2 border-b border-white/10 text-xs font-serif font-bold text-emerald-300">
+                    <span className="flex items-center gap-1.5">
+                      <span>🎧</span>
+                      <span>ÂM THANH MÔI TRƯỜNG</span>
+                    </span>
+                    <button
+                      onClick={() => setIsAmbientMenuOpen(false)}
+                      className="text-slate-400 hover:text-white p-0.5 cursor-pointer"
+                    >
+                      <X className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+
+                  <div className="space-y-1">
+                    {AMBIENT_PRESETS.map((preset) => (
+                      <button
+                        key={preset.id}
+                        onClick={() => {
+                          ambientAudio.setSound(preset.id);
+                          setCurrentAmbient(preset.id);
+                        }}
+                        className={`w-full p-2 rounded-xl text-left text-xs transition-all flex items-center justify-between cursor-pointer ${
+                          currentAmbient === preset.id
+                            ? 'bg-emerald-500/20 text-emerald-200 border border-emerald-500/40 font-bold'
+                            : 'text-slate-300 hover:bg-white/5 hover:text-white border border-transparent'
+                        }`}
+                      >
+                        <div className="flex items-center gap-2">
+                          <span className="text-base">{preset.icon}</span>
+                          <div>
+                            <div className="text-xs">{preset.name}</div>
+                            <div className="text-[10px] text-slate-400 font-normal leading-tight">{preset.description}</div>
+                          </div>
+                        </div>
+                        {currentAmbient === preset.id && <span className="text-emerald-400 text-xs">✓</span>}
+                      </button>
+                    ))}
+                  </div>
+
+                  {currentAmbient !== 'none' && (
+                    <div className="pt-2 border-t border-white/10 space-y-1">
+                      <div className="flex items-center justify-between text-[10px] text-slate-400">
+                        <span>Âm lượng âm nền:</span>
+                        <span className="font-mono text-emerald-300 font-bold">{Math.round(ambientVolume * 100)}%</span>
+                      </div>
+                      <input
+                        type="range"
+                        min={0}
+                        max={1}
+                        step={0.05}
+                        value={ambientVolume}
+                        onChange={(e) => {
+                          const val = parseFloat(e.target.value);
+                          setAmbientVolume(val);
+                          ambientAudio.setVolume(val);
+                        }}
+                        className="w-full accent-emerald-400 h-1 bg-slate-800 rounded-lg cursor-pointer"
+                      />
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+
+            {/* Dragon Aura Effect Toggle */}
+            <button
+              onClick={() => {
+                const nextState = !isDragonAuraActive;
+                setIsDragonAuraActive(nextState);
+                showToast(nextState ? '✨ Đã kích hoạt Hào Quang Long Ấn Thức Tỉnh!' : 'Đã tắt hào quang linh khí.');
+              }}
+              className={`p-2 rounded-xl border transition-all cursor-pointer ${
+                isDragonAuraActive
+                  ? 'bg-amber-500/30 border-amber-400 text-amber-300 shadow-[0_0_15px_rgba(251,191,36,0.5)] animate-pulse'
+                  : 'bg-black/25 hover:bg-black/35 border-white/10 text-slate-400 hover:text-amber-300'
+              }`}
+              title={isDragonAuraActive ? "Đang bật Hào Quang Long Ấn" : "Kích hoạt Hào Quang Long Ấn Thức Tỉnh"}
+            >
+              <Sparkles className="w-3.5 h-3.5" />
+            </button>
 
             {/* Audio Read-Aloud Button (Truyện Chữ) */}
             {readerType === 'novel' && (
@@ -2620,6 +2741,21 @@ export const UnifiedReaderView: React.FC<UnifiedReaderViewProps> = ({
         currentUser={currentUser}
         onNavigateChapter={handleNavigateFromHistory}
       />
+
+      {/* 10. Bảng Phong Thần Đạo Hữu Live Cloud Leaderboard Modal (MongoDB Atlas) */}
+      <LeaderboardModal
+        isOpen={isLeaderboardOpen}
+        onClose={() => setIsLeaderboardOpen(false)}
+        currentUser={currentUser}
+      />
+
+      {/* Dragon Awakening Golden Aura FX Layer */}
+      {isDragonAuraActive && (
+        <div className="fixed inset-0 pointer-events-none z-10 overflow-hidden">
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-amber-500/10 via-purple-950/5 to-transparent animate-pulse" />
+          <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-amber-400/5 rounded-full blur-3xl pointer-events-none animate-pulse" style={{ animationDuration: '3s' }} />
+        </div>
+      )}
 
       {/* Floating Toast Notification */}
       {quoteToast && (

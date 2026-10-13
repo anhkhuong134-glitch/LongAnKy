@@ -579,5 +579,132 @@ export default async function handler(req, res) {
     return res.status(200).json({ success: true, users: [] });
   }
 
+  // ACTION: GET COMMENTS (MongoDB Atlas)
+  if (action === 'get_comments') {
+    const chapterId = req.query.chapterId || body.chapterId;
+    if (!chapterId) {
+      return res.status(400).json({ success: false, message: 'Thiếu chapterId' });
+    }
+
+    if (dbConfig.type === 'mongodb') {
+      try {
+        const db = await getMongoDb(dbConfig.uri);
+        const comments = await db.collection('comments')
+          .find({ chapterId }, { projection: { _id: 0 } })
+          .sort({ createdAt: -1 })
+          .limit(100)
+          .toArray();
+
+        return res.status(200).json({ success: true, comments });
+      } catch (err) {
+        return res.status(500).json({ success: false, message: 'Lỗi tải bình luận: ' + err.message });
+      }
+    }
+
+    return res.status(200).json({ success: true, comments: [] });
+  }
+
+  // ACTION: POST COMMENT (MongoDB Atlas)
+  if (action === 'post_comment') {
+    const { chapterId, name, text, avatar, level, levelTitle, userId } = body;
+    if (!chapterId || !text) {
+      return res.status(400).json({ success: false, message: 'Nội dung bình luận không được để trống' });
+    }
+
+    if (dbConfig.type === 'mongodb') {
+      try {
+        const db = await getMongoDb(dbConfig.uri);
+        const doc = {
+          id: `c_${Date.now()}_${Math.random().toString(36).substr(2, 4)}`,
+          chapterId,
+          name: name || 'Đạo Hữu Vô Danh',
+          text: text.trim(),
+          avatar: avatar || '🐉',
+          level: Number(level) || 1,
+          levelTitle: levelTitle || 'Phàm Nhân',
+          userId: userId || '',
+          createdAt: new Date().toISOString(),
+        };
+
+        await db.collection('comments').insertOne(doc);
+        const { _id, ...safeComment } = doc;
+        return res.status(200).json({ success: true, comment: safeComment });
+      } catch (err) {
+        return res.status(500).json({ success: false, message: 'Lỗi lưu bình luận: ' + err.message });
+      }
+    }
+
+    return res.status(200).json({
+      success: true,
+      comment: {
+        id: `c_${Date.now()}`,
+        chapterId,
+        name: name || 'Đạo Hữu',
+        text: text.trim(),
+        avatar: avatar || '🐉',
+        level: level || 1,
+        levelTitle: levelTitle || 'Phàm Nhân',
+        createdAt: new Date().toISOString(),
+      }
+    });
+  }
+
+  // ACTION: GET & POST REACTIONS (MongoDB Atlas)
+  if (action === 'get_reactions') {
+    const chapterId = req.query.chapterId || body.chapterId;
+    if (dbConfig.type === 'mongodb' && chapterId) {
+      try {
+        const db = await getMongoDb(dbConfig.uri);
+        const doc = await db.collection('reactions').findOne({ chapterId });
+        return res.status(200).json({
+          success: true,
+          reactions: doc?.reactions || { love: 14, dragon: 28, fire: 19, flower: 22 }
+        });
+      } catch (err) {
+        // Fallback
+      }
+    }
+    return res.status(200).json({ success: true, reactions: { love: 14, dragon: 28, fire: 19, flower: 22 } });
+  }
+
+  if (action === 'post_reaction') {
+    const { chapterId, type } = body;
+    if (dbConfig.type === 'mongodb' && chapterId && type) {
+      try {
+        const db = await getMongoDb(dbConfig.uri);
+        await db.collection('reactions').updateOne(
+          { chapterId },
+          { $inc: { [`reactions.${type}`]: 1 } },
+          { upsert: true }
+        );
+        const updated = await db.collection('reactions').findOne({ chapterId });
+        return res.status(200).json({ success: true, reactions: updated?.reactions });
+      } catch (err) {
+        // Fallback
+      }
+    }
+    return res.status(200).json({ success: true });
+  }
+
+  // ACTION: GET LEADERBOARD (Top Tu Vi Đạo Hữu)
+  if (action === 'get_leaderboard') {
+    if (dbConfig.type === 'mongodb') {
+      try {
+        const db = await getMongoDb(dbConfig.uri);
+        const leaderboard = await db.collection('users')
+          .find({}, { projection: { password: 0, _id: 0 } })
+          .sort({ exp: -1 })
+          .limit(30)
+          .toArray();
+
+        return res.status(200).json({ success: true, leaderboard });
+      } catch (err) {
+        return res.status(500).json({ success: false, message: err.message });
+      }
+    }
+
+    return res.status(200).json({ success: true, leaderboard: [] });
+  }
+
   return res.status(400).json({ error: 'Hành động không hợp lệ' });
 }

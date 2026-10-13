@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Heart, Flame, Sparkles, MessageSquare, Send, User, Zap, Lock } from 'lucide-react';
+import { Heart, Flame, Sparkles, MessageSquare, Send, User, Zap, Lock, Database } from 'lucide-react';
 import { UserProfile } from '../../types/user';
 import { UserService } from '../../services/userService';
 
@@ -31,10 +31,10 @@ export const ChapterCommentsSection: React.FC<ChapterCommentsSectionProps> = ({
 }) => {
   // Reactions state
   const [reactions, setReactions] = useState<{ love: number; dragon: number; fire: number; flower: number }>({
-    love: 12,
-    dragon: 24,
-    fire: 18,
-    flower: 15
+    love: 14,
+    dragon: 28,
+    fire: 19,
+    flower: 22
   });
   const [userReacted, setUserReacted] = useState<string | null>(null);
 
@@ -45,21 +45,18 @@ export const ChapterCommentsSection: React.FC<ChapterCommentsSectionProps> = ({
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [commentToast, setCommentToast] = useState<string | null>(null);
 
-  // Load from localStorage for this chapter
+  // Load from MongoDB Atlas + fallback localStorage
   useEffect(() => {
+    // 1. Initial local load
     try {
       const storedReactions = localStorage.getItem(`longanky_reactions_${chapterId}`);
       if (storedReactions) {
         setReactions(JSON.parse(storedReactions));
-      } else {
-        setReactions({ love: 14, dragon: 28, fire: 19, flower: 22 });
       }
-
       const storedUserReacted = localStorage.getItem(`longanky_user_react_${chapterId}`);
       if (storedUserReacted) {
         setUserReacted(storedUserReacted);
       }
-
       const storedComments = localStorage.getItem(`longanky_comments_${chapterId}`);
       if (storedComments) {
         setComments(JSON.parse(storedComments));
@@ -95,6 +92,27 @@ export const ChapterCommentsSection: React.FC<ChapterCommentsSectionProps> = ({
         if (savedName) setAuthorName(savedName);
       }
     } catch (e) {}
+
+    // 2. Fetch live comments from MongoDB Atlas
+    fetch(`/api/auth?action=get_comments&chapterId=${encodeURIComponent(chapterId)}`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.success && Array.isArray(data.comments) && data.comments.length > 0) {
+          setComments(data.comments);
+          localStorage.setItem(`longanky_comments_${chapterId}`, JSON.stringify(data.comments));
+        }
+      })
+      .catch(() => {});
+
+    // 3. Fetch live reactions from MongoDB Atlas
+    fetch(`/api/auth?action=get_reactions&chapterId=${encodeURIComponent(chapterId)}`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.success && data.reactions) {
+          setReactions(data.reactions);
+        }
+      })
+      .catch(() => {});
   }, [chapterId, currentUser]);
 
   const handleReact = (type: 'love' | 'dragon' | 'fire' | 'flower') => {
@@ -106,6 +124,13 @@ export const ChapterCommentsSection: React.FC<ChapterCommentsSectionProps> = ({
       localStorage.setItem(`longanky_reactions_${chapterId}`, JSON.stringify(updated));
       localStorage.setItem(`longanky_user_react_${chapterId}`, type);
     } catch (e) {}
+
+    // Post to MongoDB Atlas
+    fetch('/api/auth', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'post_reaction', chapterId, type }),
+    }).catch(() => {});
   };
 
   const handlePostComment = (e: React.FormEvent) => {
@@ -136,11 +161,27 @@ export const ChapterCommentsSection: React.FC<ChapterCommentsSectionProps> = ({
       }
     } catch (e) {}
 
+    // Save to MongoDB Atlas
+    fetch('/api/auth', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        action: 'post_comment',
+        chapterId,
+        name: finalName,
+        text: newComment.text,
+        avatar: newComment.avatar,
+        level: newComment.level,
+        levelTitle: newComment.levelTitle,
+        userId: currentUser?.id,
+      }),
+    }).catch(() => {});
+
     // Award EXP to logged-in user
     if (currentUser) {
       UserService.awardExp(15, 'Bình luận chương truyện');
       if (onUserUpdated) onUserUpdated(UserService.getCurrentUser());
-      setCommentToast('✨ Đã gửi bình luận (+15 Tu Vi)!');
+      setCommentToast('✨ Đã gửi bình luận lên MongoDB Atlas (+15 Tu Vi)!');
     } else {
       setCommentToast('Đã gửi bình luận thành công!');
     }
@@ -201,140 +242,146 @@ export const ChapterCommentsSection: React.FC<ChapterCommentsSectionProps> = ({
             }`}
           >
             <Flame className={`w-4 h-4 ${userReacted === 'fire' ? 'fill-orange-400 text-orange-400' : 'text-orange-400'}`} />
-            <span>Sôi sục hào khí ({reactions.fire})</span>
+            <span>Cuốn hút ({reactions.fire})</span>
           </button>
 
           <button
             onClick={() => handleReact('flower')}
             className={`px-4 py-2.5 rounded-2xl border text-xs font-semibold flex items-center gap-2 transition-all cursor-pointer ${
               userReacted === 'flower'
-                ? 'bg-pink-500/25 border-pink-500/60 text-pink-300 ring-2 ring-pink-400/30 scale-105'
-                : 'bg-white/5 hover:bg-pink-500/10 border-white/10 hover:border-pink-500/30 text-slate-300 hover:text-pink-200'
+                ? 'bg-emerald-500/25 border-emerald-500/60 text-emerald-300 ring-2 ring-emerald-400/30 scale-105'
+                : 'bg-white/5 hover:bg-emerald-500/10 border-white/10 hover:border-emerald-500/30 text-slate-300 hover:text-emerald-200'
             }`}
           >
-            <Sparkles className={`w-4 h-4 ${userReacted === 'flower' ? 'fill-pink-400 text-pink-400' : 'text-pink-400'}`} />
-            <span>Tặng hoa linh thạch ({reactions.flower})</span>
+            <span>🌸</span>
+            <span>Tặng hoa ({reactions.flower})</span>
           </button>
         </div>
       </div>
 
-      {/* 2. Reader Community Reactions & Comments Section */}
-      <div className="space-y-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-2">
-            <MessageSquare className="w-4 h-4 text-amber-400" />
-            <h4 className="font-serif font-bold text-sm text-slate-100">
-              Góc Bình Luận &amp; Cảm Nghĩ ({comments.length})
-            </h4>
+      {/* 2. Comments Thread Container */}
+      <div className="space-y-6">
+        <div className="flex items-center justify-between pb-3 border-b border-white/10">
+          <div className="flex items-center gap-2">
+            <MessageSquare className="w-5 h-5 text-indigo-400" />
+            <h3 className="font-serif font-bold text-base text-slate-100">
+              Đàm Đạo &amp; Bình Luận ({comments.length})
+            </h3>
           </div>
-          <span className="text-[10px] text-slate-400 italic">Thảo luận cùng cộng đồng đọc Long Ấn</span>
+
+          <div className="flex items-center gap-1.5 text-[10px] text-emerald-400 font-mono bg-emerald-950/40 px-2 py-1 rounded-lg border border-emerald-500/20">
+            <Database className="w-3 h-3 text-emerald-400" />
+            <span>MongoDB Atlas Cloud Sync</span>
+          </div>
         </div>
 
-        {/* Member Perk Prompt for Guests */}
-        {!currentUser && onOpenAuthModal && (
-          <div className="p-3 rounded-2xl bg-gradient-to-r from-rose-950/40 via-purple-950/30 to-slate-900 border border-rose-500/30 flex items-center justify-between gap-3 text-xs">
-            <div className="flex items-center gap-2 text-rose-200">
-              <Zap className="w-4 h-4 text-amber-400 shrink-0 animate-bounce" />
-              <span><strong>Đăng nhập thành viên:</strong> Nhận huy hiệu cấp bậc Tu Vi NetTruyen và +15 EXP khi bình luận!</span>
-            </div>
-            <button
-              onClick={onOpenAuthModal}
-              className="px-3 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs shrink-0 transition-all cursor-pointer shadow-md shadow-rose-600/30"
-            >
-              Đăng Nhập
-            </button>
-          </div>
-        )}
-
-        {/* Comment Input Form */}
-        <form onSubmit={handlePostComment} className="p-4 rounded-2xl bg-slate-900/50 border border-white/10 space-y-3">
+        {/* Form Write Comment */}
+        <form onSubmit={handlePostComment} className="p-5 rounded-2xl bg-slate-900/40 border border-white/10 space-y-4">
           <div className="flex items-center justify-between">
-            {currentUser ? (
-              <div className="flex items-center space-x-2.5">
-                <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-rose-500 to-amber-500 flex items-center justify-center text-sm shadow-sm">
-                  {currentUser.avatar || '🐉'}
+            <div className="flex items-center space-x-2">
+              <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-indigo-500 to-rose-500 flex items-center justify-center text-sm shadow">
+                {currentUser?.avatar || '🐉'}
+              </div>
+              <div>
+                <div className="text-xs font-bold text-slate-200">
+                  {currentUser ? currentUser.displayName : (authorName || 'Độc giả chưa đăng nhập')}
                 </div>
-                <div>
-                  <div className="flex items-center gap-1.5">
-                    <span className="font-serif font-bold text-xs text-white">{currentUser.displayName}</span>
-                    <span className="text-[9px] font-mono font-bold px-1.5 py-0.2 rounded bg-rose-600 text-white">
-                      Lv.{currentUser.level}
-                    </span>
+                {currentUser ? (
+                  <div className="text-[10px] text-amber-300 font-serif">
+                    ✦ {currentUser.levelTitle} (Cấp {currentUser.level})
                   </div>
-                  <span className="text-[10px] text-amber-300 font-serif">✦ {currentUser.levelTitle}</span>
-                </div>
+                ) : (
+                  <div className="text-[10px] text-slate-400">
+                    Khách vãng lai
+                  </div>
+                )}
               </div>
-            ) : (
-              <div className="flex items-center space-x-2 flex-1 mr-2">
-                <div className="w-7 h-7 rounded-full bg-amber-500/20 border border-amber-400/30 flex items-center justify-center text-amber-300 text-xs font-bold shrink-0">
-                  <User className="w-3.5 h-3.5" />
-                </div>
-                <input
-                  type="text"
-                  value={authorName}
-                  onChange={e => setAuthorName(e.target.value)}
-                  placeholder="Biệt danh của bạn (ví dụ: Bé Mèo Đọc Sách)"
-                  className="flex-1 bg-black/30 border border-white/10 rounded-xl px-3 py-1.5 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-amber-400"
-                />
-              </div>
-            )}
+            </div>
 
-            {currentUser && (
-              <span className="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
-                +15 Tu Vi
-              </span>
+            {!currentUser && onOpenAuthModal && (
+              <button
+                type="button"
+                onClick={onOpenAuthModal}
+                className="text-[11px] text-amber-400 hover:text-amber-300 flex items-center gap-1 transition-colors cursor-pointer"
+              >
+                <Zap className="w-3 h-3" />
+                <span>Đăng nhập để nhận Tu Vi (+15 EXP)</span>
+              </button>
             )}
           </div>
 
-          <textarea
-            value={commentText}
-            onChange={e => setCommentText(e.target.value)}
-            rows={3}
-            placeholder={`Chia sẻ suy nghĩ của bạn về ${chapterTitle}...`}
-            className="w-full bg-black/40 border border-white/10 rounded-xl p-3 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-pink-400 leading-relaxed font-serif"
-          />
+          {!currentUser && (
+            <div>
+              <input
+                type="text"
+                placeholder="Nhập tên của bạn khi bình luận..."
+                value={authorName}
+                onChange={e => setAuthorName(e.target.value)}
+                className="w-full px-3.5 py-2 rounded-xl bg-slate-950/80 border border-white/10 text-xs text-slate-200 placeholder:text-slate-500 outline-none focus:border-indigo-400"
+              />
+            </div>
+          )}
+
+          <div>
+            <textarea
+              rows={3}
+              required
+              placeholder="Chia sẻ cảm nghĩ, dự đoán tình tiết hoặc gửi lời nhắn đến tác giả..."
+              value={commentText}
+              onChange={e => setCommentText(e.target.value)}
+              className="w-full p-3.5 rounded-xl bg-slate-950/80 border border-white/10 text-xs text-slate-200 placeholder:text-slate-500 outline-none focus:border-indigo-400 resize-none"
+            />
+          </div>
 
           <div className="flex justify-end">
             <button
               type="submit"
               disabled={isSubmitting || !commentText.trim()}
-              className="px-4 py-2 rounded-xl bg-gradient-to-r from-pink-500 to-amber-500 hover:from-pink-400 hover:to-amber-400 text-slate-950 font-bold text-xs flex items-center space-x-1.5 transition-all shadow-md shadow-pink-500/20 disabled:opacity-40 cursor-pointer"
+              className="px-5 py-2 rounded-xl bg-gradient-to-r from-indigo-600 to-rose-600 hover:from-indigo-500 hover:to-rose-500 disabled:opacity-50 text-white font-semibold text-xs flex items-center gap-2 shadow-lg shadow-indigo-600/20 active:scale-95 transition-all cursor-pointer"
             >
-              <Send className="w-3 h-3" />
+              <Send className="w-3.5 h-3.5" />
               <span>Gửi Bình Luận</span>
             </button>
           </div>
         </form>
 
-        {/* Comments List (NetTruyen Style) */}
-        <div className="space-y-2.5">
-          {comments.map(c => (
-            <div 
+        {/* Comment List */}
+        <div className="space-y-3.5">
+          {comments.map((c) => (
+            <div
               key={c.id}
-              className="p-3.5 rounded-2xl bg-slate-900/40 border border-white/5 space-y-2 hover:border-white/10 transition-colors"
+              className="p-4 rounded-2xl bg-slate-900/50 border border-white/5 space-y-2 hover:border-white/10 transition-colors"
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-2.5">
-                  <div className="w-7 h-7 rounded-xl bg-gradient-to-tr from-rose-500/30 to-amber-500/30 border border-rose-500/40 flex items-center justify-center text-xs shadow-sm">
-                    {c.avatar || c.name.slice(0, 1).toUpperCase()}
+                  <div className="w-7 h-7 rounded-lg bg-slate-800 flex items-center justify-center text-sm border border-white/10">
+                    {c.avatar || '🐉'}
                   </div>
                   <div>
                     <div className="flex items-center gap-1.5">
-                      <span className="font-serif font-bold text-xs text-slate-200">{c.name}</span>
-                      <span className="text-[9px] px-1.5 py-0.2 rounded bg-rose-600/90 text-white font-mono font-bold">
-                        Lv.{c.level || 1}
+                      <span className="font-serif font-bold text-xs text-slate-200">
+                        {c.name}
                       </span>
+                      {c.level && (
+                        <span className="text-[9px] font-mono font-bold px-1 rounded bg-rose-600/80 text-white">
+                          Lv.{c.level}
+                        </span>
+                      )}
                     </div>
                     {c.levelTitle && (
-                      <span className="text-[10px] text-amber-300/80 font-serif block leading-none">
+                      <span className="text-[9px] text-amber-300 font-serif">
                         ✦ {c.levelTitle}
                       </span>
                     )}
                   </div>
                 </div>
-                <span className="text-[10px] text-slate-500 font-mono">{c.createdAt}</span>
+
+                <span className="text-[10px] text-slate-500 font-mono">
+                  {c.createdAt.includes('T') ? new Date(c.createdAt).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }) : c.createdAt}
+                </span>
               </div>
-              <p className="text-xs text-slate-300 leading-relaxed pl-9 font-serif">
+
+              <p className="text-xs text-slate-300 pl-9 leading-relaxed">
                 {c.text}
               </p>
             </div>
