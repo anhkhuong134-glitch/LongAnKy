@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import {
   ChevronLeft, ChevronRight, List, Type, MoreHorizontal, Bookmark,
   Headphones, Maximize, Minimize, CheckCircle2, RotateCcw, X, MessageSquare,
@@ -14,7 +14,13 @@ import {
   ReaderSettings
 } from '../../services/readingProgress';
 import { AudioDramaPlayerBar } from '../audio/AudioDramaPlayerBar';
-import { AudioDramaService } from '../../services/audioDramaService';
+import { 
+  AudioDramaService, 
+  VoiceThemeId, 
+  SPEAKER_METADATA,
+  AudioDramaSentence,
+  AudioSpeaker
+} from '../../services/audioDramaService';
 import { UserProfile } from '../../types';
 
 interface NovelReaderPageProps {
@@ -47,10 +53,14 @@ export const NovelReaderPage: React.FC<NovelReaderPageProps> = ({
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
   const [currentSentenceIndex, setCurrentSentenceIndex] = useState(0);
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
-  const [voiceTheme, setVoiceTheme] = useState<'mythic_drama' | 'night_chill' | 'epic_shonen' | 'solo_male' | 'solo_female'>('mythic_drama');
+  const [voiceTheme, setVoiceTheme] = useState<VoiceThemeId>('mythic_drama');
   const [speechRate, setSpeechRate] = useState(1.0);
   const [isAutoScrollEnabled, setIsAutoScrollEnabled] = useState(true);
-  const [audioDramaSentences, setAudioDramaSentences] = useState<any[]>([]);
+  const [audioDramaSentences, setAudioDramaSentences] = useState<AudioDramaSentence[]>([]);
+
+  const synthRef = useRef<SpeechSynthesis | null>(null);
+  const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
+  const wordTimerRef = useRef<any>(null);
 
   // Reactions & Comments state
   const [reactions, setReactions] = useState<{ fire: number; love: number; dragon: number; flower: number }>({
@@ -133,6 +143,208 @@ export const NovelReaderPage: React.FC<NovelReaderPageProps> = ({
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, [chapter]);
+
+  // Initialize Web Speech Synthesis & voice listeners
+  useEffect(() => {
+    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+      synthRef.current = window.speechSynthesis;
+      const handleVoices = () => {
+        if (synthRef.current) {
+          synthRef.current.getVoices();
+        }
+      };
+      handleVoices();
+      window.speechSynthesis.addEventListener('voiceschanged', handleVoices);
+      return () => {
+        window.speechSynthesis.removeEventListener('voiceschanged', handleVoices);
+      };
+    }
+  }, []);
+
+  // Cleanup speech when unmounting or changing chapter
+  useEffect(() => {
+    return () => {
+      if (synthRef.current) {
+        try {
+          synthRef.current.cancel();
+        } catch {}
+      }
+      if (wordTimerRef.current) {
+        clearInterval(wordTimerRef.current);
+      }
+    };
+  }, [chapterId]);
+
+  // Play audio for a specific sentence index
+  const playSentence = useCallback((index: number) => {
+    if (!synthRef.current || !audioDramaSentences || audioDramaSentences.length === 0) {
+      setIsPlayingAudio(false);
+      return;
+    }
+
+    if (index < 0 || index >= audioDramaSentences.length) {
+      setIsPlayingAudio(false);
+      return;
+    }
+
+    if (wordTimerRef.current) {
+      clearInterval(wordTimerRef.current);
+      wordTimerRef.current = null;
+    }
+
+    try {
+      synthRef.current.cancel();
+      if (synthRef.current.paused) {
+        synthRef.current.resume();
+      }
+    } catch {}
+
+    const sentence = audioDramaSentences[index];
+    const utterance = new SpeechSynthesisUtterance(sentence.text);
+    utterance.lang = 'vi-VN';
+
+    const meta = SPEAKER_METADATA[sentence.speaker as AudioSpeaker] || SPEAKER_METADATA.narrator;
+    const viVoice = AudioDramaService.getBestVietnameseVoice(
+      synthRef.current, 
+      meta?.gender === 'female' ? 'female' : meta?.gender === 'male' ? 'male' : undefined
+    );
+    if (viVoice) {
+      utterance.voice = viVoice;
+    }
+
+    const { pitch, rate } = AudioDramaService.getVoiceParameters(sentence, voiceTheme, speechRate);
+    utterance.pitch = pitch;
+    utterance.rate = rate;
+
+    setCurrentSentenceIndex(index);
+    setCurrentWordIndex(0);
+
+    utterance.onboundary = (event) => {
+      if (event.name === 'word' || (event as any).charIndex !== undefined) {
+        const wordIdx = AudioDramaService.getWordIndexFromCharIndex(sentence.text, (event as any).charIndex || 0);
+        setCurrentWordIndex(wordIdx);
+      }
+    };
+
+    const words = sentence.words || sentence.text.split(/\s+/).filter(Boolean);
+    const msPerWord = AudioDramaService.getAverageWordDurationMs(sentence.text, rate);
+    let simIdx = 0;
+    wordTimerRef.current = setInterval(() => {
+      simIdx++;
+      if (simIdx < words.length) {
+        setCurrentWordIndex(prev => Math.max(prev, simIdx));
+      } else {
+        if (wordTimerRef.current) clearInterval(wordTimerRef.current);
+      }
+    }, msPerWord);
+
+    utterance.onstart = () => {
+      setIsPlayingAudio(true);
+    };
+
+    utterance.onend = () => {
+      if (wordTimerRef.current) clearInterval(wordTimerRef.current);
+      setCurrentWordIndex(words.length);
+      if (index < audioDramaSentences.length - 1) {
+        playSentence(index + 1);
+      } else {
+        setIsPlayingAudio(false);
+      }
+    };
+
+    utterance.onerror = (e) => {
+      if (wordTimerRef.current) clearInterval(wordTimerRef.current);
+      if (e.error !== 'canceled' && e.error !== 'interrupted') {
+        console.warn('Speech synthesis error:', e);
+        setIsPlayingAudio(false);
+      }
+    };
+
+    utteranceRef.current = utterance;
+
+    try {
+      synthRef.current.resume();
+    } catch {}
+
+    synthRef.current.speak(utterance);
+    setIsPlayingAudio(true);
+  }, [audioDramaSentences, voiceTheme, speechRate]);
+
+  // Audio control callbacks
+  const handleTogglePlay = useCallback(() => {
+    if (!synthRef.current) {
+      setToastMessage('Trình duyệt chưa hỗ trợ phát âm thanh Web Speech');
+      setTimeout(() => setToastMessage(null), 3000);
+      return;
+    }
+
+    if (isPlayingAudio) {
+      if (wordTimerRef.current) clearInterval(wordTimerRef.current);
+      try {
+        synthRef.current.cancel();
+      } catch {}
+      setIsPlayingAudio(false);
+    } else {
+      playSentence(currentSentenceIndex);
+    }
+  }, [isPlayingAudio, currentSentenceIndex, playSentence]);
+
+  const handlePrevSentence = useCallback(() => {
+    const nextIdx = Math.max(0, currentSentenceIndex - 1);
+    if (isPlayingAudio) {
+      playSentence(nextIdx);
+    } else {
+      setCurrentSentenceIndex(nextIdx);
+      setCurrentWordIndex(0);
+    }
+  }, [currentSentenceIndex, isPlayingAudio, playSentence]);
+
+  const handleNextSentence = useCallback(() => {
+    const nextIdx = Math.min(audioDramaSentences.length - 1, currentSentenceIndex + 1);
+    if (isPlayingAudio) {
+      playSentence(nextIdx);
+    } else {
+      setCurrentSentenceIndex(nextIdx);
+      setCurrentWordIndex(0);
+    }
+  }, [audioDramaSentences.length, currentSentenceIndex, isPlayingAudio, playSentence]);
+
+  const handleChangeVoiceTheme = useCallback((newTheme: VoiceThemeId) => {
+    setVoiceTheme(newTheme);
+    if (isPlayingAudio) {
+      setTimeout(() => playSentence(currentSentenceIndex), 50);
+    }
+  }, [isPlayingAudio, currentSentenceIndex, playSentence]);
+
+  const handleChangeSpeed = useCallback((newSpeed: number) => {
+    setSpeechRate(newSpeed);
+    if (isPlayingAudio) {
+      setTimeout(() => playSentence(currentSentenceIndex), 50);
+    }
+  }, [isPlayingAudio, currentSentenceIndex, playSentence]);
+
+  const handleCloseAudio = useCallback(() => {
+    if (synthRef.current) {
+      try {
+        synthRef.current.cancel();
+      } catch {}
+    }
+    if (wordTimerRef.current) clearInterval(wordTimerRef.current);
+    setIsPlayingAudio(false);
+    setAudioModeActive(false);
+  }, []);
+
+  // Auto-scroll follow reading paragraph
+  useEffect(() => {
+    if (!isPlayingAudio || !isAutoScrollEnabled) return;
+    const currentSentence = audioDramaSentences[currentSentenceIndex];
+    if (!currentSentence) return;
+
+    const el = document.getElementById(`novel_para_${currentSentence.paragraphIndex}`);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }, [currentSentenceIndex, isPlayingAudio, isAutoScrollEnabled, audioDramaSentences]);
 
   // Change theme palette background
   const themeBgClass =
@@ -406,6 +618,28 @@ export const NovelReaderPage: React.FC<NovelReaderPageProps> = ({
               )}
             </div>
 
+            {/* Audio Drama Direct Header Toggle */}
+            <button
+              onClick={() => {
+                if (audioModeActive) {
+                  handleCloseAudio();
+                  showToast('Đã tắt kịch truyền thanh');
+                } else {
+                  setAudioModeActive(true);
+                  playSentence(currentSentenceIndex);
+                  showToast('Đang phát kịch truyền thanh đa giọng');
+                }
+              }}
+              className={`p-2 rounded-xl transition-all cursor-pointer ${
+                audioModeActive
+                  ? 'bg-[#E4F1E9] text-[#376F64] shadow-xs ring-1 ring-[#376F64]/30'
+                  : 'text-[#5F706A] hover:text-[#376F64] hover:bg-[#F2F8F5]'
+              }`}
+              title={audioModeActive ? "Tắt kịch truyền thanh" : "Nghe kịch truyền thanh đa giọng"}
+            >
+              <Headphones className="w-5 h-5" />
+            </button>
+
             {/* "Thêm" Menu Button */}
             <div className="relative">
               <button
@@ -427,9 +661,15 @@ export const NovelReaderPage: React.FC<NovelReaderPageProps> = ({
                   </button>
                   <button
                     onClick={() => {
-                      setAudioModeActive(!audioModeActive);
+                      if (audioModeActive) {
+                        handleCloseAudio();
+                        showToast('Đã tắt kịch truyền thanh');
+                      } else {
+                        setAudioModeActive(true);
+                        playSentence(currentSentenceIndex);
+                        showToast('Đang phát kịch truyền thanh đa giọng');
+                      }
                       setShowMoreMenu(false);
-                      showToast(audioModeActive ? 'Đã tắt kịch truyền thanh' : 'Đã bật kịch truyền thanh đa giọng');
                     }}
                     className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-bold text-[#293B36] hover:bg-[#F2F8F5]"
                   >
@@ -464,30 +704,25 @@ export const NovelReaderPage: React.FC<NovelReaderPageProps> = ({
         </button>
       )}
 
-      {/* Audio Drama Bar if active */}
+      {/* Audio Drama Bar if active (Fixed bottom pill) */}
       {audioModeActive && (
-        <div className="sticky top-14 z-20 bg-white border-b border-[#DCE6DF] py-2 px-4 shadow-sm">
-          <AudioDramaPlayerBar
-            currentSentence={audioDramaSentences[currentSentenceIndex] || null}
-            currentIndex={currentSentenceIndex}
-            totalSentences={audioDramaSentences.length}
-            currentWordIndex={currentWordIndex}
-            isPlaying={isPlayingAudio}
-            voiceTheme={voiceTheme}
-            speed={speechRate}
-            isAutoScrollEnabled={isAutoScrollEnabled}
-            onTogglePlay={() => setIsPlayingAudio(!isPlayingAudio)}
-            onPrevSentence={() => setCurrentSentenceIndex(prev => Math.max(0, prev - 1))}
-            onNextSentence={() => setCurrentSentenceIndex(prev => Math.min(audioDramaSentences.length - 1, prev + 1))}
-            onChangeVoiceTheme={(th) => setVoiceTheme(th)}
-            onChangeSpeed={(sp) => setSpeechRate(sp)}
-            onToggleAutoScroll={() => setIsAutoScrollEnabled(!isAutoScrollEnabled)}
-            onClose={() => {
-              setAudioModeActive(false);
-              setIsPlayingAudio(false);
-            }}
-          />
-        </div>
+        <AudioDramaPlayerBar
+          currentSentence={audioDramaSentences[currentSentenceIndex] || null}
+          currentIndex={currentSentenceIndex}
+          totalSentences={audioDramaSentences.length}
+          currentWordIndex={currentWordIndex}
+          isPlaying={isPlayingAudio}
+          voiceTheme={voiceTheme}
+          speed={speechRate}
+          isAutoScrollEnabled={isAutoScrollEnabled}
+          onTogglePlay={handleTogglePlay}
+          onPrevSentence={handlePrevSentence}
+          onNextSentence={handleNextSentence}
+          onChangeVoiceTheme={handleChangeVoiceTheme}
+          onChangeSpeed={handleChangeSpeed}
+          onToggleAutoScroll={() => setIsAutoScrollEnabled(prev => !prev)}
+          onClose={handleCloseAudio}
+        />
       )}
 
       {/* =========================================================================
@@ -531,8 +766,9 @@ export const NovelReaderPage: React.FC<NovelReaderPageProps> = ({
               return (
                 <p
                   key={idx}
-                  className={`transition-colors duration-300 rounded-lg p-1 ${
-                    isVoiceHighlighted ? 'bg-[#E4F1E9] text-[#293B36] shadow-sm font-semibold' : ''
+                  id={`novel_para_${idx}`}
+                  className={`transition-all duration-300 rounded-xl px-3 py-1.5 -mx-3 ${
+                    isVoiceHighlighted ? 'bg-[#E4F1E9] text-[#293B36] shadow-xs font-medium ring-1 ring-[#376F64]/25' : ''
                   }`}
                 >
                   {para}
