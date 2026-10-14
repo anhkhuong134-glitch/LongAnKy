@@ -62,6 +62,14 @@ export const PublicFooter: React.FC<PublicFooterProps> = ({ onNavigate }) => {
               </li>
               <li>
                 <button
+                  onClick={() => onNavigate('/game')}
+                  className="hover:text-[#376F64] transition-colors"
+                >
+                  Game Soul Seal (NRO × NSO)
+                </button>
+              </li>
+              <li>
+                <button
                   onClick={() => onNavigate('/truyen-tranh')}
                   className="hover:text-[#376F64] transition-colors"
                 >

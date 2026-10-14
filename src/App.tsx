@@ -12,6 +12,7 @@ import { NovelReaderPage } from './components/reader/NovelReaderPage';
 import { ReaderAuthGate } from './components/auth/ReaderAuthGate';
 import { LoginPage } from './components/auth/LoginPage';
 import { UserAuthModal } from './components/auth/UserAuthModal';
+import { GameShowcasePage } from './components/public/GameShowcasePage';
 
 // Admin Components
 import { AdminLayout } from './components/admin/AdminLayout';
@@ -369,6 +370,10 @@ export default function App() {
 
       case '/the-gioi':
         return <WorldGuidePage onNavigate={navigateTo} />;
+
+      case '/game':
+      case '/he-thong-game':
+        return <GameShowcasePage onNavigate={navigateTo} />;
 
       case '/truyen-tranh':
       case '/truyen-tranh/:id':
