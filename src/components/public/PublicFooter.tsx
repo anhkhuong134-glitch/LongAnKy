@@ -70,6 +70,14 @@ export const PublicFooter: React.FC<PublicFooterProps> = ({ onNavigate }) => {
               </li>
               <li>
                 <button
+                  onClick={() => onNavigate('/bai-viet')}
+                  className="hover:text-[#376F64] transition-colors font-bold text-[#376F64]"
+                >
+                  Cẩm nang SEO & Bài viết AI
+                </button>
+              </li>
+              <li>
+                <button
                   onClick={() => onNavigate('/truyen-tranh')}
                   className="hover:text-[#376F64] transition-colors"
                 >

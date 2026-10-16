@@ -3,7 +3,7 @@ import {
   LayoutDashboard, BookOpen, Users, Compass, Film,
   CheckSquare, Image, RefreshCw, Palette, MessageSquare,
   UserCheck, History, Settings, ExternalLink, LogOut,
-  Menu, X, Shield, ChevronRight
+  Menu, X, Shield, ChevronRight, Sparkles
 } from 'lucide-react';
 import { UserProfile } from '../../types';
 
@@ -38,6 +38,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
         { label: '21 Nhân vật', path: '/admin/nhan-vat', icon: Users },
         { label: 'Thế giới & Logic', path: '/admin/the-gioi', icon: Compass },
         { label: 'Truyện tranh', path: '/admin/truyen-tranh', icon: Film },
+        { label: 'SEO & Bài viết', path: '/admin/seo', icon: Sparkles, badge: 'AIKTP' },
       ],
     },
     {

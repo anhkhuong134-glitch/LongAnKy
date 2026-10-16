@@ -13,10 +13,12 @@ import { ReaderAuthGate } from './components/auth/ReaderAuthGate';
 import { LoginPage } from './components/auth/LoginPage';
 import { UserAuthModal } from './components/auth/UserAuthModal';
 import { GameShowcasePage } from './components/public/GameShowcasePage';
+import { SeoArticlesPage } from './components/public/SeoArticlesPage';
 
 // Admin Components
 import { AdminLayout } from './components/admin/AdminLayout';
 import { AdminOverviewView } from './components/admin/AdminOverviewView';
+import { AdminSeoView } from './components/admin/AdminSeoView';
 import { AdminChaptersView } from './components/admin/AdminChaptersView';
 import { AdminChapterEditorView } from './components/admin/AdminChapterEditorView';
 import { AdminCharactersView } from './components/admin/AdminCharactersView';
@@ -266,6 +268,10 @@ export default function App() {
         return <AdminGoogleSyncView />;
       }
 
+      if (route.path === '/admin/seo') {
+        return <AdminSeoView onNavigate={navigateTo} />;
+      }
+
       if (route.path === '/admin/giao-dien') {
         return <AdminThemeView />;
       }
@@ -374,6 +380,18 @@ export default function App() {
       case '/game':
       case '/he-thong-game':
         return <GameShowcasePage onNavigate={navigateTo} />;
+
+      case '/bai-viet':
+      case '/seo':
+        return <SeoArticlesPage onNavigate={navigateTo} />;
+
+      case '/bai-viet/:slug':
+        return (
+          <SeoArticlesPage
+            articleSlug={route.params.slug}
+            onNavigate={navigateTo}
+          />
+        );
 
       case '/truyen-tranh':
       case '/truyen-tranh/:id':

@@ -25,6 +25,15 @@ export class PublicNavigationService {
       return { path: '/truyen-tranh/:id', params: { comicId: comicMatch[1] }, rawHash: hash };
     }
 
+    const articleMatch = clean.match(/^\/(?:bai-viet|seo)\/([^/?]+)/);
+    if (articleMatch) {
+      return { path: '/bai-viet/:slug', params: { slug: articleMatch[1] }, rawHash: hash };
+    }
+
+    if (clean === '/seo' || clean === '/bai-viet') {
+      return { path: '/bai-viet', params: {}, rawHash: hash };
+    }
+
     const adminChapMatch = clean.match(/^\/admin\/chuong\/([^/?]+)/);
     if (adminChapMatch) {
       return { path: '/admin/chuong/:id', params: { id: adminChapMatch[1] }, rawHash: hash };

@@ -23,6 +23,7 @@ export const PublicHeader: React.FC<PublicHeaderProps> = ({
     { label: 'Nhân vật', path: '/nhan-vat' },
     { label: 'Thế giới', path: '/the-gioi' },
     { label: 'Game Soul Seal', path: '/game' },
+    { label: 'Cẩm nang & SEO', path: '/bai-viet' },
     { label: 'Truyện tranh', path: '/truyen-tranh' },
   ];
 

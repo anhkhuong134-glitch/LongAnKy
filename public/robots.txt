@@ -1,0 +1,16 @@
+# Robots.txt for Long An Thuc Tinh (Arumo trong nang som)
+User-agent: *
+Allow: /
+Allow: /bai-viet/
+Allow: /doc/
+Allow: /nhan-vat/
+Allow: /the-gioi
+Allow: /game
+Allow: /truyen-tranh
+Allow: /muc-luc
+
+# Disallow internal admin areas
+Disallow: /admin/
+Disallow: /api/
+
+Sitemap: https://longanthuctinh.vn/sitemap.xml

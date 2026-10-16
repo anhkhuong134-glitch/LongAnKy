@@ -19,6 +19,7 @@ export const AdminOverviewView: React.FC<AdminOverviewViewProps> = ({ onNavigate
   const totalUsersCount = UserService.getAllUsers().length;
 
   const tasksList = [
+    { id: 't_seo', title: 'Tối ưu bài viết SEO & tự động sinh bài bằng AIKTP Engine', area: 'SEO & Content', status: 'Trực tiếp', link: '/admin/seo' },
     { id: 't0', title: 'Quản lý tài khoản độc giả & cập nhật liên tục từ Database', area: 'Tài khoản', status: 'Trực tiếp', link: '/admin/tai-khoan' },
     { id: 't1', title: 'Hoàn thiện hồ sơ công khai cho Tovan và Eli', area: 'Nhân vật', status: 'Đang làm', link: '/admin/nhan-vat' },
     { id: 't2', title: 'Biên tập Chương 6 — Nước lạnh dưới giếng cảng', area: 'Truyện chữ', status: 'Đang làm', link: '/admin/chuong' },
